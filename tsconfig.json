@@ -1,0 +1,50 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "paths": {
+      "@homeapi/freebox": [
+        "libs/freebox/src"
+      ],
+      "@homeapi/freebox/*": [
+        "libs/freebox/src/*"
+      ],
+      "@homeapi/nordvpn": [
+        "libs/nordvpn/src"
+      ],
+      "@homeapi/nordvpn/*": [
+        "libs/nordvpn/src/*"
+      ],
+      "@homeapi/pubsub": [
+        "libs/pubsub/src"
+      ],
+      "@homeapi/pubsub/*": [
+        "libs/pubsub/src/*"
+      ],
+      "@homeapi/ovpn": [
+        "libs/ovpn/src"
+      ],
+      "@homeapi/ovpn/*": [
+        "libs/ovpn/src/*"
+      ],
+      "@homeapi/lgtv": [
+        "libs/lgtv/src"
+      ],
+      "@homeapi/lgtv/*": [
+        "libs/lgtv/src/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/home-api/src",
+  "monorepo": true,
+  "root": "apps/home-api",
+  "compilerOptions": {
+    "webpack": true,
+    "tsConfigPath": "apps/home-api/tsconfig.app.json"
+  },
+  "projects": {
+    "home-api": {
+      "type": "application",
+      "root": "apps/home-api",
+      "entryFile": "main",
+      "sourceRoot": "apps/home-api/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/home-api/tsconfig.app.json"
+      }
+    },
+    "freebox": {
+      "type": "library",
+      "root": "libs/freebox",
+      "entryFile": "index",
+      "sourceRoot": "libs/freebox/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/freebox/tsconfig.lib.json"
+      }
+    },
+    "nordvpn": {
+      "type": "library",
+      "root": "libs/nordvpn",
+      "entryFile": "index",
+      "sourceRoot": "libs/nordvpn/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/nordvpn/tsconfig.lib.json"
+      }
+    },
+    "pubsub": {
+      "type": "library",
+      "root": "libs/pubsub",
+      "entryFile": "index",
+      "sourceRoot": "libs/pubsub/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/pubsub/tsconfig.lib.json"
+      }
+    },
+    "ovpn": {
+      "type": "library",
+      "root": "libs/ovpn",
+      "entryFile": "index",
+      "sourceRoot": "libs/ovpn/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/ovpn/tsconfig.lib.json"
+      }
+    },
+    "lgtv": {
+      "type": "library",
+      "root": "libs/lgtv",
+      "entryFile": "index",
+      "sourceRoot": "libs/lgtv/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/lgtv/tsconfig.lib.json"
+      }
+    }
+  }
+}
