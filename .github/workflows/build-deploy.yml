@@ -8,22 +8,56 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [10.x, 12.x, 14.x]
-
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - name: restore node cache
+      uses: actions/cache@master
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
     - run: yarn install --frozen-lockfile
     - run: yarn build
-    - name: Cache
-      uses: actions/cache@v1.2.0
+    - uses: actions/upload-artifact@v2
       with:
-        # A directory to store and save the cache
-        path: node_modules
-        # An explicit key for restoring and saving the cache
-        key: master
+        name: dist
+        path: dist
+  
+  dockerize:
+    runs-on: ubuntu-latest
+
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+      - name: restore node cache
+        uses: actions/cache@master
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - uses: actions/download-artifact@v2
+        with:
+          name: dist
+          path: .
+      - uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: superd22/homeapi
+          tags: latest
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    needs: dockerize
+    steps:
+    - name: Deploying to server
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: sudo systemctl restart homeapi

@@ -3,6 +3,7 @@
 Description=HOMEAPI
 [Service]
 TimeoutStartSec=0
-ExecStart=-/usr/bin/docker run -v /etc/openvpn/client/:/volumes/openvpn/:rw -e NODE_ENV=prod -p 3000:3000
+ExecStartPre=-/usr/bin/docker pull superd22/homeapi
+ExecStart=-/usr/bin/docker run -v /etc/openvpn/client/:/volumes/openvpn/:rw -e NODE_ENV=prod -p 3000:3000 superd22/homeapi
 [Install]
 WantedBy=multi-user.target
