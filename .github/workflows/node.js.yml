@@ -1,7 +1,7 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Node.js CI
+name: Build CI
 
 on:
   push:
@@ -11,7 +11,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -24,5 +23,12 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm run build --if-present
+    - run: yarn install --frozen-lockfile
+    - run: yarn build
+    - name: Cache
+      uses: actions/cache@v1.2.0
+      with:
+        # A directory to store and save the cache
+        path: node_modules
+        # An explicit key for restoring and saving the cache
+        key: master
