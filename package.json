@@ -35,6 +35,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^6.5.4",
     "sqlite3": "^4.2.0",
+    "ssh2-promise": "^0.1.7",
     "tiny-json-http": "^7.1.2",
     "typeorm": "^0.2.24"
   },

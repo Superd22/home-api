@@ -1,7 +1,8 @@
 import { Injectable, HttpService } from '@nestjs/common'
 import { registerEnumType } from '@nestjs/graphql'
+import { execSync } from 'child_process'
 import * as fs from 'fs'
-
+import SSH2Promise = require('ssh2-promise');
 
 /**
  * Allows fetching NordVPN api for stats about servers
@@ -37,7 +38,7 @@ export class NordvpnService {
      * Downloads a ovpn config file for the given server
      * @param serverName serverId.nordvpn.com
      */
-    public async fetchOVPNConfigForServer(serverName: string): Promise<string> {
+    public async setupVPNConf(serverName: string): Promise<string> {
         const file = await this.http.get<string>(`https://downloads.nordcdn.com/configs/files/ovpn_legacy/servers/${serverName}.udp1194.ovpn`).toPromise()
         // Ensure that we use our identity
         const ovpnConf = file.data.replace('auth-user-pass', 'auth-user-pass /etc/openvpn/identity')
@@ -48,6 +49,58 @@ export class NordvpnService {
         }));
         
         return ovpnConf
+    }
+    
+    protected async sshToHost(): Promise<SSH2Promise> {
+        const ssh = new SSH2Promise({
+            host: this.findHostIP(),
+            username: 'homeapi',
+            identity: `${__dirname}/../../../.ssh/id_rsa`
+        })
+
+        return ssh.connect()
+    }
+
+    protected async openVPNTunnel(serverName: string): Promise<boolean> {
+        const ssh = await this.sshToHost()
+        await this.closeVPNTunnel(ssh)
+
+        try {
+            if (process.env.NODE_ENV !== 'prod') return true
+            await ssh.exec(`systemctl openvpn@${serverName}`)
+            // Reroute all traffic not targeting 192.168.x.x through tun0
+            await ssh.exec(`iptables -t nat -A POSTROUTING -s 192.168.0.0/16 \! -d 192.168.0.0/16 -o tun0 -j MASQUERADE`)
+            return true
+        } catch(e) {
+            console.error(e);
+            await this.closeVPNTunnel()
+            return false
+        } finally {
+            await ssh.close()
+        }
+    }
+
+    protected async closeVPNTunnel(ssh?: SSH2Promise): Promise<boolean> {
+        if (!ssh) ssh = await this.sshToHost()
+        try {
+            if (process.env.NODE_ENV !== 'prod') return true
+            await ssh.exec(`systemctl openvpn@*`)
+            await ssh.exec(`iptables -F`)
+            await ssh.exec(`iptables -t nat -F`)
+            return true
+        } catch(e) {
+            console.error(e)
+            return false
+        } finally {
+            await ssh.close()
+        }
+    }
+
+    /**
+     * From inside docker container, find host ip for ssh
+     */
+    protected async findHostIP(): Promise<string> {
+        return execSync(`ip route show default | awk '/default/ {print $3}'`, { encoding: 'utf8' })
     }
 
 }

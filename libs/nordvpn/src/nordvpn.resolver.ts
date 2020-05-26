@@ -19,7 +19,7 @@ export class NordvpnResolver {
     ): Promise<Nordvpn> {
 
         const bestServer = await this.nordvpnService.fetchBestServerForRegion(region)
-        const serverConfig = await this.nordvpnService.fetchOVPNConfigForServer(bestServer)
+        const serverConfig = await this.nordvpnService.setupVPNConf(bestServer)
 
         return { region: 'fr', serverName: bestServer }
     }
