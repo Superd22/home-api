@@ -9,6 +9,8 @@ ENV INTERNAL_HOST_IP "$(ip route show default | awk '/default/ {print $3}')"
 
 RUN apk add --update --no-cache openssh
 
+RUN npm rebuild
+
 CMD ["node", "dist/apps/home-api/main.js"]
 
 EXPOSE 3000
