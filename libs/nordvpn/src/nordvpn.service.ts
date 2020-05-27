@@ -1,4 +1,4 @@
-import { Injectable, HttpService } from '@nestjs/common'
+import { Injectable, Logger, HttpService } from '@nestjs/common'
 import { registerEnumType } from '@nestjs/graphql'
 import { execSync } from 'child_process'
 import * as fs from 'fs'
@@ -10,6 +10,8 @@ import SSH2Promise = require('ssh2-promise');
 @Injectable()
 export class NordvpnService {
     
+    protected readonly logger = new Logger('VPN_SERVICE')
+
     constructor(
         protected readonly http: HttpService
     ) {}
@@ -61,18 +63,21 @@ export class NordvpnService {
         return ssh.connect()
     }
 
-    protected async openVPNTunnel(serverName: string): Promise<boolean> {
+    public async openVPNTunnel(serverName: string): Promise<boolean> {
         const ssh = await this.sshToHost()
+        this.logger.log(`Connected to host`)
         await this.closeVPNTunnel(ssh)
 
         try {
             if (process.env.NODE_ENV !== 'prod') return true
-            await ssh.exec(`systemctl openvpn@${serverName}`)
+            this.logger.log('Connecting VPN...')
+            this.logger.log(await ssh.exec(`systemctl openvpn@${serverName}`))
             // Reroute all traffic not targeting 192.168.x.x through tun0
-            await ssh.exec(`iptables -t nat -A POSTROUTING -s 192.168.0.0/16 \! -d 192.168.0.0/16 -o tun0 -j MASQUERADE`)
+            this.logger.log(await ssh.exec(`iptables -t nat -A POSTROUTING -s 192.168.0.0/16 \! -d 192.168.0.0/16 -o tun0 -j MASQUERADE`))
             return true
         } catch(e) {
             console.error(e);
+            this.logger.error(e.toString())
             await this.closeVPNTunnel()
             return false
         } finally {
