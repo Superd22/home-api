@@ -13,7 +13,7 @@ import { PubsubModule } from '@homeapi/pubsub';
         HttpModule,
         PubsubModule,
         NordvpnModule,
-        TypeOrmModule.forFeature([FreeboxToken])
+        // TypeOrmModule.forFeature([FreeboxToken])
     ],
     providers: [
         FreeboxService,

@@ -10,12 +10,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
             autoSchemaFile: true,
             installSubscriptionHandlers: true,
         }),
-        TypeOrmModule.forRoot({
-            type: 'sqlite',
-            database: ":memory:",
-            synchronize: true,
-            autoLoadEntities: true,
-        }),
+        // TypeOrmModule.forRoot({
+        //     type: 'sqlite',
+        //     database: ":memory:",
+        //     synchronize: true,
+        //     autoLoadEntities: true,
+        // }),
         FreeboxModule
     ],
     providers: [AppResolver],

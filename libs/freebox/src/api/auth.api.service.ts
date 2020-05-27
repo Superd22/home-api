@@ -18,7 +18,7 @@ export class FreeboxAuthAPI {
     constructor(
         protected readonly http: HttpService,
         protected readonly pubsub: PubsubService,
-        @InjectRepository(FreeboxToken) protected token: Repository<FreeboxToken>,
+        // @InjectRepository(FreeboxToken) protected token: Repository<FreeboxToken>,
     ) {
         // this.getWorkingAppToken()
     }
@@ -27,9 +27,9 @@ export class FreeboxAuthAPI {
     /** 
      * get a new app token from the freebox
      */
-    public async getWorkingAppToken(): Promise<FreeboxToken> {
-        const existingToken = await this.token.findOne({ where: { status: "granted" } })
-        if (existingToken) return existingToken;
+    public async getWorkingAppToken(): Promise<void> {
+        // const existingToken = await this.token.findOne({ where: { status: "granted" } })
+        // if (existingToken) return existingToken;
 
         this.logger.debug(`Couldn't find AppToken, fetching one.`)
         // Otherwise try and fetch one
@@ -37,17 +37,13 @@ export class FreeboxAuthAPI {
         if (data && data.success) {
             this.logger.debug(`Fetched app-token from freebox.`)
             console.log(data.result)
-            return this.token.save({
-                appToken: data.result.app_token,
-                trackId: data.result.track_id,
-            })
+            // return this.token.save({
+            //     appToken: data.result.app_token,
+            //     trackId: data.result.track_id,
+            // })
         }
     }
 
-
-    protected init() {
-
-    }
 
     /**
      * returns id packet of the current app
