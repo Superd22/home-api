@@ -1,4 +1,4 @@
-FROM node:12-alpine
+FROM arm64v8/node:lts-alpine3.9
 
 RUN mkdir /opt/home-api
 WORKDIR /opt/home-api
