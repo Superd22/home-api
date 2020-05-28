@@ -7,6 +7,7 @@ COPY . /opt/home-api
 ENV NODE_ENV prod
 ENV INTERNAL_HOST_IP "$(ip route show default | awk '/default/ {print $3}')"
 
+RUN npm rebuild websocket
 RUN apk add --update --no-cache openssh
 
 CMD ["node", "dist/apps/home-api/main.js"]
