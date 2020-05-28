@@ -5,4 +5,6 @@ import { LgtvService } from './lgtv.service';
   providers: [LgtvService],
   exports: [LgtvService],
 })
-export class LgtvModule {}
+export class LgtvModule {
+
+}

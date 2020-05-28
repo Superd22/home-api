@@ -1,8 +1,11 @@
+import { LgtvModule } from './../../../libs/lgtv/src/lgtv.module';
 import { Module } from '@nestjs/common';
 import { AppResolver } from './app.resolver';
 import { FreeboxModule } from '@homeapi/freebox';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PubsubModule } from '@homeapi/pubsub';
+import { NordvpnModule } from '@homeapi/nordvpn';
 
 @Module({
     imports: [
@@ -16,7 +19,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         //     synchronize: true,
         //     autoLoadEntities: true,
         // }),
-        FreeboxModule
+        FreeboxModule,
+        PubsubModule,
+        NordvpnModule,
+        LgtvModule,
     ],
     providers: [AppResolver],
 })
