@@ -103,8 +103,8 @@ export class NordvpnService {
         try {
             if (process.env.NODE_ENV !== 'prod') return true
             await this.execSsh(ssh, `sudo systemctl stop openvpn-client@*`)
-            await this.execSsh(ssh, `sudo iptables -F`)
-            await this.execSsh(ssh, `sudo iptables -t nat -F`)
+            // await this.execSsh(ssh, `sudo iptables -F`)
+            // await this.execSsh(ssh, `sudo iptables -t nat -F`)
             return true
         } catch(e) {
             this.logger.error(e.toString())
