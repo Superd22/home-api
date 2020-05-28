@@ -54,12 +54,16 @@ export class NordvpnService {
     }
     
     protected async sshToHost(): Promise<SSH2Promise> {
-        const ssh = new SSH2Promise({
+        const sshConfig = {
             host: await this.findHostIP(),
             username: 'homeapi',
-            identity: `${__dirname}/../../../.ssh/id_rsa`
-        })
+            identity: `${__dirname}/../../../.ssh/id_rsa`,
+            port: 2022
+        }
 
+        const ssh = new SSH2Promise(sshConfig)
+        this.logger.debug('Connecting to ssh...')
+        this.logger.debug(sshConfig)
         return ssh.connect()
     }
 
@@ -105,6 +109,7 @@ export class NordvpnService {
      * From inside docker container, find host ip for ssh
      */
     protected async findHostIP(): Promise<string> {
+        const ip = 
         return execSync(`ip route show default | awk '/default/ {print $3}'`, { encoding: 'utf8' }).trim()
     }
 
