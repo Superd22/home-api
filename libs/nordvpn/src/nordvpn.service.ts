@@ -58,29 +58,39 @@ export class NordvpnService {
             host: await this.findHostIP(),
             username: 'homeapi',
             identity: `${__dirname}/../../../.ssh/id_rsa`,
-            port: 2022
         }
 
         const ssh = new SSH2Promise(sshConfig)
-        this.logger.debug('Connecting to ssh...')
+        this.logger.debug('Created SSH config')
         this.logger.debug(sshConfig)
-        return ssh.connect()
+        return ssh
+    }
+
+    protected async execSsh(ssh: SSH2Promise, cmd: string): Promise<string> {
+        this.logger.debug(`ssh ${cmd}`)
+        const buff = await ssh.exec(cmd)
+        let output = ""
+        if (buff instanceof Buffer) {
+            output = buff.toString('utf-8')
+        } else output = buff
+        this.logger.debug(`[SSH] ${output}`)
+        return output;
     }
 
     public async openVPNTunnel(serverName: string): Promise<boolean> {
         const ssh = await this.sshToHost()
-        this.logger.log(`Connected to host`)
         await this.closeVPNTunnel(ssh)
 
         try {
             if (process.env.NODE_ENV !== 'prod') return true
             this.logger.log('Connecting VPN...')
-            this.logger.log(await ssh.exec(`systemctl openvpn@${serverName}`))
+            await this.execSsh(ssh, `systemctl openvpn@${serverName}`)
             // Reroute all traffic not targeting 192.168.x.x through tun0
-            this.logger.log(await ssh.exec(`iptables -t nat -A POSTROUTING -s 192.168.0.0/16 \! -d 192.168.0.0/16 -o tun0 -j MASQUERADE`))
+            await this.execSsh(ssh, `iptables -t nat -A POSTROUTING -s 192.168.1.0/16 \! -d 192.168.1.0/16 -o tun0 -j MASQUERADE`)
+            
             return true
         } catch(e) {
-            console.error(e);
+            console.error('der was an error', e);
             this.logger.error(e.toString())
             await this.closeVPNTunnel()
             return false
@@ -109,7 +119,6 @@ export class NordvpnService {
      * From inside docker container, find host ip for ssh
      */
     protected async findHostIP(): Promise<string> {
-        const ip = 
         return execSync(`ip route show default | awk '/default/ {print $3}'`, { encoding: 'utf8' }).trim()
     }
 
