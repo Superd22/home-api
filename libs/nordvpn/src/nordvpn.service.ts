@@ -84,13 +84,12 @@ export class NordvpnService {
         try {
             if (process.env.NODE_ENV !== 'prod') return true
             this.logger.log('Connecting VPN...')
-            await this.execSsh(ssh, `systemctl openvpn@${serverName}`)
+            await this.execSsh(ssh, `sudo systemctl start openvpn-client@${serverName}`)
             // Reroute all traffic not targeting 192.168.x.x through tun0
-            await this.execSsh(ssh, `iptables -t nat -A POSTROUTING -s 192.168.1.0/16 \! -d 192.168.1.0/16 -o tun0 -j MASQUERADE`)
+            await this.execSsh(ssh, `sudo iptables -t nat -A POSTROUTING -s 192.168.1.0/16 \! -d 192.168.1.0/16 -o tun0 -j MASQUERADE`)
             
             return true
         } catch(e) {
-            console.error('der was an error', e);
             this.logger.error(e.toString())
             await this.closeVPNTunnel()
             return false
@@ -103,12 +102,12 @@ export class NordvpnService {
         if (!ssh) ssh = await this.sshToHost()
         try {
             if (process.env.NODE_ENV !== 'prod') return true
-            await ssh.exec(`systemctl openvpn@*`)
-            await ssh.exec(`iptables -F`)
-            await ssh.exec(`iptables -t nat -F`)
+            await this.execSsh(ssh, `sudo systemctl stop openvpn-client@*`)
+            await this.execSsh(ssh, `sudo iptables -F`)
+            await this.execSsh(ssh, `sudo iptables -t nat -F`)
             return true
         } catch(e) {
-            console.error(e)
+            this.logger.error(e.toString())
             return false
         } finally {
             await ssh.close()
