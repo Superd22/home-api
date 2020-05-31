@@ -33,7 +33,7 @@ export class NordvpnService {
      */
     public async fetchBestServerForRegion(region: NordVPNRegion) {
         await this.fetchCountries()
-        const { data } = await this.http.get<RecommendedServer[]>(this.api, { params: {
+        const { data } = await this.http.get<RecommendedServer[]>(this.wpApi, { params: {
             action: 'servers_recommendations',
             filters: {
                 "country_id": this.nordvpnCountries.find(c => c.code.toLowerCase() === region).id,
@@ -67,7 +67,7 @@ export class NordvpnService {
      */
     protected async fetchCountries(): Promise<void> {
         if (this.nordvpnCountries.length) return
-        return this.http.get<NordVPNCountry[]>(this.api + '?action=servers_countries').pipe(
+        return this.http.get<NordVPNCountry[]>(this.wpApi + '?action=servers_countries').pipe(
             map(data => {
                 this.nordvpnCountries = data.data
             })
