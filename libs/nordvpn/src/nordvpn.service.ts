@@ -1,8 +1,11 @@
 import { Injectable, Logger, HttpService } from '@nestjs/common'
 import { registerEnumType } from '@nestjs/graphql'
 import { execSync } from 'child_process'
+import { NordVPNCountry } from '../nordvpn/country.interface';
+import { map } from 'rxjs/operators'
 import * as fs from 'fs'
 import SSH2Promise = require('ssh2-promise');
+import { RecommendedServer } from '../nordvpn/reco-server.interface';
 
 /**
  * Allows fetching NordVPN api for stats about servers
@@ -12,6 +15,8 @@ export class NordvpnService {
     
     protected readonly logger = new Logger('VPN_SERVICE')
 
+    protected nordvpnCountries: NordVPNCountry[] = []
+
     constructor(
         protected readonly http: HttpService
     ) {}
@@ -19,21 +24,25 @@ export class NordvpnService {
     /** endpoint url for nordvpn */
     protected readonly api: string = 'https://nordvpn.com/api/server/stats'
 
+    /** endpoint url for nordvpn wp api */
+    protected readonly wpApi: string = 'https://nordvpn.com/wp-admin/admin-ajax.php'
+
 
     /**
-     * Fetch a sever below 30% usage in a given region
+     * Fetch recommended server for region
      */
     public async fetchBestServerForRegion(region: NordVPNRegion) {
-        const servers = await this.http.get<NordVPNServers>(this.api).toPromise()
-        
-        let [server] = Object.entries(servers.data)
-            .find(([server, load]) => server.startsWith(region) && load.percent < 10)
-        if (!server) [server] = Object.entries(servers.data)
-            .find(([server, load]) => server.startsWith(region) && load.percent < 30)
-        if (!server) [server] = Object.entries(servers.data)
-                    .find(([server, load]) => server.startsWith(region) && load.percent < 50)
-        
-        return server
+        await this.fetchCountries()
+        const { data } = await this.http.get<RecommendedServer[]>(this.api, { params: {
+            action: 'servers_recommendations',
+            filters: {
+                "country_id": this.nordvpnCountries.find(c => c.code.toLowerCase() === region).id,
+                // We want UDP vpns
+                "servers_technologies":[3]
+            }
+        } }).toPromise()
+
+        return data[0].hostname
     }
 
     /**
@@ -53,6 +62,18 @@ export class NordvpnService {
         return ovpnConf
     }
     
+    /**
+     * Fetch the list of available nordvpn countries
+     */
+    protected async fetchCountries(): Promise<void> {
+        if (this.nordvpnCountries.length) return
+        return this.http.get<NordVPNCountry[]>(this.api + '?action=servers_countries').pipe(
+            map(data => {
+                this.nordvpnCountries = data.data
+            })
+        ).toPromise()
+    }
+
     protected async sshToHost(): Promise<SSH2Promise> {
         const sshConfig = {
             host: await this.findHostIP(),
@@ -124,9 +145,11 @@ export class NordvpnService {
 }
 
 export enum NordVPNRegion {
+    au = 'au',
     us = 'us',
     uk = 'uk',
     ca = 'ca',
+    ch = 'ch',
 }
 
 registerEnumType(NordVPNRegion, { name: 'VPNRegion' })
