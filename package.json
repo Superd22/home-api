@@ -27,7 +27,7 @@
     "@nestjs/platform-fastify": "^7.0.9",
     "@nestjs/typeorm": "^7.0.0",
     "@types/axios": "^0.14.0",
-    "apollo-server-fastify": "^2.13.0",
+    "apollo-server-fastify": "^2.14.2",
     "axios": "^0.19.2",
     "class-transformer": "^0.2.3",
     "graphql-subscriptions": "^1.1.0",
