@@ -61,6 +61,24 @@
       "compilerOptions": {
         "tsConfigPath": "libs/lgtv/tsconfig.lib.json"
       }
+    },
+    "spotify": {
+      "type": "library",
+      "root": "libs/spotify",
+      "entryFile": "index",
+      "sourceRoot": "libs/spotify/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/spotify/tsconfig.lib.json"
+      }
+    },
+    "windows": {
+      "type": "library",
+      "root": "libs/windows",
+      "entryFile": "index",
+      "sourceRoot": "libs/windows/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/windows/tsconfig.lib.json"
+      }
     }
   }
 }

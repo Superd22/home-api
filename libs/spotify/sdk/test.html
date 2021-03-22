@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Spotify Web Playback SDK Quick Start Tutorial</title>
+</head>
+<body>
+  <h1>Spotify Web Playback SDK Quick Start Tutorial</h1>
+  <h2>Open your console log: <code>View > Developer > JavaScript Console</code></h2>
+
+  <script src="https://sdk.scdn.co/spotify-player.js"></script>
+  <script>
+      console.log("NIQUE TA MAMPAN")
+    window.onSpotifyWebPlaybackSDKReady = () => {
+        console.log("NIQUE TON PAPA")
+      const token = 'BQDbo9MIeX1LLopi5rmbhEOXjHkweYqfz9DWbVql7VtX61naOQdkgHvh62BMQTj8PrtE-QjTgWQWPNjvxE9S8IaH6Yxx9dn9ajCNLUiWELfog5PVgMXNVxV0-ugaDkV5RCiqUAPjDfR5DpAtb7HZSUFd8tVRZUARs2alneKkhogulDTX_yUwbGBq-xw';
+      const player = new Spotify.Player({
+        name: 'Home Entertainment',
+        getOAuthToken: cb => { console.log("GETOAUTH"); cb(token); }
+      });
+      // Error handling
+      player.addListener('initialization_error', (wut) => { console.error("alors", JSON.stringify(wut, null, 4)); });
+      player.addListener('authentication_error', ({ message }) => { console.error(message); });
+      player.addListener('account_error', ({ message }) => { console.error(message); });
+      player.addListener('playback_error', ({ message }) => { console.error(message); });
+
+      // Playback status updates
+      player.addListener('player_state_changed', state => { console.log(state); });
+
+      // Ready
+      player.addListener('ready', ({ device_id }) => {
+        console.log('Ready with Device ID', device_id);
+      });
+
+      // Not Ready
+      player.addListener('not_ready', ({ device_id }) => {
+        console.log('Device ID has gone offline', device_id);
+      });
+
+      // Connect to the player!
+      player.connect();
+
+      console.log("PLAYER", player)
+    };
+  </script>
+</body>
+</html>

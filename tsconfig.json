@@ -41,6 +41,18 @@
       ],
       "@homeapi/lgtv/*": [
         "libs/lgtv/src/*"
+      ],
+      "@homeapi/spotify": [
+        "libs/spotify/src"
+      ],
+      "@homeapi/spotify/*": [
+        "libs/spotify/src/*"
+      ],
+      "@homeapi/windows": [
+        "libs/windows/src"
+      ],
+      "@homeapi/windows/*": [
+        "libs/windows/src/*"
       ]
     }
   },
