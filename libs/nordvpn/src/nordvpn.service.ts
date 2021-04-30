@@ -54,7 +54,7 @@ export class NordvpnService {
         // Ensure that we use our identity
         const ovpnConf = file.data.replace('auth-user-pass', 'auth-user-pass /etc/openvpn/identity')
 
-        await new Promise((resolve, reject) => fs.writeFile(`${__dirname}/../../../volumes/openvpn_clients/${serverName}.conf`, ovpnConf, (err) => {
+        await new Promise<void>((resolve, reject) => fs.writeFile(`${__dirname}/../../../volumes/openvpn_clients/${serverName}.conf`, ovpnConf, (err) => {
             if(err) reject(err)
             else resolve()
         }));
