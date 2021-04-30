@@ -18,7 +18,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./apps/home-api/test/jest-e2e.json"
+    "test:e2e": "jest --config ./apps/home-api/test/jest-e2e.json",
+    "synth": "node dist/apps/services/main.js"
   },
   "dependencies": {
     "@nestjs/common": "8.1.1",
@@ -29,7 +30,11 @@
     "@types/axios": "0.14.0",
     "apollo-server-fastify": "3.4.0",
     "axios": "0.23.0",
+    "cdk8s": "1.0.0-beta.11",
+    "cdk8s-plus-17": "^1.0.0-beta.11",
     "class-transformer": "0.4.0",
+    "constructs": "3.3.75",
+    "graphql": "^15.5.1",
     "graphql-subscriptions": "1.2.1",
     "lgtv2": "1.6.3",
     "reflect-metadata": "0.1.13",
@@ -90,7 +95,9 @@
       "@homeapi/ovpn/(.*)": "<rootDir>/libs/ovpn/src/$1",
       "@homeapi/ovpn": "<rootDir>/libs/ovpn/src",
       "@homeapi/lgtv/(.*)": "<rootDir>/libs/lgtv/src/$1",
-      "@homeapi/lgtv": "<rootDir>/libs/lgtv/src"
+      "@homeapi/lgtv": "<rootDir>/libs/lgtv/src",
+      "@homeapi/k8s/(.*)": "<rootDir>/libs/k8s/src/$1",
+      "@homeapi/k8s": "<rootDir>/libs/k8s/src"
     }
   }
 }

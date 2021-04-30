@@ -17,6 +17,15 @@
         "tsConfigPath": "apps/home-api/tsconfig.app.json"
       }
     },
+    "infra": {
+      "type": "application",
+      "root": "apps/infra",
+      "entryFile": "main",
+      "sourceRoot": "apps/infra/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/infra/tsconfig.app.json"
+      }
+    },
     "freebox": {
       "type": "library",
       "root": "libs/freebox",
@@ -60,6 +69,15 @@
       "sourceRoot": "libs/lgtv/src",
       "compilerOptions": {
         "tsConfigPath": "libs/lgtv/tsconfig.lib.json"
+      }
+    },
+    "k8s": {
+      "type": "library",
+      "root": "libs/k8s",
+      "entryFile": "index",
+      "sourceRoot": "libs/k8s/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/k8s/tsconfig.lib.json"
       }
     }
   }

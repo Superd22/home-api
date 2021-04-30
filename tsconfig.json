@@ -41,6 +41,12 @@
       ],
       "@homeapi/lgtv/*": [
         "libs/lgtv/src/*"
+      ],
+      "@homeapi/k8s": [
+        "libs/k8s/src"
+      ],
+      "@homeapi/k8s/*": [
+        "libs/k8s/src/*"
       ]
     }
   },
