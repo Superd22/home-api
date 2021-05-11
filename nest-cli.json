@@ -61,6 +61,24 @@
       "compilerOptions": {
         "tsConfigPath": "libs/lgtv/tsconfig.lib.json"
       }
+    },
+    "services": {
+      "type": "application",
+      "root": "apps/services",
+      "entryFile": "main",
+      "sourceRoot": "apps/services/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/services/tsconfig.app.json"
+      }
+    },
+    "k8s": {
+      "type": "library",
+      "root": "libs/k8s",
+      "entryFile": "index",
+      "sourceRoot": "libs/k8s/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/k8s/tsconfig.lib.json"
+      }
     }
   }
 }
