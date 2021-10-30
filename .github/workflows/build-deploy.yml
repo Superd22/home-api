@@ -49,16 +49,16 @@ jobs:
           dockerHubUser: ${{ secrets.DOCKER_USERNAME }}
           dockerHubPassword: ${{ secrets.DOCKER_PASSWORD }}
 
-  deploy:
-    runs-on: ubuntu-latest
+  # deploy:
+  #   runs-on: ubuntu-latest
 
-    needs: dockerize
-    steps:
-    - name: Deploying to server
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        port: ${{ secrets.SSH_PORT }}
-        script: sudo systemctl restart homeapi
+  #   needs: dockerize
+  #   steps:
+  #   - name: Deploying to server
+  #     uses: appleboy/ssh-action@master
+  #     with:
+  #       host: ${{ secrets.HOST }}
+  #       username: ${{ secrets.SSH_USERNAME }}
+  #       key: ${{ secrets.SSH_KEY }}
+  #       port: ${{ secrets.SSH_PORT }}
+  #       script: sudo systemctl restart homeapi
