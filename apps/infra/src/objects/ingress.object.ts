@@ -5,6 +5,9 @@ export interface IngressRouteProps {
     /** metadata name for this route */
     name: string
     entryPoints: string[]
+    tls?: {
+        certResolver?: string
+    },
     routes: {
         match: string,
         kind: string,
@@ -29,6 +32,7 @@ export class IngressRoute extends ApiObject {
                 name: props.name
             },
             spec: {
+                tls: props.tls,
                 entryPoints: props.entryPoints,
                 routes: props.routes
             }

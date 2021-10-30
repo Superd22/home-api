@@ -19,7 +19,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./apps/home-api/test/jest-e2e.json",
-    "synth": "node dist/apps/services/main.js"
+    "infra:build": "npx nest build infra",
+    "infra:synthonly": "node dist/apps/infra/main.js",
+    "infra:synth": "yarn run infra:build && yarn run infra:synthonly",
+    "infra:watch": "npx nest start --watch infra"
   },
   "dependencies": {
     "@nestjs/common": "8.1.1",

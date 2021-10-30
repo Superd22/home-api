@@ -1,8 +1,7 @@
-import { CustomResourceDefinitionNames, } from '../../../../libs/k8s/src/imports/k8s';
 import { Construct } from 'constructs';
-import { App, Chart, ChartProps, Helm, JsonPatch, } from 'cdk8s';
-import { IngressV1Beta1, ServiceAccount } from 'cdk8s-plus-17'
-import { KubeDeployment, KubeService, IntOrString, KubeClusterRole, KubeClusterRoleBinding, IngressRule } from '@homeapi/k8s';
+import { App, Chart, JsonPatch, } from 'cdk8s';
+import { ServiceAccount } from 'cdk8s-plus-17'
+import { KubeDeployment, KubeService, KubeClusterRole, KubeClusterRoleBinding } from '@homeapi/k8s';
 import { KubeCustomResourceDefinition } from 'cdk8s-plus-17/lib/imports/k8s';
 import { IngressRoute } from '../objects/ingress.object';
 
@@ -107,7 +106,7 @@ export class Traefik extends Chart {
                                     '--certificatesresolvers.myresolver.acme.storage=acme.json',
                                     // Please note that this is the staging Let's Encrypt server.
                                     // Once you get things working, you should remove that whole line altogether.
-                                    '--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory',
+                                    // '--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory',
                                 ],
                                 ports: [
                                     { 
@@ -136,7 +135,7 @@ export class Traefik extends Chart {
             routes: [
                 {
                     kind: 'Rule',
-                    match: '(PathPrefix(`/dashboard`) || PathPrefix(`/api`))',
+                    match: 'PathPrefix(`/dashboard`)',
                     services: [{ name: 'api@internal', kind: 'TraefikService' }]
                 }
             ]

@@ -1,6 +1,6 @@
 import { Module, OnModuleInit } from '@nestjs/common'
-import { App, Chart, ChartProps } from 'cdk8s'
-import { WhoAmI } from './charts/test.chart'
+import { App } from 'cdk8s'
+import { HomeAPI } from './charts/homeapi.chart'
 import { Traefik } from './charts/traefik.chart'
 
 @Module({
@@ -13,7 +13,7 @@ export class AppModule implements OnModuleInit {
     onModuleInit() {
         const app = new App();
         new Traefik(app);
-        new WhoAmI(app)
+        new HomeAPI(app);
         app.synth();
     }
 
