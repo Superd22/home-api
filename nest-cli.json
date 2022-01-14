@@ -79,6 +79,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/k8s/tsconfig.lib.json"
       }
+    },
+    "home-assistant": {
+      "type": "application",
+      "root": "apps/home-assistant",
+      "entryFile": "main",
+      "sourceRoot": "apps/home-assistant/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/home-assistant/tsconfig.app.json"
+      }
     }
   }
 }

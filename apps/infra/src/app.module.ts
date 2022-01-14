@@ -1,6 +1,8 @@
 import { Module, OnModuleInit } from '@nestjs/common'
 import { App } from 'cdk8s'
+import { HomeAssistant } from './charts/home-assistant.chart';
 import { HomeAPI } from './charts/homeapi.chart'
+import { Satisfactory } from './charts/satisfactory.chart';
 import { Traefik } from './charts/traefik.chart'
 
 @Module({
@@ -14,6 +16,8 @@ export class AppModule implements OnModuleInit {
         const app = new App();
         new Traefik(app);
         new HomeAPI(app);
+        new HomeAssistant(app);
+        // new Satisfactory(app);
         app.synth();
     }
 

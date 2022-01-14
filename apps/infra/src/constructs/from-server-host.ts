@@ -36,7 +36,7 @@ export interface WebServiceProps {
   readonly volumes?: Volume[];
 }
 
-export class WebService extends Construct {
+export class FromServerHost extends Construct {
   constructor(scope: Construct, id: string, props: WebServiceProps) {
     super(scope, id);
 
