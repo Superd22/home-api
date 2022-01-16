@@ -13,7 +13,7 @@ import { IngressRoute } from '../objects/ingress.object';
 export class Traefik extends Chart {
   constructor(scope: Construct) {
     super(scope, 'traefik-chart', {});
-    this.doCRDs();
+    // this.doCRDs();
 
     new KubeClusterRole(this, 'traefik-cluster-role', {
       metadata: {
@@ -79,7 +79,7 @@ export class Traefik extends Chart {
           { protocol: 'TCP', name: 'web', port: 80 },
           { protocol: 'TCP', name: 'admin', port: 8080 },
           { protocol: 'TCP', name: 'websecure', port: 443 },
-        //   { protocol: 'UDP', name: 'sat-main', port: 7777 },
+          { protocol: 'TCP', name: 'minecraft', port: 25565 },
         //   { protocol: 'UDP', name: 'sat-beacon', port: 15000 },
         //   { protocol: 'UDP', name: 'sat-query', port: 15777 },
         ],
@@ -102,6 +102,7 @@ export class Traefik extends Chart {
         labels: label,
       },
       spec: {
+        strategy: { type: "Recreate" },
         replicas: 1,
         selector: {
           matchLabels: label,
@@ -124,7 +125,7 @@ export class Traefik extends Chart {
                   '--log.level=DEBUG',
                   '--entrypoints.web.Address=:80',
                   '--entrypoints.websecure.Address=:443',
-                //   '--entrypoints.sat-main.Address=:7777/udp',
+                  '--entrypoints.minecraft.Address=:25565',
                 //   '--entrypoints.sat-beacon.Address=:15000/udp',
                 //   '--entrypoints.sat-query.Address=:15777/udp',
                   '--pilot.token=68a9f3b3-5ae6-4546-aa05-59d5bece33c1',
@@ -152,12 +153,12 @@ export class Traefik extends Chart {
                     containerPort: 8080,
                     hostPort: 8080,
                   },
-                //   {
-                //     protocol: 'UDP',
-                //     name: 'sat-main',
-                //     containerPort: 7777,
-                //     hostPort: 7777,
-                //   },
+                  {
+                    protocol: 'TCP',
+                    name: 'minecraft',
+                    containerPort: 25565,
+                    hostPort: 25565,
+                  },
                 //   {
                 //     protocol: 'UDP',
                 //     name: 'sat-beacon',
