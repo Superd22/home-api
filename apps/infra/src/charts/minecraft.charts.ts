@@ -70,7 +70,7 @@ export class Minecraft extends Chart {
                 env: [
                   { name: 'EULA', value: 'true' },
                 ],
-                ports: ports.map(p => ({ protocol: 'TCP', hostPort: p.port, containerPort: p.port }))
+                ports: ports.map(p => ({ protocol: 'TCP', containerPort: p.port }))
               },
             ],
           },

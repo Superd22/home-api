@@ -27,6 +27,9 @@ export class WhoAmI extends Chart {
         template: {
           metadata: { labels: label },
           spec: {
+            nodeSelector: {
+              powerful: 'true',
+            },
             containers: [
               {
                 name: 'whoami',

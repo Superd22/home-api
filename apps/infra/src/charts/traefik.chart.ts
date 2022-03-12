@@ -9,10 +9,17 @@ import {
 } from '@homeapi/k8s';
 import { KubeCustomResourceDefinition } from 'cdk8s-plus-17/lib/imports/k8s';
 import { IngressRoute } from '../objects/ingress.object';
+import { Inject, Injectable, Scope } from '@nestjs/common';
+import { CDK8SApp } from '../app.service';
+import { IngressService } from '../services/ingress.service';
 
+@Injectable()
 export class Traefik extends Chart {
-  constructor(scope: Construct) {
-    super(scope, 'traefik-chart', {});
+  constructor(
+    protected readonly app: CDK8SApp,
+    protected readonly ingress: IngressService
+  ) {
+    super(app, 'traefik-chart', {});
     // this.doCRDs();
 
     new KubeClusterRole(this, 'traefik-cluster-role', {
@@ -76,12 +83,11 @@ export class Traefik extends Chart {
       },
       spec: {
         ports: [
-          { protocol: 'TCP', name: 'web', port: 80 },
-          { protocol: 'TCP', name: 'admin', port: 8080 },
-          { protocol: 'TCP', name: 'websecure', port: 443 },
-          { protocol: 'TCP', name: 'minecraft', port: 25565 },
-        //   { protocol: 'UDP', name: 'sat-beacon', port: 15000 },
-        //   { protocol: 'UDP', name: 'sat-query', port: 15777 },
+          ...this.ingress.ingresses.map(ingress => ({
+            protocol: ingress.protocol || 'TCP',
+            name: ingress.name,
+            port: ingress.hostPort
+          })),
         ],
         selector: {
           app: 'traefik',
@@ -102,7 +108,7 @@ export class Traefik extends Chart {
         labels: label,
       },
       spec: {
-        strategy: { type: "Recreate" },
+        strategy: { type: 'Recreate' },
         replicas: 1,
         selector: {
           matchLabels: label,
@@ -123,11 +129,7 @@ export class Traefik extends Chart {
                   '--api.insecure',
                   '--accesslog',
                   '--log.level=DEBUG',
-                  '--entrypoints.web.Address=:80',
-                  '--entrypoints.websecure.Address=:443',
-                  '--entrypoints.minecraft.Address=:25565',
-                //   '--entrypoints.sat-beacon.Address=:15000/udp',
-                //   '--entrypoints.sat-query.Address=:15777/udp',
+                  ...this.ingress.ingresses.map(ingress => `--entrypoints.${ingress.name}.Address=:${ingress.hostPort}${ingress.protocol === 'UDP' ? '/udp' : ''}`),
                   '--pilot.token=68a9f3b3-5ae6-4546-aa05-59d5bece33c1',
                   '--providers.kubernetescrd',
                   '--certificatesresolvers.myresolver.acme.tlschallenge',
@@ -138,39 +140,12 @@ export class Traefik extends Chart {
                   // '--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory',
                 ],
                 ports: [
-                  {
-                    name: 'web',
-                    containerPort: 80,
-                    hostPort: 80,
-                  },
-                  {
-                    name: 'websecure',
-                    containerPort: 443,
-                    hostPort: 443,
-                  },
-                  {
-                    name: 'admin',
-                    containerPort: 8080,
-                    hostPort: 8080,
-                  },
-                  {
-                    protocol: 'TCP',
-                    name: 'minecraft',
-                    containerPort: 25565,
-                    hostPort: 25565,
-                  },
-                //   {
-                //     protocol: 'UDP',
-                //     name: 'sat-beacon',
-                //     containerPort: 15000,
-                //     hostPort: 15000,
-                //   },
-                //   {
-                //     protocol: 'UDP',
-                //     name: 'sat-query',
-                //     containerPort: 15777,
-                //     hostPort: 15777,
-                //   },
+                  ...this.ingress.ingresses.map((ingress) => ({
+                    name: ingress.name,
+                    containerPort: ingress.hostPort,
+                    hostPort: ingress.hostPort,
+                    protocol: ingress.protocol
+                  })),
                 ],
               },
             ],
@@ -340,4 +315,5 @@ export class Traefik extends Chart {
       JsonPatch.replace('/apiVersion', 'apiextensions.k8s.io/v1beta1'),
     );
   }
+
 }
