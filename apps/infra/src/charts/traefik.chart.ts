@@ -127,8 +127,11 @@ export class Traefik extends Chart {
                 image: 'traefik:v2.4',
                 args: [
                   '--api.insecure',
-                  '--accesslog',
+                  '--accesslog=true',
+                  '--accesslog.format=json',
+                  '--log.format=json',
                   '--log.level=DEBUG',
+                  '--log.format=json',
                   ...this.ingress.ingresses.map(ingress => `--entrypoints.${ingress.name}.Address=:${ingress.hostPort}${ingress.protocol === 'UDP' ? '/udp' : ''}`),
                   '--pilot.token=68a9f3b3-5ae6-4546-aa05-59d5bece33c1',
                   '--providers.kubernetescrd',

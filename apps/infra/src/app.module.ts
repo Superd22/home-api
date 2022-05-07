@@ -6,15 +6,20 @@ import { HomeAPI } from './charts/homeapi.chart';
 import { Traefik } from './charts/traefik.chart';
 import { IngressService } from './services/ingress.service';
 import { CDK8SApp } from './app.service'
+import { DIYHue } from './charts/dyihue.chart';
+import { DataDog } from './charts/datadog.chart';
 
 const services = [
   IngressService
 ]
 
 const activatedCharts: Type<Chart>[] = [
-  Traefik,
   HomeAPI,
-  HomeAssistant
+  HomeAssistant,
+  DIYHue,
+  DataDog,
+  // OpenHab,
+  Traefik,
 ];
 
 @Module({

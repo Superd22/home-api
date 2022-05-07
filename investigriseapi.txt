@@ -1,0 +1,15 @@
+- /device
+- /device/
+- /device/%s/command
+- /device/%s/schedule
+- /device/%s/timezone
+- /device/%s/user
+- /device/{deviceId}
+- /device/{deviceId}/gear/{gearId}/group
+- /device/{deviceId}/gear/{gearId}/name
+- /device/{deviceId}/gear/{gearId}/position
+- /device/{deviceId}/gear/{gearId}/schedule
+- /device/{deviceId}/gearList/position
+- /device/{deviceId}/gearList/schedule
+- /device/{deviceId}/name
+- /disclaimer

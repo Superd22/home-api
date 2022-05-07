@@ -20,10 +20,10 @@ export class IngressService {
       name: 'websecure',
       hostPort: 443,
     },
-    {
-      name: 'admin',
-      hostPort: 8080,
-    },
+    // {
+    //   name: 'admin',
+    //   hostPort: 8080,
+    // },
   ]
 
   public get ingresses(): IngressPort[] {

@@ -23,6 +23,7 @@ export class HomeAssistant extends Chart {
     new WebService(this, 'service', {
       image: 'ghcr.io/home-assistant/home-assistant:stable',
       containerOptions: {
+        imagePullPolicy: 'Always',
         volumeMounts: [{ name: 'config', mountPath: '/config' }],
       },
       volumes: [
