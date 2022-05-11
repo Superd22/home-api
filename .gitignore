@@ -36,3 +36,8 @@ lerna-debug.log*
 # Docker volumes
 volumes/*/*
 !volumes/*/.gitkeep
+
+# Secrets
+.gitsecret/keys/random_seed
+**/*.encrypted.*
+!*.secret

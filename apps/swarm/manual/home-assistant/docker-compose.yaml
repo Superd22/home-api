@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:stable
+    volumes:
+      - homeassistant:/config
+    labels:
+      - traefik.docker.network=webproxy
+      - traefik.http.routers.homeassistant.entrypoints=websecure
+      - traefik.http.routers.homeassistant.rule=Host(`home.davidfain.com`)
+      - traefik.http.routers.homeassistant.service=homeassistant
+      - traefik.http.routers.homeassistant.tls=true
+      - traefik.http.routers.dihomeassistantyhue.tls.certresolver=le
+      - traefik.http.routers.homeassistantunsecure.entrypoints=web
+      - traefik.http.routers.homeassistantunsecure.rule=Host(`home.davidfain.com`)
+      - traefik.http.routers.homeassistantunsecure.service=homeassistant
+      - traefik.http.services.homeassistant.loadbalancer.server.port=8123
+networks:
+  webproxy:
+    external:
+      name: webproxy
+volumes:
+  homeassistant:

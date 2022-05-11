@@ -5,7 +5,7 @@
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es2017",
+    "target": "es2020",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
@@ -47,6 +47,12 @@
       ],
       "@homeapi/k8s/*": [
         "libs/k8s/src/*"
+      ],
+      "@homeapi/ctsdk": [
+        "libs/ctsdk/src"
+      ],
+      "@homeapi/ctsdk/*": [
+        "libs/ctsdk/src/*"
       ]
     }
   },

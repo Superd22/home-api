@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  mqtt:
+    image: eclipse-mosquitto
+    ports:
+      - "1883:1883"
+    volumes:
+      - mqttconfig:/mosquitto/config
+      - mqttdata:/mosquitto/data
+    labels:
+      # Books is the actual calibre public web interface
+      - traefik.docker.network=webproxy
+      - traefik.http.routers.mqtt.entrypoints=websecure
+      - traefik.http.routers.mqtt.rule=Host(`mqtt.home.davidfain.com`)
+      - traefik.http.routers.mqtt.service=mqtt
+      - traefik.http.routers.mqtt.tls=true
+      - traefik.http.routers.mqtt.tls.certresolver=le
+      - traefik.http.routers.mqttunsecure.entrypoints=web
+      - traefik.http.routers.mqttunsecure.rule=Host(`mqtt.home.davidfain.com`)
+      - traefik.http.routers.mqttunsecure.service=mqtt
+      - traefik.http.services.mqtt.loadbalancer.server.port=9001
+networks:
+  webproxy:
+      name: webproxy
+volumes:
+  mqttconfig:
+  mqttdata:

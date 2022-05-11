@@ -88,6 +88,24 @@
       "compilerOptions": {
         "tsConfigPath": "apps/home-assistant/tsconfig.app.json"
       }
+    },
+    "swarm": {
+      "type": "application",
+      "root": "apps/swarm",
+      "entryFile": "main",
+      "sourceRoot": "apps/swarm/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/swarm/tsconfig.app.json"
+      }
+    },
+    "ctsdk": {
+      "type": "library",
+      "root": "libs/ctsdk",
+      "entryFile": "index",
+      "sourceRoot": "libs/ctsdk/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/ctsdk/tsconfig.lib.json"
+      }
     }
   }
 }
