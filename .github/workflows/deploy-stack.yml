@@ -14,11 +14,17 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
+    - uses: arwynfr/actions-docker-context@v2
+      with:
+        docker_host: 'ssh://freebox@home.davidfain.com'
+        context_name: 'freebox-remote'
+        ssh_cert: ${{ secrets.SSH_CERT_HOME }}
+        ssh_key: ${{ secrets.SSH_KEY_HOME }}
     - name: restore node cache
       uses: actions/cache@master
       with:
         path: node_modules
-        key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+        key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
     - run: npx yarn install --frozen-lockfile
     - name: Git Secret Reveal Step
       uses: entrostat/git-secret-action@v3.2.0
@@ -26,9 +32,12 @@ jobs:
         gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
     - run: npx nest build swarm
       name: Building Swarm App
-    - run: cd dist && node ./app/swarm/main.js synth
+    - run: node ./apps/swarm/main.js synth
       name: Synthing YAML
-    - run: node ./app/swarm/main.js prune
+      working-directory: ./dist
+    - run: node ./apps/swarm/main.js prune
       name: Pruning old stacks
-    - run: node ./app/swarm/main.js deploy
+      working-directory: ./dist
+    - run: node ./apps/swarm/main.js deploy
       name: Deploying new stacks
+      working-directory: ./dist

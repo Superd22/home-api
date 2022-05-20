@@ -41,3 +41,5 @@ volumes/*/*
 .gitsecret/keys/random_seed
 **/*.encrypted.*
 !*.secret
+
+**.temp

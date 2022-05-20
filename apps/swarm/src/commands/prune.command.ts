@@ -2,6 +2,8 @@ import { Logger } from '@nestjs/common';
 import { Command, CommandRunner, Option } from 'nest-commander';
 import { SwarmApp } from '../swarm.service';
 import { CommandYamlHelper } from './command-yaml.service';
+import { summary } from '@actions/core';
+
 import execSh from 'exec-sh';
 
 export interface PruneOptions {

@@ -32,7 +32,7 @@ export class DeployCommand implements CommandRunner {
     for (const [file, stackName] of yml) {
       this.logger.debug(`Deploying stack ${stackName}`)
       try {
-        const { stdout } = await execSh.promise(`${options.dryRun ? 'echo [dry-run]: ' : ''}docker --context freebox-remote stack deploy --compose-file ${file} ${stackName}`)
+        const { stdout } = await execSh.promise(`${options.dryRun ? 'echo [dry-run]: ' : ''}docker --context freebox-remote stack deploy --compose-file ${file} ${stackName}`, true)
         this.logger.log(`Deployed ${stackName}.`)
         if (stdout) {
           this.logger.debug(stdout)
