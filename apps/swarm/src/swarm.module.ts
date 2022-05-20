@@ -14,7 +14,7 @@ import { Config } from './config.encrypted';
 import { WebServiceFactory } from './services/web-service/web-service.factory';
 import { SwarmApp } from './swarm.service';
 
-export const composes = [Traefik, DIYHue, DataDog, HomeAssistant, Test];
+export const composes = [Traefik, DIYHue, DataDog, HomeAssistant];
 
 const commands = [SynthCommand, DeployCommand, PruneCommand]
 
