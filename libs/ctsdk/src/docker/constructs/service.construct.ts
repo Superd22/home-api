@@ -6,7 +6,7 @@ import { KeyValue, KeyValueImpl } from '../nodes/key-value.node';
 
 export class Service extends Construct<ServiceProps, Compose> {
   protected toJSON() {
-    const props = { ...this };
+    const props = { ...this._props };
 
     props.environment = props.environment?.map((e) =>
       typeof e === 'string' ? e : new KeyValueImpl(e),

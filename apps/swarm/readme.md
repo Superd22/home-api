@@ -9,5 +9,9 @@ needs a webproxy overlay --attachable network. (@todo probably can be provisione
 
 
 # synth
+- `npx nest start swarm` currently dumps docker-compose in root
 
-needs cdk
+
+
+# json schema to ts
+`npx -p json-schema-to-typescript json2ts traefik-v2.json -o traefik-v2.d.ts`

@@ -1,4 +1,4 @@
-import { KeyValue } from '@homeapi/ctsdk';
+import { KeyValue, KeyValueImpl } from '@homeapi/ctsdk';
 
 /**
  * Turns a JSON config to KeyValue objects
@@ -16,7 +16,7 @@ export function keyValueFromConfig(
     const entries = Object.entries(config).flatMap(([key, value]) => {
       if (value instanceof Object)
         return lfc(value as Record<any, any>, `${prefix}${key}.`, acc);
-      return { key: `${prefix}${key}`, value: value };
+      return new KeyValueImpl({ key: `${prefix}${key}`, value: value });
     });
     return [...acc, ...entries]
   };

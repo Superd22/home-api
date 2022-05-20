@@ -5,6 +5,8 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
+import { KeyValue } from "./nodes";
+
 export type DefinitionsDeployment = {
   mode?: string;
   endpoint_mode?: string;
@@ -517,7 +519,7 @@ export interface DefinitionsService {
   cap_add?: string[];
   cap_drop?: string[];
   cgroup_parent?: string;
-  command?: string | string[];
+  command?: string | string[] | KeyValue[];
   configs?: ServiceConfigOrSecret;
   container_name?: string;
   cpu_count?: number;

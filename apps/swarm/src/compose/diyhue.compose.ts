@@ -1,12 +1,33 @@
-import { App, Compose, Port, Service } from '@homeapi/ctsdk';
-import { WebService } from '../charts/webservice.chart';
-
+import { App, Compose, Network, Port, Service, Volume } from '@homeapi/ctsdk';
+import { Injectable } from '@nestjs/common';
+import { WebService } from '../services/web-service/webservice.chart';
+import { SwarmApp } from '../swarm.service';
+@Injectable()
 export class DIYHue extends Compose {
-  constructor(app: App) {
+  constructor(app: SwarmApp) {
     super(app, DIYHue.name);
 
+    new Network(this, '10_vlan', {
+      driver: 'macvlan',
+      driver_opts: {
+        parent: 'enp0s3'
+      },
+      ipam: {
+        config: [
+          { subnet: "192.168.1.0/24", gateway: "192.168.1.1", ip_range: "192.168.1.64/32" }
+        ]
+      }
+    })
+
+    /** @todo in webserver */
+    new Network(this, 'webproxy', {
+      name: 'webproxy'
+    })
+
+    new Volume(this, 'diyhuevolume', null)
+
     new WebService(this, 'diyhue', {
-      web: { match: 'Host(`diyhue.home.davidfain.com`)' },
+      web: { match: 'Host(`diyhue.home.davidfain.com`)', allowHttp: true },
       serviceProps: {
         image: 'diyhue/core:latest',
         ports: [

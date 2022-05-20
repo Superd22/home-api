@@ -1,0 +1,34 @@
+name: Deploy Swarm
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: restore node cache
+      uses: actions/cache@master
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+    - run: npx yarn install --frozen-lockfile
+    - name: Git Secret Reveal Step
+      uses: entrostat/git-secret-action@v3.2.0
+      with:
+        gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+    - run: npx nest build swarm
+      name: Building Swarm App
+    - run: cd dist && node ./app/swarm/main.js synth
+      name: Synthing YAML
+    - run: node ./app/swarm/main.js prune
+      name: Pruning old stacks
+    - run: node ./app/swarm/main.js deploy
+      name: Deploying new stacks

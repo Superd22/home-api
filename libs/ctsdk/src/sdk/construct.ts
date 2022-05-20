@@ -1,30 +1,32 @@
-import { Enumerable } from "../decorators/enumerable.decorator"
-import { Node } from './node'
+import { Enumerable } from '../decorators/enumerable.decorator';
+import { Node } from './node';
 
-export const Construct_ID = Symbol('id of a given construct')
+export const Construct_ID = Symbol('id of a given construct');
 export abstract class Construct<
-  Props extends Record<string, unknown>,
-  Parent extends Construct<any, any> = Construct<any, any>
-> extends Node<Props>  {
+  Props extends Object,
+  Parent extends Construct<any, any> = Construct<any, any>,
+> extends Node<Props> {
+  public readonly [Construct_ID]!: string;
 
-  public readonly [Construct_ID]!: string 
+  protected readonly internals: Construct<any>[] = [];
 
-  protected readonly internals: Construct<any>[] = []
+  constructor(
+    protected readonly scope: Parent,
+    protected readonly name: string,
+    props?: Props,
+  ) {
+    super(props);
+    Enumerable(false)(this, Construct_ID);
+    Enumerable(false)(this, 'internals');
 
-  constructor(scope: Parent, name: string, props?: Props) {
-    super(props)
-    Enumerable(false)(this, Construct_ID)
-    Enumerable(false)(this, 'internals')
+    this[Construct_ID] = name?.toLowerCase();
 
-    this[Construct_ID] = name
-
-    if(scope) {
-      scope.addConstruct(this)
+    if (scope) {
+      scope.addConstruct(this);
     }
   }
 
   protected addConstruct(construct: Construct<any>) {
-    this.internals.push(construct)
+    this.internals.push(construct);
   }
-
 }

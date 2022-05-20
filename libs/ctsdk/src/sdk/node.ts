@@ -1,26 +1,27 @@
-import { Enumerable } from "../decorators/enumerable.decorator"
-
 /**
  * Represents a value that can be converted to YAML down the line
  */
 export class Node<Props extends Object> {
 
-  /** internal data not supplied to YAML */
-  protected _data: unknown
+  /** data supplied to YAML */
+  protected _props: Props = {} as Props
+
+  public get props(): Readonly<Props> {
+    return { ...this._props }
+  }
 
   constructor(props?: Props) {
-    Enumerable(false)(this, '_data')
-
     if(props) {
-      Object.assign(this, this.editProps(props))
+      this._props = this.editProps(props)
     }
   }
 
+  protected toJSON(): Props | string {
+    return { ...this._props }
+  }
 
   protected editProps(props: Props): Props {
     return { ...props }
   }
-}
 
-// @ts-ignore
-export interface Node<Props extends Object> extends Props {} 
+}

@@ -3,6 +3,7 @@ import { Service } from './service.construct';
 import { ComposeSpecification, DefinitionsService } from '../compose-v3';
 import { stringify } from 'yaml';
 import { Volume } from './volume.construct';
+import { Network } from './network.construct';
 
 export class Compose extends Construct<ComposeProps, App> {
 
@@ -12,17 +13,21 @@ export class Compose extends Construct<ComposeProps, App> {
     props?: ComposeProps
   ) {
     super(scope, name, props)
+    
     if (!props?.name && this.constructor.name !== Compose.name) {
-      this.name = this.constructor.name
+      this._props.name =  this.constructor.name.toLowerCase()
     }
+
+    if (props?.name === null) delete this._props.name
   }
 
   public toYAML(): string {
-    const props = { ...this } as ComposeProps;
+    const props = { ...this._props } as ComposeProps;
     const compose = {
       ...props,
       services: this.returnInternalObject(Service),
       volumes: this.returnInternalObject(Volume),
+      networks: this.returnInternalObject(Network),
     } as ComposeSpecification
 
     return stringify(compose)
@@ -36,7 +41,3 @@ export class Compose extends Construct<ComposeProps, App> {
 }
 
 interface ComposeProps extends Pick<ComposeSpecification, 'name' | 'version'> {}
-
-type ComposeInternals = {
-  services: Service[];
-};
