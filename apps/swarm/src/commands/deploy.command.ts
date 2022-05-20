@@ -45,6 +45,8 @@ export class DeployCommand implements CommandRunner {
       }
     }
 
+    summary.addTable(deploySummary)
+
     summary.write()
 
     this.logger.log('Done deploying')
