@@ -8,10 +8,6 @@ import { Traefik } from './traefik.compose';
  */
 export class WebProxyNetwork extends Network {
 
-  public get id(): string {
-    return `${this.traefik[Construct_ID]}_${this[Construct_ID]}`
-  }
-
   constructor(
     protected readonly traefik: Traefik,
   ) {

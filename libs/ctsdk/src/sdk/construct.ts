@@ -8,10 +8,10 @@ export abstract class Construct<
 > extends Node<Props> {
   public readonly [Construct_ID]!: string;
 
-  protected readonly internals: Construct<any>[] = [];
+  public readonly internals: Construct<any>[] = [];
 
   constructor(
-    protected readonly scope: Parent,
+    public readonly scope: Parent,
     protected readonly name: string,
     props?: Props,
   ) {
@@ -26,7 +26,15 @@ export abstract class Construct<
     }
   }
 
-  protected addConstruct(construct: Construct<any>) {
+  /**
+   * Find id of this construct in the given scope
+   */
+  public id(scope?: Construct<any, any>): string {
+    if (scope && scope === this.scope) return this[Construct_ID];
+    return `${!!this.scope[Construct_ID] ? this.scope[Construct_ID] + '_' : ''}${this[Construct_ID]}`;
+  }
+
+  public addConstruct(construct: Construct<any>) {
     this.internals.push(construct);
   }
 }

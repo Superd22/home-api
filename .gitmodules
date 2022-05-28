@@ -1,0 +1,3 @@
+[submodule "apps/swarm/src/compose/plex/UnicornDockerUnofficial"]
+	path = apps/swarm/src/compose/plex/UnicornDockerUnofficial
+	url = git@github.com:Superd22/UnicornDockerUnofficial.git

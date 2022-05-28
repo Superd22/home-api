@@ -10,6 +10,7 @@ import { CommandYamlHelper } from './command-yaml.service';
 export interface DeployOptions {
   path?: string;
   dryRun?: boolean;
+  context?: string;
 }
 
 @Command({ name: 'deploy', description: 'Deploy YAML to docker' })
@@ -21,7 +22,8 @@ export class DeployCommand implements CommandRunner {
   ) {}
 
   async run(passedParam: string[], options?: DeployOptions): Promise<void> {
-    const yml = await this.helper.getYamlOfFolder({ path: options.path })
+    const ymlOfFolder = await this.helper.getYamlOfFolder({ path: options.path })
+    const yml = passedParam.length > 0 ? ymlOfFolder.filter(([path, stack]) => passedParam.includes(stack)) : ymlOfFolder
 
     summary.addHeading('Deployments')
     this.logger.debug('Found YAMLs to deploy', [yml.length])
@@ -32,7 +34,7 @@ export class DeployCommand implements CommandRunner {
     for (const [file, stackName] of yml) {
       this.logger.debug(`Deploying stack ${stackName}`)
       try {
-        const { stdout } = await execSh.promise(`${options.dryRun ? 'echo [dry-run]: ' : ''}docker --context freebox-remote stack deploy --compose-file ${file} ${stackName}`, true)
+        const { stdout } = await execSh.promise(`${options.dryRun ? 'echo [dry-run]: ' : ''}docker --context ${options.context} stack deploy --compose-file ${file} ${stackName}`, true)
         this.logger.log(`Deployed ${stackName}.`)
         if (stdout) {
           this.logger.debug(stdout)
@@ -61,6 +63,14 @@ export class DeployCommand implements CommandRunner {
   }
 
 
+  @Option({
+    flags: '-c, --context [string]',
+    description: 'context to use',
+    defaultValue: 'freebox-remote'
+  })
+  protected parseContext(val: string): string {
+    return val
+  }
 
   @Option({
     flags: '-d, --dry-run [string]',

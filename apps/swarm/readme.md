@@ -1,17 +1,19 @@
 # Getting started
 - docker
 
-needs a webproxy overlay --attachable network. (@todo probably can be provisioned automatically?)
+For deploy, make sure you have a docker context `freebox-remote`
+
+CI handles everything but basically this app provides a few command:
+
+- `npx nest start swarm synth` => Creates docker-compose.*.yml from typescript definitions
+- `npx nest start swarm deploy` => Deploy those yaml to remote swarm
+
+# todo
+- [ ] Add Windows Machine to swarm (issou)
 
 
 
-`docker-compose --context freebox -f traefik/docker-compose.yaml -f diyhue/docker-compose.yaml -f home-assistant/docker-compose.yaml -f mqtt/docker-compose.yaml up -d` to update multiples
 
-
-# synth
-- `npx nest start swarm` currently dumps docker-compose in root
-
-
-
-# json schema to ts
+### json schema to ts 
+can be useful to type things
 `npx -p json-schema-to-typescript json2ts traefik-v2.json -o traefik-v2.d.ts`

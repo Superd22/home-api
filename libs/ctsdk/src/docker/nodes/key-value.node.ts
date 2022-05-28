@@ -1,6 +1,7 @@
-import { Node } from '../../sdk'
+import* as wesh from '../../sdk'
 
-export class KeyValueImpl extends Node<KeyValue> implements KeyValue {
+console.log("wesh", wesh)
+export class KeyValueImpl extends wesh.Node<KeyValue> implements KeyValue {
   
   constructor(props: KeyValue) {
     if (props instanceof KeyValueImpl) return props
@@ -19,7 +20,7 @@ export class KeyValueImpl extends Node<KeyValue> implements KeyValue {
     return this._props.value
   }
 
-  protected toJSON(): string {
+  public toJSON(): string {
     return `${this._props.key}=${this._props.value}`
   }
 
