@@ -53,7 +53,14 @@ export class Traefik extends Compose {
 
     const service = new Service(this, 'reverse-proxy', {
       image: 'traefik:latest',
-      ports: ['443:443', '80:80', '8080:8080'],
+      ports: ['443:443', '80:80', '8080:8080'].map(p => {
+        const [_, containerPort, hostPort, protocol] = p.match(/([0-9]+):([0-9]+)/)
+        return {
+          target: Number(containerPort),
+          published: Number(hostPort),
+          mode: 'host'
+        } as Port
+    }) as Port[],
       volumes: [
         '/var/run/docker.sock:/var/run/docker.sock',
         'traefik-letsencrypt:/letsencrypt',

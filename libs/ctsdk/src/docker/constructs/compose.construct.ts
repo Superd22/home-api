@@ -2,7 +2,7 @@ import { App, Construct, Construct_ID } from '../../sdk';
 import { Service } from './service.construct';
 import { ComposeSpecification, DefinitionsService } from '../compose-v3';
 import { stringify } from 'yaml';
-import { Volume } from './volume.construct';
+import { Volume } from './volumes/volume.construct';
 import { Network } from './network.construct';
 
 export class Compose extends Construct<ComposeProps, App> {

@@ -1,3 +1,5 @@
+import { stringify } from "yaml"
+
 /**
  * Represents a value that can be converted to YAML down the line
  */
@@ -6,8 +8,8 @@ export class Node<Props extends Object> {
   /** data supplied to YAML */
   protected _props: Props = {} as Props
 
-  public get props(): Readonly<Props> {
-    return { ...this._props }
+  public get props(): Props {
+    return this._props
   }
 
   constructor(props?: Props) {
@@ -16,8 +18,13 @@ export class Node<Props extends Object> {
     }
   }
 
-  protected toJSON(): Props | string {
+  public toJSON(scope: Node<any> = this): Props | string {
     return { ...this._props }
+  }
+
+
+  public toYAML(): string {
+    return stringify(this)
   }
 
   protected editProps(props: Props): Props {

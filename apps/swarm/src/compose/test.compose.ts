@@ -13,14 +13,16 @@ export class Test extends Compose {
   ) {
     super(app, Test.name, { version: '3.6', name: null });
 
-    const service = this.web.webService(this, 'test', {
-      web: { match: 'Host(`test.home.davidfain.com`)', port: 80 },
-      serviceProps: {
-        image: 'strm/helloworld-http',
-        ports: ['80']
-      },
-    });
+    for (const node of Object.values(AvailableNodes)) {
+      const service = this.web.webService(this, `test-${node}`, {
+        web: { match: `Host(\`test.${node}.home.davidfain.com\`)`, allowHttp: true, port: 80 },
+        serviceProps: {
+          image: 'strm/helloworld-http',
+          ports: ['80']
+        },
+      });
 
-    new NodeSelector(service, AvailableNodes.Galactica)
+      new NodeSelector(service, node)
+    }
   }
 }

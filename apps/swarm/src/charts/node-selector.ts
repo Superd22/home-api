@@ -28,5 +28,6 @@ export class NodeSelector extends Construct<{ node: AvailableNodes}, Service> {
 
 export enum AvailableNodes {
   HomeAPI="HomeAPI",
-  Galactica="Galactica"
+  Galactica="Galactica",
+  Desktop="DESKTOP-QAGP9L0"
 }
