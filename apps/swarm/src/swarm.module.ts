@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { AvailableNodes } from './charts/node-selector';
 import { CommandYamlHelper } from './commands/command-yaml.service';
 import { DeployCommand } from './commands/deploy.command';
 import { PruneCommand } from './commands/prune.command';
@@ -8,6 +9,7 @@ import { DataDog } from './compose/datadog.compose';
 import { DIYHue } from './compose/diyhue.compose';
 import { Flood } from './compose/flood.compose';
 import { HomeAssistant } from './compose/home-assistant.compose';
+import { NetworkVolume } from './compose/internal/network-volume/network.volume';
 import { VolumeSharerService } from './compose/internal/network-volume/volume-sharer.service';
 import { MQTT } from './compose/mqtt.compose';
 import { Plex } from './compose/plex/plex.compose';
@@ -29,6 +31,7 @@ export const composes = [
   MQTT,
   Portainer,
   Calibre,
+  DIYHue
 ];
 
 const commands = [SynthCommand, DeployCommand, PruneCommand];
@@ -51,5 +54,14 @@ export class SwarmModule {
   constructor(
     protected readonly app: SwarmApp,
     protected readonly volumes: VolumeSharerService,
-  ) {}
+  ) {
+
+    this.volumes.registerVolume(
+      new NetworkVolume(undefined, 'test-switch-games', {
+        node: AvailableNodes.Galactica,
+        path: '/mnt/raid/0.SHARED/1.Games/Switch/'
+      })
+    )
+
+  }
 }

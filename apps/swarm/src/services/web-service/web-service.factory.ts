@@ -83,7 +83,7 @@ export class WebServiceFactory {
   /**
    * Makes sure given compose has access to webproxy network
    */
-  protected ensureWebProxyNetwork(...constructs: (Compose | Service)[]): void {
+  public ensureWebProxyNetwork(...constructs: (Compose | Service)[]): void {
     for (const construct of constructs) {
       if (construct instanceof Compose) {
         // @todo dedup should probably be handled internally

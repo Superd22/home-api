@@ -90,6 +90,8 @@ export class Plex extends Compose {
     
     environment: [
       ...keyValueFromConfig({
+        PUID: 1000,
+        PGID: 1000,
         VERSION: "docker",
         TZ: this.timezone,
         ORCHESTRATOR_URL: "http://tasks.plex_orchestrator:3500",
@@ -120,51 +122,55 @@ export class Plex extends Compose {
     ]
   })
 
-  // protected readonly transcoder_galactica =  new Service(this, 'transcoder', {
-  //   image: 'ghcr.io/linuxserver/plex',
-  //   hostname: "plex-worker-{{.Node.Hostname}}",
-  //   networks: {
-  //     [this.network.id(this)]: {},
-  //     [this.webproxyNetwork.id(this)]: {}
-  //   },
-  //   volumes: [
-  //     '/etc/localtime:/etc/localtime:ro',
-  //     `${this.volumes['plex-media'].id(this)}:/mnt/media`,
-  //     `${this.volumes['plex-tmp'].id(this)}:/tmp:rw`,
-  //     `${this.volumes['local-codecs'].id(this)}:/codecs:rw`
-  //   ],
-  //   environment: keyValueFromConfig({
-  //     DOCKER_MODS: "ghcr.io/pabloromeo/clusterplex_worker_dockermod:latest",
-  //     VERSION: "docker",
-  //     TZ: this.timezone,
-  //     LISTENING_PORT: 3501,
-  //     STAT_CPU_INTERVAL: 2000,
-  //     ORCHESTRATOR_URL: "http://tasks.plex_orchestrator:3500"
-  //   })
-  // })
+  protected readonly transcoder_galactica =  new Service(undefined, 'transcoder', {
+    image: 'ghcr.io/linuxserver/plex',
+    hostname: "plex-worker-{{.Node.Hostname}}",
+    networks: {
+      [this.network.id(this)]: {},
+      [this.webproxyNetwork.id(this)]: {}
+    },
+    volumes: [
+      '/etc/localtime:/etc/localtime:ro',
+      `${this.volumes['plex-media'].id(this)}:/mnt/media`,
+      `${this.volumes['plex-tmp'].id(this)}:/tmp:rw`,
+      `${this.volumes['local-codecs'].id(this)}:/codecs:rw`
+    ],
+    environment: keyValueFromConfig({
+      PUID: 1000,
+      PGID: 1000,
+      DOCKER_MODS: "ghcr.io/pabloromeo/clusterplex_worker_dockermod:latest",
+      VERSION: "docker",
+      TZ: this.timezone,
+      LISTENING_PORT: 3501,
+      STAT_CPU_INTERVAL: 2000,
+      ORCHESTRATOR_URL: "http://tasks.plex_orchestrator:3500"
+    })
+  })
 
-  // protected readonly transcoder_desktop =  new Service(this, 'transcoder_desktop', {
-  //   image: 'ghcr.io/linuxserver/plex',
-  //   hostname: "plex-worker-{{.Node.Hostname}}",
-  //   networks: {
-  //     [this.network.id(this)]: {},
-  //     [this.webproxyNetwork.id(this)]: {}
-  //   },
-  //   volumes: [
-  //     '/etc/localtime:/etc/localtime:ro',
-  //     `${this.volumes['plex-media'].id(this)}:/mnt/media`,
-  //     `${this.volumes['plex-tmp'].id(this)}:/tmp/plex-transcode:rw`,
-  //     `${this.volumes['local-codecs'].id(this)}:/codecs:rw`
-  //   ],
-  //   environment: keyValueFromConfig({
-  //     DOCKER_MODS: "ghcr.io/pabloromeo/clusterplex_worker_dockermod:latest",
-  //     VERSION: "docker",
-  //     TZ: this.timezone,
-  //     LISTENING_PORT: 3501,
-  //     STAT_CPU_INTERVAL: 2000,
-  //     ORCHESTRATOR_URL: "http://tasks.plex_orchestrator:3500"
-  //   })
-  // })
+  protected readonly transcoder_desktop =  new Service(undefined, 'transcoder_desktop', {
+    image: 'ghcr.io/linuxserver/plex',
+    hostname: "plex-worker-{{.Node.Hostname}}",
+    networks: {
+      [this.network.id(this)]: {},
+      [this.webproxyNetwork.id(this)]: {}
+    },
+    volumes: [
+      '/etc/localtime:/etc/localtime:ro',
+      `${this.volumes['plex-media'].id(this)}:/mnt/media`,
+      `${this.volumes['plex-tmp'].id(this)}:/tmp/plex-transcode:rw`,
+      `${this.volumes['local-codecs'].id(this)}:/codecs:rw`
+    ],
+    environment: keyValueFromConfig({
+      PUID: 1000,
+      PGID: 1000,
+      DOCKER_MODS: "ghcr.io/pabloromeo/clusterplex_worker_dockermod:latest",
+      VERSION: "docker",
+      TZ: this.timezone,
+      LISTENING_PORT: 3501,
+      STAT_CPU_INTERVAL: 2000,
+      ORCHESTRATOR_URL: "http://tasks.plex_orchestrator:3500"
+    })
+  })
 
   constructor(
     protected readonly app: SwarmApp,
@@ -175,11 +181,11 @@ export class Plex extends Compose {
 
     webproxyNetwork.bind(this)
 
-    // new NodeSelector(this.plex, AvailableNodes.Galactica);
+    new NodeSelector(this.plex, AvailableNodes.Galactica);
     new NodeSelector(this.orchestrator, AvailableNodes.Galactica);
     new NodeSelector(this.tautulli, AvailableNodes.Galactica);
-    // new NodeSelector(this.transcoder_galactica, AvailableNodes.Galactica)
-    // new NodeSelector(this.transcoder_desktop, AvailableNodes.Desktop)
+    new NodeSelector(this.transcoder_galactica, AvailableNodes.Galactica)
+    new NodeSelector(this.transcoder_desktop, AvailableNodes.Desktop)
 
     reverseProxyToWeb(this.plex, {
       match: 'Host("plex.davidfain.com")',
@@ -194,13 +200,13 @@ export class Plex extends Compose {
       allowHttp: true,
       port: 3500,
     });
-    // reverseProxyToWeb(this.transcoder_galactica, {
-    //   match: 'Host("galactica.transcode.plex.davidfain.com")',
-    //   port: 3501,
-    // });
-    // reverseProxyToWeb(this.transcoder_desktop, {
-    //   match: 'Host("desktop.transcode.plex.davidfain.com")',
-    //   port: 3501,
-    // });
+    reverseProxyToWeb(this.transcoder_galactica, {
+      match: 'Host("galactica.transcode.plex.davidfain.com")',
+      port: 3501,
+    });
+    reverseProxyToWeb(this.transcoder_desktop, {
+      match: 'Host("desktop.transcode.plex.davidfain.com")',
+      port: 3501,
+    });
   }
 }

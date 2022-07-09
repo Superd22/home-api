@@ -14,7 +14,7 @@ export class LaunchThroughComposeService extends Service {
     scope: Compose,
     name: string,
     internalServiceProps: ServiceProps,
-    externalServiceProps: Omit<ServiceProps, 'image' | 'command' | 'volumes'> = {},
+    externalServiceProps: Omit<ServiceProps, 'image' | 'command'> = {},
     onCompose: (compose: Compose) => void = () => {}
     ) {
     const tempCompose = new Compose(null, `${name}`, { version: "3.6" })
@@ -28,9 +28,10 @@ export class LaunchThroughComposeService extends Service {
       command: [
         "-c",
         // @todo do this better omg
-        `echo "${tempCompose.toYAML().replace(/"/g, "\\\"")}" > docker-compose.yml && cat docker-compose.yml && docker-compose up`,
+        `echo "${tempCompose.toYAML().replace(/`/g, '\\`').replace(/"/g, "\\\"")}" > docker-compose.yml && cat docker-compose.yml && docker-compose up`,
       ],
       volumes: [
+        ...(externalServiceProps?.volumes as string[]) || [],
         '/var/run/docker.sock:/var/run/docker.sock'
       ],
     })

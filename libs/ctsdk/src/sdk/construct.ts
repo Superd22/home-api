@@ -30,7 +30,7 @@ export abstract class Construct<
    * Find id of this construct in the given scope
    */
   public id(scope?: Construct<any, any>): string {
-    if (scope && scope === this.scope) return this[Construct_ID];
+    if (!this.scope || (scope && scope === this.scope)) return this[Construct_ID];
     return `${!!this.scope[Construct_ID] ? this.scope[Construct_ID] + '_' : ''}${this[Construct_ID]}`;
   }
 

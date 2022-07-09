@@ -18,7 +18,7 @@ export class HomeAssistant extends Compose {
     const service = this.webServiceFactory.webService(this, 'homeassistant', {
       web: { match: 'Host(`home.davidfain.com`)', port: 8123, allowHttp: true },
       serviceProps: {
-        image: 'ghcr.io/home-assistant/home-assistant:stable',
+        image: 'ghcr.io/home-assistant/home-assistant:latest',
         volumes: ['homeassistant:/config'],
       },
     });
