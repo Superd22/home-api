@@ -64,7 +64,7 @@ export class SwarmModule {
       path: '/mnt/raid/0.SHARED/1.Games/Switch/',
     });
 
-    new NetworkVolume(undefined, 'test-switch-games', {
+    new NetworkVolume(undefined, 'shared', {
       node: AvailableNodes.Galactica,
       path: '/mnt/raid/0.SHARED/',
     });
