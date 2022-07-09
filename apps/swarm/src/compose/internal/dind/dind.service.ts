@@ -24,11 +24,12 @@ export class LaunchThroughComposeService extends Service {
     super(scope, `${name}_launcher`, {
       ...externalServiceProps,
       image: 'danieletorelli/compose',
+      container_name: `launcher-dind-${name}`,
       entrypoint: 'sh',
       command: [
         "-c",
         // @todo do this better omg
-        `echo "${tempCompose.toYAML().replace(/`/g, '\\`').replace(/"/g, "\\\"")}" > docker-compose.yml && cat docker-compose.yml && docker-compose up`,
+        `echo "${tempCompose.toYAML().replace(/`/g, '\\`').replace(/"/g, "\\\"")}" > docker-compose.yml && cat docker-compose.yml && docker-compose up > /dev/null`,
       ],
       volumes: [
         ...(externalServiceProps?.volumes as string[]) || [],
