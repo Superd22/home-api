@@ -27,7 +27,7 @@ jobs:
         key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
     - run: npx yarn install --frozen-lockfile
     - name: Git Secret Reveal Step
-      uses: entrostat/git-secret-action@v3.2.0
+      uses: entrostat/git-secret-action@v3.3.0
       with:
         gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
     - run: npx nest build swarm
