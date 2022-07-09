@@ -31,7 +31,7 @@ export const composes = [
   MQTT,
   Portainer,
   Calibre,
-  DIYHue
+  DIYHue,
 ];
 
 const commands = [SynthCommand, DeployCommand, PruneCommand];
@@ -55,13 +55,18 @@ export class SwarmModule {
     protected readonly app: SwarmApp,
     protected readonly volumes: VolumeSharerService,
   ) {
+    /**
+     * @todo better way to create network volumes.
+     */
 
-    this.volumes.registerVolume(
-      new NetworkVolume(undefined, 'test-switch-games', {
-        node: AvailableNodes.Galactica,
-        path: '/mnt/raid/0.SHARED/1.Games/Switch/'
-      })
-    )
+    new NetworkVolume(undefined, 'test-switch-games', {
+      node: AvailableNodes.Galactica,
+      path: '/mnt/raid/0.SHARED/1.Games/Switch/',
+    });
 
+    new NetworkVolume(undefined, 'test-switch-games', {
+      node: AvailableNodes.Galactica,
+      path: '/mnt/raid/0.SHARED/',
+    });
   }
 }
