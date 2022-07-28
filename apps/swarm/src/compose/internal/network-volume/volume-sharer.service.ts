@@ -82,7 +82,7 @@ export class VolumeSharerService {
             ...volumes.reduce(
               (acc, volume, index) => ({
                 ...acc,
-                [`NFS_EXPORT_${index+1}`]: `/nfs/${volume.id()} *(rw)`,
+                [`NFS_EXPORT_${index+1}`]: `/nfs/${volume.id()} *(rw,sync,no_root_squash,all_squash,anonuid=65534,anongid=65534)`,
               }),
               {},
             ),
