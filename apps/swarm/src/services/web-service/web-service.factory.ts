@@ -1,5 +1,5 @@
 import { Compose, KeyValue, Network, Service } from '@homeapi/ctsdk';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import set from 'lodash/set';
 import { keyValueFromConfig } from '../../charts/utils/kv-from-config.util';
 import { WebProxyNetwork } from '../../compose/traefik/webproxy.network';
@@ -7,7 +7,10 @@ import { WebService, WebServiceProps } from './webservice.chart';
 
 @Injectable()
 export class WebServiceFactory {
-  constructor(protected readonly network: WebProxyNetwork) {}
+  constructor(
+    @Inject(WebProxyNetwork)
+    protected readonly network: WebProxyNetwork
+  ) {}
 
   public webService(
     compose: Compose,

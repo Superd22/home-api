@@ -1,5 +1,5 @@
 import { Construct_ID, Network } from '@homeapi/ctsdk';
-import {  Injectable } from '@nestjs/common';
+import {  forwardRef, Inject, Injectable } from '@nestjs/common';
 import { Traefik } from './traefik.compose';
 
 @Injectable()
