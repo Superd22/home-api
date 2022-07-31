@@ -29,7 +29,7 @@ export class LaunchThroughComposeService extends Service {
       command: [
         "-c",
         // @todo do this better omg
-        `mkdir /opt/compose/ -p && cd /opt/compose/ && echo "${tempCompose.toYAML().replace(/`/g, '\\`').replace(/"/g, "\\\"")}" > docker-compose.yml && cat docker-compose.yml && docker-compose up > /dev/null`,
+        `mkdir ~/compose/ -p && cd ~/compose/ && echo "${tempCompose.toYAML().replace(/`/g, '\\`').replace(/"/g, "\\\"")}" > docker-compose.yml && cat docker-compose.yml && docker-compose up > /dev/null`,
       ],
       volumes: [
         ...(externalServiceProps?.volumes as string[]) || [],
