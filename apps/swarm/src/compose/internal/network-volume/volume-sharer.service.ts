@@ -40,7 +40,13 @@ export class VolumeSharerService {
 
   public getNfsOptsFor(node: AvailableNodes): string {
     // @todo for other hosts
-    return `addr=192.168.192.69,nolock,rw,soft`;
+    switch (node) {
+      case AvailableNodes.Galactica:
+        return `addr=192.168.192.69,nolock,rw,soft`;
+      case AvailableNodes.HomeAPI:
+        return `addr=192.168.192.197,nolock,rw,soft`;
+
+    }
   }
 
   /**
@@ -64,9 +70,9 @@ export class VolumeSharerService {
         compose,
         `sharer_${node}`,
         {
-          image: 'erichough/nfs-server',
+          image: 'zhangyi2018/nfs-server',
           cap_add: ['SYS_ADMIN', 'CAP_NET_ADMIN'],
-          volumes: [`${rootVolume.id(compose)}:/nfs`,...volumes.map((v, index) => `${v.path}:/nfs/${v.id()}`)],
+          volumes: [`${rootVolume.id(compose)}:/nfs`, ...volumes.map((v, index) => `${v.path}:/nfs/${v.id()}`)],
           networks: {
             /** @todo custom network */
             [this.network.id(compose)]: {},
@@ -82,7 +88,7 @@ export class VolumeSharerService {
             ...volumes.reduce(
               (acc, volume, index) => ({
                 ...acc,
-                [`NFS_EXPORT_${index+1}`]: `/nfs/${volume.id()} *(rw,sync,no_root_squash,all_squash,anonuid=65534,anongid=65534)`,
+                [`NFS_EXPORT_${index + 1}`]: `/nfs/${volume.id()} *(rw,sync,no_root_squash,all_squash,anonuid=65534,anongid=65534)`,
               }),
               {},
             ),

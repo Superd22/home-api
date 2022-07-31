@@ -54,12 +54,14 @@ export class WebService extends Service {
             [`${this [Construct_ID]}unsecure`]: {
               entrypoints: 'web',
               rule: this.config.match,
-              service: this[Construct_ID]
+              service: this[Construct_ID],
+              middlewares: "forward-auth",
             },
             [this[Construct_ID]]: {
               entrypoints: 'websecure',
               rule: this.config.match,
               service: this[Construct_ID],
+              middlewares: "forward-auth",
               tls: {
                 certresolver: 'le',
               },
@@ -67,6 +69,11 @@ export class WebService extends Service {
           },
         },
       },
+    }
+
+    if (!this.config.requiresAuth )  {
+      delete labels.traefik.http.routers[`${this [Construct_ID]}unsecure`].middlewares
+      delete labels.traefik.http.routers[`${this [Construct_ID]}`].middlewares
     }
 
     if (!this.config.allowHttp && !this.config.unsecure)  {
@@ -94,6 +101,7 @@ export interface WebServiceProps {
     match: string;
     unsecure?: boolean;
     allowHttp?: boolean;
+    requiresAuth?: boolean;
     /** 
      * container port to use
      * default: 80

@@ -14,6 +14,7 @@ import { VolumeSharerService } from './compose/internal/network-volume/volume-sh
 import { MQTT } from './compose/mqtt.compose';
 import { Plex } from './compose/plex/plex.compose';
 import { Portainer } from './compose/portainer.compose';
+import { Swarmpit } from './compose/swarmpit.compose';
 import { Test } from './compose/test.compose';
 import { Traefik } from './compose/traefik/traefik.compose';
 import { WebProxyNetwork } from './compose/traefik/webproxy.network';
@@ -32,6 +33,7 @@ export const composes = [
   Portainer,
   Calibre,
   DIYHue,
+  Swarmpit
 ];
 
 const commands = [SynthCommand, DeployCommand, PruneCommand];

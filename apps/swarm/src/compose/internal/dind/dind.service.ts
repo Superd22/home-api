@@ -23,7 +23,7 @@ export class LaunchThroughComposeService extends Service {
 
     super(scope, `${name}_launcher`, {
       ...externalServiceProps,
-      image: 'docker/compose',
+      image: 'codefresh/compose',
       container_name: `launcher-dind-${name}`,
       entrypoint: 'sh',
       command: [

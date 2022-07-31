@@ -111,7 +111,7 @@ export type ListOrDict =
        */
       [k: string]: string | number | boolean | null;
     }
-  | string[];
+  | string[] | KeyValue[];
 export type DefinitionsGenericResources = {
   discrete_resource_spec?: {
     kind?: string;

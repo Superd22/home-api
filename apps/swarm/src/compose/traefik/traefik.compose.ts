@@ -87,11 +87,38 @@ export class Traefik extends Compose {
       {
         serviceProps: {
           image: 'npawelek/traefik-forward-auth',
+          deploy: {
+            labels: keyValueFromConfig({
+              traefik: {
+                http: {
+                  routers: {
+                    "forward-auth": {
+                      middlewares: "forward-auth"
+                    },
+                  },
+                  middlewares: {
+                    'forward-auth': {
+                      forwardauth: {
+                        address: `http://traefik_forward-auth:4181`,
+                        authResponseHeaders: "X-Forwarded-User",
+                        trustForwardHeader: true,
+                      }
+                    }
+                  }
+                }
+              }
+            }),
+          },
+          networks: {
+            // @todo better API for dis?
+            webproxy: null,
+          },
           command: keyValueFromConfig({
             "auth-host": "auth.davidfain.com",
             "cookie-domain": "davidfain.com",
             whitelist: "superd001@gmail.com",
             secret: this.appConfig.traefik.auth.secret,
+            'log-level': 'debug',
             providers: {
               google: {
                 'client-id': this.appConfig.traefik.auth.providers.google.clientId,

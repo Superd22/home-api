@@ -15,7 +15,7 @@ export class Test extends Compose {
 
     for (const node of Object.values(AvailableNodes)) {
       const service = this.web.webService(this, `test-${node}`, {
-        web: { match: `Host(\`test.${node}.home.davidfain.com\`)`, allowHttp: true, port: 80 },
+        web: { match: `Host(\`test.${node}.home.davidfain.com\`)`, allowHttp: true, port: 80, requiresAuth: true },
         serviceProps: {
           image: 'strm/helloworld-http',
           ports: ['80']
