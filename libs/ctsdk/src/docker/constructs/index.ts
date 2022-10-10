@@ -1,3 +1,4 @@
+export * from './configs/'
 export * from './volumes/'
 export * from './compose.construct'
 export * from './service.construct'

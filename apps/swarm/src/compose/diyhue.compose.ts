@@ -20,7 +20,7 @@ export class DIYHue extends Compose {
 
     const volume = new Volume(this, 'config');
     const service = this.web.webService(undefined, 'diyhue', {
-      web: { match: 'Host(`hue.davidfain.com`)' },
+      web: { match: 'Host(`hue.davidfain.com`)', allowHttp: true, port: 80 },
       serviceProps: {
         image: 'diyhue/core:latest',
         // no use since macvlan
@@ -32,12 +32,12 @@ export class DIYHue extends Compose {
         volumes: [`${volume.id()}:/opt/hue-emulator/config`],
         environment: [
           'MAC=FE:47:AD:42:F0:D9',
-          'IP=192.168.1.48',
+          'IP=192.168.1.64',
           { key: 'DEBUG', value: true },
         ],
         mac_address: '02:42:C0:A8:84:64',
         networks: {
-          '10_vlan': { priority: 100 },
+          '10_vlan': {},
         },
       },
     });

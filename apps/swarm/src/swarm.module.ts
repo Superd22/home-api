@@ -8,9 +8,11 @@ import { Calibre } from './compose/calibre.compose';
 import { DataDog } from './compose/datadog.compose';
 import { DIYHue } from './compose/diyhue.compose';
 import { Flood } from './compose/flood.compose';
+import { Freebox } from './compose/freebox.compose';
 import { HomeAssistant } from './compose/home-assistant.compose';
 import { NetworkVolume } from './compose/internal/network-volume/network.volume';
 import { VolumeSharerService } from './compose/internal/network-volume/volume-sharer.service';
+import { JellyFin } from './compose/jellyfin.compose';
 import { MQTT } from './compose/mqtt.compose';
 import { Plex } from './compose/plex/plex.compose';
 import { Portainer } from './compose/portainer.compose';
@@ -33,7 +35,9 @@ export const composes = [
   Portainer,
   Calibre,
   DIYHue,
-  Swarmpit
+  Swarmpit,
+  Freebox,
+  JellyFin
 ];
 
 const commands = [SynthCommand, DeployCommand, PruneCommand];

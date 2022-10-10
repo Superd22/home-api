@@ -9,17 +9,17 @@ import { keyValueFromConfig } from "apps/swarm/src/charts/utils/kv-from-config.u
  * we want manually
  */
 export class LaunchThroughComposeService extends Service {
-  
+
   constructor(
     scope: Compose,
     name: string,
     internalServiceProps: ServiceProps,
     externalServiceProps: Omit<ServiceProps, 'image' | 'command'> = {},
-    onCompose: (compose: Compose) => void = () => {}
-    ) {
+    onCompose: (compose: Compose, service?: Service) => void = () => { }
+  ) {
     const tempCompose = new Compose(null, `${name}`, { version: "3.6" })
-    onCompose(tempCompose)
     const tmpService = new Service(tempCompose, `${name}`, { ...internalServiceProps })
+    onCompose(tempCompose, tmpService)
 
     super(scope, `${name}_launcher`, {
       ...externalServiceProps,
