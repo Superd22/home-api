@@ -1,8 +1,7 @@
-import* as wesh from '../../sdk'
+import * as wesh from '../../sdk'
 
-console.log("wesh", wesh)
 export class KeyValueImpl extends wesh.Node<KeyValue> implements KeyValue {
-  
+
   constructor(props: KeyValue) {
     if (props instanceof KeyValueImpl) return props
     super(props)

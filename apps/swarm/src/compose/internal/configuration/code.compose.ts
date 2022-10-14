@@ -15,7 +15,6 @@ export class Code implements ISynthAfterCompose {
   protected static editableVolumes: EditableVolume[] = []
 
   public static registerVolume(volume: EditableVolume) {
-    console.log("register", volume)
     Code.editableVolumes.push(volume)
   }
 
@@ -28,8 +27,6 @@ export class Code implements ISynthAfterCompose {
       new NodeSelector(this.code, AvailableNodes.Galactica)
 
       Code.editableVolumes.forEach(volume => this.addConstruct(volume.networkVolume))
-
-      console.log('hm', this.internals, this.internals[this.internals.length - 1].id(this))
     }
 
     protected readonly _config = new Volume(this, 'config')

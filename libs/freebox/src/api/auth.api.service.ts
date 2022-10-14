@@ -12,7 +12,7 @@ import * as os from "os"
 export class FreeboxAuthAPI {
 
     protected readonly api: string = "http://mafreebox.freebox.fr/api/v7/"
-    protected readonly logger: Logger = new Logger('Freebox') 
+    protected readonly logger: Logger = new Logger('Freebox')
 
 
     constructor(
