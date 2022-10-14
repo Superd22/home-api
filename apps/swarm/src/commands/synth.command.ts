@@ -1,7 +1,9 @@
+import { Compose } from '@homeapi/ctsdk';
 import { Logger } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
+import { cp } from 'fs/promises';
 import { Command, CommandRunner, Option } from 'nest-commander';
-import { VolumeSharerService } from '../compose/internal/network-volume/volume-sharer.service';
+import { MetadataExplorerService } from '../services/metadatas/metadata-explorer.service';
 import { composes } from '../swarm.module';
 import { SwarmApp } from '../swarm.service';
 
@@ -15,8 +17,8 @@ export class SynthCommand implements CommandRunner {
   constructor(
     protected readonly app: SwarmApp,
     protected readonly moduleRef: ModuleRef,
-    protected readonly volumes: VolumeSharerService
-  ) {}
+    protected readonly metadatas: MetadataExplorerService,
+  ) { }
 
   async run(passedParam: string[], options?: SynthOptions): Promise<void> {
 
@@ -28,10 +30,14 @@ export class SynthCommand implements CommandRunner {
       this.logger.debug(`Found chart ${Chart.name}`);
     }
 
-    this.volumes.synth()
+    for (const after of this.metadatas.synthAfterCompose()) {
+      if (!(after instanceof Compose)) after.synth()
+    }
 
     this.logger.log('Synthing.');
     await this.app.synth({ ...options });
+    await cp(__dirname + '/../../manual', options.path || './', { recursive: true })
+
     this.logger.log('Done!');
   }
 

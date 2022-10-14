@@ -5,7 +5,7 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-import { KeyValue } from "./nodes";
+import { KeyValue, SwarmDevice } from "./nodes";
 
 export type DefinitionsDeployment = {
   mode?: string;
@@ -105,12 +105,12 @@ export type DefinitionsDeployment = {
 } & Deployment;
 export type ListOrDict =
   | {
-      /**
-       * This interface was referenced by `undefined`'s JSON-Schema definition
-       * via the `patternProperty` ".+".
-       */
-      [k: string]: string | number | boolean | null;
-    }
+    /**
+     * This interface was referenced by `undefined`'s JSON-Schema definition
+     * via the `patternProperty` ".+".
+     */
+    [k: string]: string | number | boolean | null;
+  }
   | string[] | KeyValue[];
 export type DefinitionsGenericResources = {
   discrete_resource_spec?: {
@@ -240,17 +240,17 @@ export type Deployment = {
 export type ServiceConfigOrSecret = (
   | string
   | {
-      source?: string;
-      target?: string;
-      uid?: string;
-      gid?: string;
-      mode?: number;
-      /**
-       * This interface was referenced by `undefined`'s JSON-Schema definition
-       * via the `patternProperty` "^x-".
-       */
-      [k: string]: unknown;
-    }
+    source?: string;
+    target?: string;
+    uid?: string;
+    gid?: string;
+    mode?: number;
+    /**
+     * This interface was referenced by `undefined`'s JSON-Schema definition
+     * via the `patternProperty` "^x-".
+     */
+    [k: string]: unknown;
+  }
 )[];
 export type StringOrList = string | ListOfStrings;
 /**
@@ -300,15 +300,15 @@ export type DefinitionsNetwork = {
     [k: string]: unknown;
   };
   external?:
-    | boolean
-    | {
-        name?: string;
-        /**
-         * This interface was referenced by `undefined`'s JSON-Schema definition
-         * via the `patternProperty` "^x-".
-         */
-        [k: string]: unknown;
-      };
+  | boolean
+  | {
+    name?: string;
+    /**
+     * This interface was referenced by `undefined`'s JSON-Schema definition
+     * via the `patternProperty` "^x-".
+     */
+    [k: string]: unknown;
+  };
   internal?: boolean;
   enable_ipv6?: boolean;
   attachable?: boolean;
@@ -365,15 +365,15 @@ export type Network = {
     [k: string]: unknown;
   };
   external?:
-    | boolean
-    | {
-        name?: string;
-        /**
-         * This interface was referenced by `undefined`'s JSON-Schema definition
-         * via the `patternProperty` "^x-".
-         */
-        [k: string]: unknown;
-      };
+  | boolean
+  | {
+    name?: string;
+    /**
+     * This interface was referenced by `undefined`'s JSON-Schema definition
+     * via the `patternProperty` "^x-".
+     */
+    [k: string]: unknown;
+  };
   internal?: boolean;
   enable_ipv6?: boolean;
   attachable?: boolean;
@@ -402,15 +402,15 @@ export type DefinitionsVolume = {
     [k: string]: string | number;
   };
   external?:
-    | boolean
-    | {
-        name?: string;
-        /**
-         * This interface was referenced by `undefined`'s JSON-Schema definition
-         * via the `patternProperty` "^x-".
-         */
-        [k: string]: unknown;
-      };
+  | boolean
+  | {
+    name?: string;
+    /**
+     * This interface was referenced by `undefined`'s JSON-Schema definition
+     * via the `patternProperty` "^x-".
+     */
+    [k: string]: unknown;
+  };
   labels?: ListOrDict;
   /**
    * This interface was referenced by `undefined`'s JSON-Schema definition
@@ -432,15 +432,15 @@ export type Volume = {
     [k: string]: string | number;
   };
   external?:
-    | boolean
-    | {
-        name?: string;
-        /**
-         * This interface was referenced by `undefined`'s JSON-Schema definition
-         * via the `patternProperty` "^x-".
-         */
-        [k: string]: unknown;
-      };
+  | boolean
+  | {
+    name?: string;
+    /**
+     * This interface was referenced by `undefined`'s JSON-Schema definition
+     * via the `patternProperty` "^x-".
+     */
+    [k: string]: unknown;
+  };
   labels?: ListOrDict;
   /**
    * This interface was referenced by `undefined`'s JSON-Schema definition
@@ -485,29 +485,29 @@ export interface PropertiesServices {
 export interface DefinitionsService {
   deploy?: DefinitionsDeployment;
   build?:
-    | string
-    | {
-        context?: string;
-        dockerfile?: string;
-        args?: ListOrDict;
-        ssh?: ListOrDict;
-        labels?: ListOrDict;
-        cache_from?: string[];
-        cache_to?: string[];
-        no_cache?: boolean;
-        network?: string;
-        pull?: boolean;
-        target?: string;
-        shm_size?: number | string;
-        extra_hosts?: ListOrDict;
-        isolation?: string;
-        secrets?: ServiceConfigOrSecret;
-        /**
-         * This interface was referenced by `undefined`'s JSON-Schema definition
-         * via the `patternProperty` "^x-".
-         */
-        [k: string]: unknown;
-      };
+  | string
+  | {
+    context?: string;
+    dockerfile?: string;
+    args?: ListOrDict;
+    ssh?: ListOrDict;
+    labels?: ListOrDict;
+    cache_from?: string[];
+    cache_to?: string[];
+    no_cache?: boolean;
+    network?: string;
+    pull?: boolean;
+    target?: string;
+    shm_size?: number | string;
+    extra_hosts?: ListOrDict;
+    isolation?: string;
+    secrets?: ServiceConfigOrSecret;
+    /**
+     * This interface was referenced by `undefined`'s JSON-Schema definition
+     * via the `patternProperty` "^x-".
+     */
+    [k: string]: unknown;
+  };
   blkio_config?: {
     device_read_bps?: BlkioLimit[];
     device_read_iops?: BlkioLimit[];
@@ -542,18 +542,18 @@ export interface DefinitionsService {
     [k: string]: unknown;
   };
   depends_on?:
-    | ListOfStrings
-    | {
-        /**
-         * This interface was referenced by `undefined`'s JSON-Schema definition
-         * via the `patternProperty` "^[a-zA-Z0-9._-]+$".
-         */
-        [k: string]: {
-          condition: "service_started" | "service_healthy" | "service_completed_successfully";
-        };
-      };
+  | ListOfStrings
+  | {
+    /**
+     * This interface was referenced by `undefined`'s JSON-Schema definition
+     * via the `patternProperty` "^[a-zA-Z0-9._-]+$".
+     */
+    [k: string]: {
+      condition: "service_started" | "service_healthy" | "service_completed_successfully";
+    };
+  };
   device_cgroup_rules?: ListOfStrings;
-  devices?: string[];
+  devices?: (string | SwarmDevice)[];
   dns?: StringOrList;
   dns_opt?: string[];
   dns_search?: StringOrList;
@@ -563,11 +563,11 @@ export interface DefinitionsService {
   environment?: ListOrDict;
   expose?: (string | number)[];
   extends?:
-    | string
-    | {
-        service: string;
-        file?: string;
-      };
+  | string
+  | {
+    service: string;
+    file?: string;
+  };
   external_links?: string[];
   extra_hosts?: ListOrDict;
   group_add?: (string | number)[];
@@ -601,25 +601,25 @@ export interface DefinitionsService {
   memswap_limit?: number | string;
   network_mode?: string;
   networks?:
-    | ListOfStrings
-    | {
-        /**
-         * This interface was referenced by `undefined`'s JSON-Schema definition
-         * via the `patternProperty` "^[a-zA-Z0-9._-]+$".
-         */
-        [k: string]: {
-          aliases?: ListOfStrings;
-          ipv4_address?: string;
-          ipv6_address?: string;
-          link_local_ips?: ListOfStrings;
-          priority?: number;
-          /**
-           * This interface was referenced by `undefined`'s JSON-Schema definition
-           * via the `patternProperty` "^x-".
-           */
-          [k: string]: unknown;
-        } | null;
-      };
+  | ListOfStrings
+  | {
+    /**
+     * This interface was referenced by `undefined`'s JSON-Schema definition
+     * via the `patternProperty` "^[a-zA-Z0-9._-]+$".
+     */
+    [k: string]: {
+      aliases?: ListOfStrings;
+      ipv4_address?: string;
+      ipv6_address?: string;
+      link_local_ips?: ListOfStrings;
+      priority?: number;
+      /**
+       * This interface was referenced by `undefined`'s JSON-Schema definition
+       * via the `patternProperty` "^x-".
+       */
+      [k: string]: unknown;
+    } | null;
+  };
   oom_kill_disable?: boolean;
   oom_score_adj?: number;
   pid?: string | null;
@@ -629,17 +629,17 @@ export interface DefinitionsService {
     | number
     | string
     | {
-        mode?: string;
-        host_ip?: string;
-        target?: number;
-        published?: string | number;
-        protocol?: string;
-        /**
-         * This interface was referenced by `undefined`'s JSON-Schema definition
-         * via the `patternProperty` "^x-".
-         */
-        [k: string]: unknown;
-      }
+      mode?: string;
+      host_ip?: string;
+      target?: number;
+      published?: string | number;
+      protocol?: string;
+      /**
+       * This interface was referenced by `undefined`'s JSON-Schema definition
+       * via the `patternProperty` "^x-".
+       */
+      [k: string]: unknown;
+    }
   )[];
   privileged?: boolean;
   profiles?: ListOfStrings;
@@ -666,60 +666,60 @@ export interface DefinitionsService {
      * via the `patternProperty` "^[a-z]+$".
      */
     [k: string]:
-      | number
-      | {
-          hard: number;
-          soft: number;
-          /**
-           * This interface was referenced by `undefined`'s JSON-Schema definition
-           * via the `patternProperty` "^x-".
-           */
-          [k: string]: unknown;
-        };
+    | number
+    | {
+      hard: number;
+      soft: number;
+      /**
+       * This interface was referenced by `undefined`'s JSON-Schema definition
+       * via the `patternProperty` "^x-".
+       */
+      [k: string]: unknown;
+    };
   };
   user?: string;
   userns_mode?: string;
   volumes?: (
     | string
     | {
-        type: string;
-        source?: string;
-        target?: string;
-        read_only?: boolean;
-        consistency?: string;
-        bind?: {
-          propagation?: string;
-          create_host_path?: boolean;
-          selinux?: "z" | "Z";
-          /**
-           * This interface was referenced by `undefined`'s JSON-Schema definition
-           * via the `patternProperty` "^x-".
-           */
-          [k: string]: unknown;
-        };
-        volume?: {
-          nocopy?: boolean;
-          /**
-           * This interface was referenced by `undefined`'s JSON-Schema definition
-           * via the `patternProperty` "^x-".
-           */
-          [k: string]: unknown;
-        };
-        tmpfs?: {
-          size?: number | string;
-          mode?: number;
-          /**
-           * This interface was referenced by `undefined`'s JSON-Schema definition
-           * via the `patternProperty` "^x-".
-           */
-          [k: string]: unknown;
-        };
+      type: string;
+      source?: string;
+      target?: string;
+      read_only?: boolean;
+      consistency?: string;
+      bind?: {
+        propagation?: string;
+        create_host_path?: boolean;
+        selinux?: "z" | "Z";
         /**
          * This interface was referenced by `undefined`'s JSON-Schema definition
          * via the `patternProperty` "^x-".
          */
         [k: string]: unknown;
-      }
+      };
+      volume?: {
+        nocopy?: boolean;
+        /**
+         * This interface was referenced by `undefined`'s JSON-Schema definition
+         * via the `patternProperty` "^x-".
+         */
+        [k: string]: unknown;
+      };
+      tmpfs?: {
+        size?: number | string;
+        mode?: number;
+        /**
+         * This interface was referenced by `undefined`'s JSON-Schema definition
+         * via the `patternProperty` "^x-".
+         */
+        [k: string]: unknown;
+      };
+      /**
+       * This interface was referenced by `undefined`'s JSON-Schema definition
+       * via the `patternProperty` "^x-".
+       */
+      [k: string]: unknown;
+    }
   )[];
   volumes_from?: string[];
   working_dir?: string;
@@ -767,11 +767,11 @@ export interface DefinitionsSecret {
   name?: string;
   file?: string;
   external?:
-    | boolean
-    | {
-        name?: string;
-        [k: string]: unknown;
-      };
+  | boolean
+  | {
+    name?: string;
+    [k: string]: unknown;
+  };
   labels?: ListOrDict;
   driver?: string;
   driver_opts?: {
@@ -799,11 +799,11 @@ export interface DefinitionsConfig {
   name?: string;
   file?: string;
   external?:
-    | boolean
-    | {
-        name?: string;
-        [k: string]: unknown;
-      };
+  | boolean
+  | {
+    name?: string;
+    [k: string]: unknown;
+  };
   labels?: ListOrDict;
   template_driver?: string;
   /**

@@ -4,6 +4,7 @@ import { DefinitionsService } from '../compose-v3';
 import { Port } from '../nodes/port.node';
 import { KeyValue, KeyValueImpl } from '../nodes/key-value.node';
 import { Network } from './network.construct';
+import { SwarmDevice } from '../nodes/swarm-device.node';
 
 export class Service extends Construct<ServiceProps, Compose> {
   public toJSON() {
@@ -17,6 +18,24 @@ export class Service extends Construct<ServiceProps, Compose> {
       typeof l === 'string' ? l : new KeyValueImpl(l),
     );
 
+    const swarmDevices = [];
+    props.devices = props.devices?.map((d: string | SwarmDevice) => {
+      if (d instanceof SwarmDevice) {
+        props.volumes = props.volumes || []
+        props.labels = props.labels || []
+
+        props.volumes.push(`${d.props.devicePath}:${d.props.devicePath}`)
+        swarmDevices.push(d.props.devicePath)
+        return undefined
+      }
+
+      return d
+    }).filter(d => !!d)
+
+    if (swarmDevices.length) {
+      props.labels.push(`volume.device=${swarmDevices.join(';')}`)
+    }
+
     if (props.networks && Array.isArray(props.networks)) {
       props.networks = props.networks.map((network) => {
         if (typeof network === 'string') return network;
@@ -26,6 +45,8 @@ export class Service extends Construct<ServiceProps, Compose> {
 
     return props;
   }
+
+
 }
 
 // @ts-ignore

@@ -22,8 +22,7 @@ export class App extends Construct<any> {
         .map(async (compose) => {
           const data = (compose as Compose).toYAML();
           return writeFile(
-            `${options.path ? options.path : ''}docker-compose.${
-              compose[Construct_ID]
+            `${options.path ? options.path : ''}docker-compose.${compose[Construct_ID]
             }.yml`,
             data,
             { encoding: 'utf-8' },

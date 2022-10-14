@@ -5,11 +5,13 @@ import {
   NodeSelector,
 } from 'apps/swarm/src/charts/node-selector';
 import { keyValueFromConfig } from 'apps/swarm/src/charts/utils/kv-from-config.util';
+import { SynthAfterCompose } from 'apps/swarm/src/services/metadatas/after-compose.decorator';
 import { SwarmApp } from '../../../swarm.service';
 import { WebProxyNetwork } from '../../traefik/webproxy.network';
 import { LaunchThroughComposeService } from '../dind/dind.service';
 import { NetworkVolume } from './network.volume';
 
+@SynthAfterCompose()
 @Injectable()
 export class VolumeSharerService {
   protected readonly logger = new Logger(VolumeSharerService.name);
@@ -65,14 +67,16 @@ export class VolumeSharerService {
 
     for (const node of requiredNodes) {
       const volumes = this.volumes.filter((volume) => volume.node === node);
-      const rootVolume = new Volume(compose, `root-${node.toLowerCase()}`)
+      const rootVolume = new Volume(compose, `root-${node.toLowerCase()}`, null, true)
       const service = new LaunchThroughComposeService(
         compose,
         `sharer_${node}`,
         {
           image: 'zhangyi2018/nfs-server',
           cap_add: ['SYS_ADMIN', 'CAP_NET_ADMIN'],
-          volumes: [`${rootVolume.id(compose)}:/nfs`, ...volumes.map((v, index) => `${v.path}:/nfs/${v.id()}`)],
+          volumes: [
+            `${rootVolume.id()}:/nfs`,
+            ...volumes.map((v, index) => `${v.path}:/nfs/${v.id()}`)],
           networks: {
             /** @todo custom network */
             [this.network.id(compose)]: {},
@@ -99,6 +103,14 @@ export class VolumeSharerService {
         (scope) => {
           this.network.bind(scope);
           (scope as any).addConstruct(rootVolume)
+
+          for (const namedVolume of volumes.filter(v => v.isNamed)) {
+            scope.addConstruct(
+              new Volume(scope, namedVolume.id(), {
+                external: true
+              })
+            )
+          }
         },
       );
 

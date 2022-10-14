@@ -42,8 +42,9 @@ export class WebService extends Service {
         },
       },
       traefik: {
+        enable: true,
         port: this.config.port || 80,
-        docker: {network: 'traefik_webproxy' },
+        docker: { network: 'traefik_webproxy' },
         http: {
           services: {
             [this[Construct_ID]]: {
@@ -51,7 +52,7 @@ export class WebService extends Service {
             }
           },
           routers: {
-            [`${this [Construct_ID]}unsecure`]: {
+            [`${this[Construct_ID]}unsecure`]: {
               entrypoints: 'web',
               rule: this.config.match,
               service: this[Construct_ID],
@@ -71,13 +72,13 @@ export class WebService extends Service {
       },
     }
 
-    if (!this.config.requiresAuth )  {
-      delete labels.traefik.http.routers[`${this [Construct_ID]}unsecure`].middlewares
-      delete labels.traefik.http.routers[`${this [Construct_ID]}`].middlewares
+    if (!this.config.requiresAuth) {
+      delete labels.traefik.http.routers[`${this[Construct_ID]}unsecure`].middlewares
+      delete labels.traefik.http.routers[`${this[Construct_ID]}`].middlewares
     }
 
-    if (!this.config.allowHttp && !this.config.unsecure)  {
-      delete labels.traefik.http.routers[`${this [Construct_ID]}unsecure`]
+    if (!this.config.allowHttp && !this.config.unsecure) {
+      delete labels.traefik.http.routers[`${this[Construct_ID]}unsecure`]
     }
 
     if (this.config.unsecure) {

@@ -6,4 +6,4 @@ export class Volume extends Construct<VolumeProps, Compose> {
 
 }
 
-interface VolumeProps extends DefinitionsVolume {}
+export interface VolumeProps extends DefinitionsVolume { }

@@ -10,7 +10,7 @@ export class WebServiceFactory {
   constructor(
     @Inject(WebProxyNetwork)
     protected readonly network: WebProxyNetwork
-  ) {}
+  ) { }
 
   public webService(
     compose: Compose,
@@ -28,12 +28,19 @@ export class WebServiceFactory {
   /**
    * Adds reverse proxy web access to a service
    * @param service
-   * @param props
+   * @param web
    */
-  public webAccess(service: Service, props: WebAccessProps) {
+  public webAccess(service: Service, web: WebAccessProps) {
     const compose = service.scope;
+
+    const { props } = new WebService(undefined, web.routerName, {
+      web
+    })
     this.ensureWebProxyNetwork(compose, service);
-    this.addLabels(service, props)
+
+    service.props.labels = [...new Set([...props.labels || [], ...service.props.labels || []]) as any]
+    service.props.deploy.labels = [...new Set([...(props.deploy?.labels as any) || [], ...(service.props.deploy?.labels as any) || []]) as any]
+    // this.addLabels(service, web)
   }
 
 
@@ -66,7 +73,7 @@ export class WebServiceFactory {
       },
     }
 
-    if (!config.allowHttp && !config.unsecure)  {
+    if (!config.allowHttp && !config.unsecure) {
       delete labels.traefik.http.routers[`${config.routerName}unsecure`]
     }
 
@@ -77,9 +84,13 @@ export class WebServiceFactory {
     // find a better way to do dis
     // in swarm mode labels should be on service (ie= deploy) NOT on container
     if (!service.props?.deploy?.labels) set(service.props, 'deploy.labels', []);
+    if (!service.props?.labels) set(service.props, 'labels', []);
 
+
+    service.props.labels.push(...keyValueFromConfig(labels));
     (service.props.deploy.labels as any as KeyValue[]).push(...keyValueFromConfig(labels))
 
+    service.props.labels = [...new Set(service.props.labels as any)] as any
     service.props.deploy.labels = [... new Set(service.props.deploy.labels as any as KeyValue[])] as any
   }
 

@@ -12,7 +12,7 @@ import { Freebox } from './compose/freebox.compose';
 import { HomeAssistant } from './compose/home-assistant.compose';
 import { NetworkVolume } from './compose/internal/network-volume/network.volume';
 import { VolumeSharerService } from './compose/internal/network-volume/volume-sharer.service';
-import { JellyFin } from './compose/jellyfin.compose';
+import { HTPC } from './compose/htpc.compose';
 import { MQTT } from './compose/mqtt.compose';
 import { Plex } from './compose/plex/plex.compose';
 import { Portainer } from './compose/portainer.compose';
@@ -23,6 +23,9 @@ import { WebProxyNetwork } from './compose/traefik/webproxy.network';
 import { Config } from './config.encrypted';
 import { WebServiceFactory } from './services/web-service/web-service.factory';
 import { SwarmApp } from './swarm.service';
+import { DevicerService } from './compose/internal/devices/devicer.service';
+import { MetadataExplorerService } from './services/metadatas/metadata-explorer.service';
+import { Code } from './compose/internal/configuration/code.compose';
 
 export const composes = [
   Traefik,
@@ -37,8 +40,13 @@ export const composes = [
   DIYHue,
   Swarmpit,
   Freebox,
-  JellyFin
+  HTPC
 ];
+
+export const dynamicComposes = [
+  Code,
+  VolumeSharerService,
+]
 
 const commands = [SynthCommand, DeployCommand, PruneCommand];
 
@@ -48,10 +56,12 @@ const commands = [SynthCommand, DeployCommand, PruneCommand];
   providers: [
     Config,
     SwarmApp,
-    VolumeSharerService,
+    DevicerService,
     WebProxyNetwork,
     WebServiceFactory,
     CommandYamlHelper,
+    MetadataExplorerService,
+    ...dynamicComposes,
     ...composes,
     ...commands,
   ],

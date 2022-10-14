@@ -14,6 +14,8 @@ export abstract class Construct<
     public readonly scope: Parent,
     protected readonly name: string,
     props?: Props,
+    /** skipp adding this construct to the scope */
+    noAdd = false
   ) {
     super(props);
     Enumerable(false)(this, Construct_ID);
@@ -21,7 +23,7 @@ export abstract class Construct<
 
     this[Construct_ID] = name?.toLowerCase();
 
-    if (scope) {
+    if (scope && !noAdd) {
       scope.addConstruct(this);
     }
   }
