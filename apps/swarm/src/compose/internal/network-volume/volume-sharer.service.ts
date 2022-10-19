@@ -76,7 +76,7 @@ export class VolumeSharerService {
           cap_add: ['SYS_ADMIN', 'CAP_NET_ADMIN'],
           volumes: [
             `${rootVolume.id()}:/nfs`,
-            ...volumes.map((v, index) => `${v.path}:/nfs/${v.id()}`)],
+            ...volumes.map((v, index) => `${v.path || v.id()}:/nfs/${v.id()}`)],
           networks: {
             /** @todo custom network */
             [this.network.id(compose)]: {},
@@ -104,12 +104,26 @@ export class VolumeSharerService {
           this.network.bind(scope);
           (scope as any).addConstruct(rootVolume)
 
-          for (const namedVolume of volumes.filter(v => v.isNamed)) {
-            scope.addConstruct(
-              new Volume(scope, namedVolume.id(), {
-                external: true
-              })
-            )
+          console.log("rgre", volumes.filter(v => !!!v.path))
+          // For every volume that does not have a path
+          for (const namedVolume of volumes.filter(v => !!!v.path)) {
+
+            this.logger.debug(`Network volume ${namedVolume.id()} has no path`)
+            if (namedVolume.fromVolume) {
+
+              this.logger.debug(`Binding network volume ${namedVolume.id()} to already declared volume`)
+              scope.addConstruct(
+                new Volume(scope, namedVolume.id(), {
+                  external: true
+                })
+              )
+            } else {
+              this.logger.debug(`Binding network volume ${namedVolume.id()} to new volume`)
+              scope.addConstruct(
+                new Volume(scope, namedVolume.id())
+              )
+            }
+
           }
         },
       );

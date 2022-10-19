@@ -18,16 +18,15 @@ export class NetworkVolume extends Volume {
     return this.options.node;
   }
 
-  public get path(): string {
-    return this.options.path || this.id();
+  public get path(): string | undefined {
+    return this.options.path
   }
 
   /**
-   * wether or not this is a network volume for a named device
-   * on this host
+   * This network volume exposes a named volume
    */
-  public get isNamed(): boolean {
-    return !!!this.options.path
+  public get fromVolume(): Volume | undefined {
+    return this.options.fromExternal
   }
 
   constructor(
@@ -41,7 +40,7 @@ export class NetworkVolume extends Volume {
         type: 'nfs',
         o: VolumeSharerService.instance.getNfsOptsFor(options.node),
       },
-    }, options.skipDeclare);
+    }, options.fromExternal ? true : false);
     this.sharerService.registerVolume(this);
     this.props.driver_opts.device = `:/nfs/${this.id()}`
   }
@@ -53,9 +52,8 @@ interface NetworkVolumeBoundOptions {
   node: AvailableNodes;
   /** path on node, if ignored, assumes named volume */
   path?: string;
-  /** 
-   * very hacky, skips adding this volume to the compose, but registers it as available
-   * anyways
+  /**
+   * Create a network volume from an external named volume
    */
-  skipDeclare?: boolean
+  fromExternal?: Volume
 }

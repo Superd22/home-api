@@ -16,7 +16,7 @@ export class EditableVolume extends Volume {
     node: AvailableNodes,
   ) {
     super(scope, name, {})
-    this.networkVolume = new NetworkVolume(scope, name, { node, skipDeclare: true })
+    this.networkVolume = new NetworkVolume(scope, name, { node, fromExternal: this })
     Code.registerVolume(this)
   }
 
