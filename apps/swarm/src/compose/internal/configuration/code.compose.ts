@@ -15,6 +15,7 @@ export class Code implements ISynthAfterCompose {
   protected static editableVolumes: EditableVolume[] = []
 
   public static registerVolume(volume: EditableVolume) {
+    console.log("hmm")
     Code.editableVolumes.push(volume)
   }
 

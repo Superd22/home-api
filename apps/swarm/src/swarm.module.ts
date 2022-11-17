@@ -26,6 +26,7 @@ import { SwarmApp } from './swarm.service';
 import { DevicerService } from './compose/internal/devices/devicer.service';
 import { MetadataExplorerService } from './services/metadatas/metadata-explorer.service';
 import { Code } from './compose/internal/configuration/code.compose';
+import { Backup } from './compose/internal/backup/backup.compose';
 
 export const composes = [
   Traefik,
@@ -44,6 +45,7 @@ export const composes = [
 ];
 
 export const dynamicComposes = [
+  Backup,
   Code,
   VolumeSharerService,
 ]

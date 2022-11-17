@@ -29,6 +29,10 @@ export class HTPC extends Compose {
       this,
       'sonarr-config'
     ),
+    'radarr-config': new Volume(
+      this,
+      'radarr-config'
+    ),
     'bazarr-config': new Volume(
       this,
       'bazarr-config'
@@ -36,8 +40,14 @@ export class HTPC extends Compose {
     'prowlarr-config': new Volume(
       this,
       'prowlarr-config'
+    ),
+    'jellyseer-config': new Volume(
+      this,
+      'jellyseer-config',
     )
   } as const;
+
+
 
 
   private Tdarr = class TDAR {
@@ -82,6 +92,51 @@ export class HTPC extends Compose {
   }
 
 
+  protected readonly jellyseer = this.web.webService(this, 'jellyseer', {
+    web: {
+      match: 'Host(`jellyseer.davidfain.com`)',
+      port: 5055
+    },
+    serviceProps: {
+      image: 'fallenbagel/jellyseerr:latest',
+      volumes: [
+        this.volumes['jellyseer-config'].toService({ path: '/app/config' })
+      ],
+      environment: keyValueFromConfig({
+        LOG_LEVEL: "debug",
+        TZ: this.timezone
+      })
+    }
+  })
+
+  protected readonly radarr = this.web.webService(this, 'radarr', {
+    web: {
+      match: 'Host("radarr.davidfain.com")',
+      port: 7878,
+    },
+    serviceProps: {
+      image: 'lscr.io/linuxserver/radarr:latest',
+      deploy: {
+        replicas: 1,
+      },
+      networks: {
+        [this.webproxyNetwork.id(this)]: {},
+      },
+      volumes: [
+        `/mnt/raid/0.SHARED/:/data`,
+        `${this.volumes['radarr-config'].id(this)}:/config`,
+      ],
+      environment: [
+        ...keyValueFromConfig({
+          PUID: 1000,
+          PGID: 1000,
+          TZ: this.timezone,
+        }),
+      ],
+    }
+  })
+
+
   constructor(
     protected readonly app: SwarmApp,
     protected readonly web: WebServiceFactory,
@@ -102,6 +157,19 @@ export class HTPC extends Compose {
         image: 'lscr.io/linuxserver/jellyfin:latest',
         deploy: {
           replicas: 1,
+          /** @todo gpu helper */
+          resources: {
+            reservations: {
+              generic_resources: [
+                {
+                  discrete_resource_spec: {
+                    kind: 'NVIDIA-GPU',
+                    value: 0
+                  }
+                }
+              ]
+            }
+          }
         },
         networks: {
           [this.webproxyNetwork.id(this)]: {},
@@ -115,6 +183,7 @@ export class HTPC extends Compose {
         ],
         environment: [
           ...keyValueFromConfig({
+            NVIDIA_VISIBLE_DEVICES: 'all',
             PUID: 1000,
             PGID: 1000,
             TZ: this.timezone,
@@ -211,5 +280,7 @@ export class HTPC extends Compose {
     new NodeSelector(sonarr, AvailableNodes.Galactica);
     new NodeSelector(bazarr, AvailableNodes.Galactica);
     new NodeSelector(prowlarr, AvailableNodes.Galactica);
+    new NodeSelector(this.jellyseer, AvailableNodes.Galactica);
+    new NodeSelector(this.radarr, AvailableNodes.Galactica);
   }
 }
