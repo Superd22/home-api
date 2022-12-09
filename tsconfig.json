@@ -7,7 +7,7 @@
     "experimentalDecorators": true,
     "target": "es2020",
     "sourceMap": true,
-    "outDir": "./dist",
+    "outDir": "./distfdgs",
     "baseUrl": "./",
     "incremental": true,
     "esModuleInterop": true,
@@ -53,6 +53,18 @@
       ],
       "@homeapi/ctsdk/*": [
         "libs/ctsdk/src/*"
+      ],
+      "@homeapi/auth": [
+        "libs/auth/src"
+      ],
+      "@homeapi/auth/*": [
+        "libs/auth/src/*"
+      ],
+      "@homeapi/infra-status": [
+        "libs/infra-status/src"
+      ],
+      "@homeapi/infra-status/*": [
+        "libs/infra-status/src/*"
       ]
     }
   },

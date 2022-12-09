@@ -22,8 +22,8 @@ export class NordvpnResolver {
 
         const bestServer = await this.nordvpnService.fetchBestServerForRegion(region)
         await this.pubsub.emit({ event: PubSubEvents.VPNStarting, vpnName: bestServer, vpnRegion: region })
-        await this.nordvpnService.setupVPNConf(bestServer)
-        await this.nordvpnService.openVPNTunnel(bestServer)
+        // await this.nordvpnService.setupVPNConf(bestServer)
+        // await this.nordvpnService.openVPNTunnel(bestServer)
         await this.pubsub.emit({ event: PubSubEvents.VPNStarted, vpnName: bestServer, vpnRegion: region })
 
         return { region: 'fr', serverName: bestServer }

@@ -24,10 +24,12 @@ export class FreeboxToken {
      * Password to send to requests to freebox
      */
     public get password(): string {
-        if (!this.challenge || this.appToken) throw new Error(`Could not generate password, missing challenge/apptoken for token ${this.id}`)
-        return crypto.createHmac('sha1', this.appToken)
+        if (!this.challenge || !this.appToken) throw new Error(`Could not generate password, missing challenge/apptoken for token ${this.id}`)
+        const password= crypto.createHmac('sha1', this.appToken, { encoding: 'utf8' })
             .update(this.challenge)
-            .digest('base64')
+            .digest('hex')
+
+            return password
     }
 
 }

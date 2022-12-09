@@ -1,4 +1,5 @@
-import { Injectable, Logger, HttpService } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
+import { HttpService } from '@nestjs/axios'
 import { registerEnumType } from '@nestjs/graphql'
 import { execSync } from 'child_process'
 import { NordVPNCountry } from '../nordvpn/country.interface';

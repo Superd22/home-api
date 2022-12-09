@@ -106,6 +106,34 @@
       "compilerOptions": {
         "tsConfigPath": "libs/ctsdk/tsconfig.lib.json"
       }
+    },
+    "server-manager": {
+      "type": "application",
+      "root": "apps/server-manager",
+      "entryFile": "main",
+      "sourceRoot": "apps/server-manager/api",
+      "compilerOptions": {
+        "tsConfigPath": "apps/server-manager/tsconfig.app.json",
+        "webpackConfigPath": "apps/server-manager/webpack.config.js"
+      }
+    },
+    "auth": {
+      "type": "library",
+      "root": "libs/auth",
+      "entryFile": "index",
+      "sourceRoot": "libs/auth/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/auth/tsconfig.lib.json"
+      }
+    },
+    "infra-status": {
+      "type": "library",
+      "root": "libs/infra-status",
+      "entryFile": "index",
+      "sourceRoot": "libs/infra-status/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/infra-status/tsconfig.lib.json"
+      }
     }
   }
 }

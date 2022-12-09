@@ -1,0 +1,14 @@
+<div>
+
+  <div class="nodes">
+    <app-node [node]="node" *ngFor="let node of nodes$ | async">
+    </app-node>
+  </div>
+
+  <div class="games">
+    <app-game-poster [game]="game" *ngFor="let game of games$ | async"></app-game-poster>
+  </div>
+
+
+  <router-outlet></router-outlet>
+</div>

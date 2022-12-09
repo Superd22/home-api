@@ -1,0 +1,10 @@
+query watchStatusChange {
+  nodes {
+    id
+    online
+    games {
+      id
+      online
+    }
+  }
+}

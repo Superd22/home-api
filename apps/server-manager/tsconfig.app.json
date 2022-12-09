@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "outDir": "../../dist/apps/server-manager/api"
+  },
+  "include": ["api/**/*"],
+  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
+}

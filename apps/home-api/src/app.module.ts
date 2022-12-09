@@ -6,24 +6,30 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PubsubModule } from '@homeapi/pubsub';
 import { NordvpnModule } from '@homeapi/nordvpn';
+import { ConfigService } from './config.service.encrypted';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { InfraStatusModule } from '@homeapi/infra-status'
 
 @Module({
     imports: [
-        GraphQLModule.forRoot({
-            autoSchemaFile: true,
-            installSubscriptionHandlers: true,
+        GraphQLModule.forRoot<ApolloDriverConfig>({
+            driver: ApolloDriver,
+            autoSchemaFile: true,  
+            subscriptions: {
+                'graphql-ws': true
+            },
         }),
-        // TypeOrmModule.forRoot({
-        //     type: 'sqlite',
-        //     database: ":memory:",
-        //     synchronize: true,
-        //     autoLoadEntities: true,
-        // }),
+        TypeOrmModule.forRoot({
+            ...new ConfigService().db,
+            synchronize: true,
+            autoLoadEntities: true,
+        }),
         FreeboxModule,
         PubsubModule,
         NordvpnModule,
         LgtvModule,
+        InfraStatusModule
     ],
-    providers: [AppResolver],
+    providers: [AppResolver, ConfigService],
 })
 export class AppModule { }

@@ -1,6 +1,6 @@
 import { Compose } from './compose.construct';
 import { Construct, Construct_ID } from '../../sdk';
-import { DefinitionsNetwork } from '../compose-v3';
+import { DefinitionsNetwork, DefinitionsService } from '../compose-v3';
 
 export class Network extends Construct<NetworkProps, Compose> {
 
@@ -13,6 +13,12 @@ export class Network extends Construct<NetworkProps, Compose> {
       new Network(scope, this.id(scope), {
          external: { name: this.id(scope) },
       })
+    }
+  }
+
+  public toService(): DefinitionsService['networks'] {
+    return {
+      [this.id(this.scope)]: {}
     }
   }
 

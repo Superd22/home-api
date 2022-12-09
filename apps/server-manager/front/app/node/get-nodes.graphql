@@ -1,0 +1,6 @@
+query getNodes{
+  nodes {
+    name
+    online
+  }
+}

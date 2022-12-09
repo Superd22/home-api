@@ -1,0 +1,13 @@
+query getGames{
+  games {
+    id
+    name
+    online
+    image
+    node {
+      id
+      name
+      online
+    }
+  }
+}

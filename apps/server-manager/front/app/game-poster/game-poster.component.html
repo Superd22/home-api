@@ -1,0 +1,14 @@
+<mat-card class="game" [style.background-image]="'url(' + game.image + ')'">
+  <div class="actions">
+    <div class="status">
+      <div class="indicator" [class.online]="game.online"></div>
+      <em *ngIf="game.online">Hosted</em>
+      <em *ngIf="!game.online">Hostable</em>
+      <em *ngIf="game.node?.name">
+        on {{game.node?.name}}
+      </em>
+    </div>
+
+    <mat-slide-toggle></mat-slide-toggle>
+  </div>
+</mat-card>

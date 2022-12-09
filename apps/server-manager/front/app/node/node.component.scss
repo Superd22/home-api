@@ -1,0 +1,12 @@
+.node {
+  width: 150px;
+  height: 100%;
+  margin: 0px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.offline {
+    opacity: 0.5;
+  }
+}

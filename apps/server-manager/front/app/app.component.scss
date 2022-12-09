@@ -1,0 +1,10 @@
+.nodes {
+  display: flex;
+  height: 15vh;
+  padding: 16px 8px;
+  overflow: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
