@@ -1,6 +1,6 @@
-import { Construct_ID, Network } from '@homeapi/ctsdk';
-import {  forwardRef, Inject, Injectable } from '@nestjs/common';
-import { Traefik } from './traefik.compose';
+import { Compose, Construct_ID, Network } from '@homeapi/ctsdk';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { TraefikService } from './traefik.compose';
 
 @Injectable()
 /**
@@ -9,9 +9,9 @@ import { Traefik } from './traefik.compose';
 export class WebProxyNetwork extends Network {
 
   constructor(
-    protected readonly traefik: Traefik,
+    protected readonly traefik: TraefikService,
   ) {
-    super(traefik, 'webproxy', {
+    super(new Compose(undefined, 'traefik'), 'webproxy', {
       driver: 'overlay',
       attachable: true
     });

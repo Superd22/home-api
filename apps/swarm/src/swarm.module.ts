@@ -18,7 +18,7 @@ import { Plex } from './compose/plex/plex.compose';
 import { Portainer } from './compose/portainer.compose';
 import { Swarmpit } from './compose/swarmpit.compose';
 import { Test } from './compose/test.compose';
-import { Traefik } from './compose/traefik/traefik.compose';
+import { TraefikService } from './compose/traefik/traefik.compose';
 import { WebProxyNetwork } from './compose/traefik/webproxy.network';
 import { Config } from './config.encrypted';
 import { WebServiceFactory } from './services/web-service/web-service.factory';
@@ -27,9 +27,10 @@ import { DevicerService } from './compose/internal/devices/devicer.service';
 import { MetadataExplorerService } from './services/metadatas/metadata-explorer.service';
 import { Code } from './compose/internal/configuration/code.compose';
 import { Backup } from './compose/internal/backup/backup.compose';
+import { Satisfactory } from './compose/games/satisfactory.compose';
+import { Auth } from './compose/auth.compose';
 
 export const composes = [
-  Traefik,
   DataDog,
   HomeAssistant,
   Flood,
@@ -41,13 +42,16 @@ export const composes = [
   DIYHue,
   Swarmpit,
   Freebox,
-  HTPC
+  HTPC,
+  Satisfactory,
+  Auth
 ];
 
 export const dynamicComposes = [
   Backup,
   Code,
   VolumeSharerService,
+  TraefikService
 ]
 
 const commands = [SynthCommand, DeployCommand, PruneCommand];
