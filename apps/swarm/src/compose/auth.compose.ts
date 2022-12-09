@@ -61,7 +61,7 @@ export class Auth extends Compose {
       port: 9000,
     },
     serviceProps: {
-      image: 'ghcr.io/goauthentik/server:latest',
+      image: 'ghcr.io/goauthentik/server:2022.10',
       command: 'server',
       labels: keyValueFromConfig({
         'traefik.http.middlewares.testHeader.headers.customrequestheaders.X-Frame-Options':"",
@@ -98,7 +98,7 @@ export class Auth extends Compose {
 
 
   protected readonly worker = new Service(this, 'worker', {
-    image: 'ghcr.io/goauthentik/server:latest',
+    image: 'ghcr.io/goauthentik/server:2022.10',
     command: 'worker',
     volumes: [
       this.volumes.authentik.media.toService({ path: '/media' }),

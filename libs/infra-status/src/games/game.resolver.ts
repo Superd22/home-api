@@ -8,6 +8,7 @@ import { SteamGameSearchResult } from "../api/steam";
 import { ListGamesQuery } from "./list-game.query";
 import { GQLNode } from "../nodes/node.object";
 import { DockerNode } from "../api/node.docker"
+import { Scope, Scopes } from "@homeapi/auth";
 
 @Resolver(() => GQLGame)
 export class GameResolver {
@@ -73,6 +74,7 @@ export class GameResolver {
 
 
   @Mutation(() => Boolean)
+  @Scopes(Scope.InfraManager)
   public async turnOffServer(@Args('gameId', { type: () => ID }) id: string): Promise<boolean> {
     const service: Service = await this.infra.docker.getService(id).inspect()
 
@@ -85,6 +87,7 @@ export class GameResolver {
   }
 
   @Mutation(() => Boolean)
+  @Scopes(Scope.InfraManager)
   public async turnOnServer(@Args('gameId', { type: () => ID }) id: string): Promise<boolean> {
     const service: Service = await this.infra.docker.getService(id).inspect()
 

@@ -45,3 +45,5 @@ volumes/*/*
 **.temp
 
 /docker-compose.*.yml
+
+**/.angular

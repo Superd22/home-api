@@ -1,8 +1,21 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { APP_GUARD } from '@nestjs/core';
+import { JWKSStrategy } from './jwks.strategy';
+import { JwtksAuthGuard } from './jwtks.guard';
+import { ScopesGuard } from './scopes.guard';
 
 @Module({
-  providers: [AuthService],
-  exports: [AuthService],
+  providers: [
+    JWKSStrategy,
+    {
+      provide: APP_GUARD,
+      useClass: JwtksAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ScopesGuard,
+    },
+  ],
+  exports: [JWKSStrategy],
 })
-export class AuthModule {}
+export class AuthModule { }

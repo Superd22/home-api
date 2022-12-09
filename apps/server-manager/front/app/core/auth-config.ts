@@ -7,7 +7,7 @@ export const authConfig: AuthConfig = {
   redirectUri: window.location.origin + '/',
   strictDiscoveryDocumentValidation: false,
   // silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html',
-  scope: 'openid profile email api offline_access', // Ask offline_access to support refresh token refreshes
+  scope: 'infra-manager offline_access', // Ask offline_access to support refresh token refreshes
   useSilentRefresh: false, // Needed for Code Flow to suggest using iframe-based refreshes
   sessionChecksEnabled: true,
   showDebugInformation: true, // Also requires enabling "Verbose" level in devtools

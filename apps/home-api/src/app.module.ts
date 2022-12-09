@@ -9,6 +9,7 @@ import { NordvpnModule } from '@homeapi/nordvpn';
 import { ConfigService } from './config.service.encrypted';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { InfraStatusModule } from '@homeapi/infra-status'
+import { AuthModule } from '@homeapi/auth';
 
 @Module({
     imports: [
@@ -24,6 +25,7 @@ import { InfraStatusModule } from '@homeapi/infra-status'
             synchronize: true,
             autoLoadEntities: true,
         }),
+        AuthModule,
         FreeboxModule,
         PubsubModule,
         NordvpnModule,
