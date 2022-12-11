@@ -40,4 +40,4 @@ jobs:
     - name: 'Build & push images'
       run: npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=container --parallel=2
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_REGISTRY_TOKEN }}
+        INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
