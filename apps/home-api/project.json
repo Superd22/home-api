@@ -5,27 +5,29 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nrwl/webpack:webpack",
+      "executor": "@nrwl/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
       "options": {
-        "target": "node",
-        "compiler": "tsc",
-        "outputPath": "dist/apps/home-api",
         "main": "apps/home-api/src/main.ts",
+        "outputPath": "dist/apps/home-api",
+        "outputFileName": "main.js",
         "tsConfig": "apps/home-api/tsconfig.app.json",
-        "assets": ["apps/home-api/src/assets"]
+        "project": "apps/home-api/package.json",
+        "assets": [],
+        "esbuildOptions": {},
+        "thirdParty": false,
+        "format": [
+          "cjs"
+        ],
+        "platform": "node"
       },
       "configurations": {
+        "development": {
+          "minify": false
+        },
         "production": {
-          "optimization": true,
-          "extractLicenses": true,
-          "inspect": false,
-          "fileReplacements": [
-            {
-              "replace": "apps/home-api/src/environments/environment.ts",
-              "with": "apps/home-api/src/environments/environment.prod.ts"
-            }
-          ]
+          "minify": true
         }
       }
     },
@@ -60,9 +62,7 @@
       "options": {
         "engine": "docker",
         "push": true,
-        "tags": [
-          "ghcr.io/superd22/home-api/api:latest"
-        ],
+        "tags": ["ghcr.io/superd22/home-api/api:latest"],
         "platforms": ["linux/amd64", "linux/arm64"],
         "metadata": {
           "images": ["ghcr.io/superd22/home-api/api"],
@@ -77,9 +77,7 @@
           ]
         }
       },
-      "dependsOn": [
-        "build"
-      ]
+      "dependsOn": ["build"]
     }
   },
   "tags": []
