@@ -27,5 +27,7 @@ jobs:
       uses: docker/setup-buildx-action@v2      
     - name: Derive appropriate SHAs for base and head for `nx affected` commands
       uses: nrwl/nx-set-shas@v3
+      with: 
+        main-branch-name: 'master'
     - name: 'Build & push images'
       run: INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=container --parallel=2
