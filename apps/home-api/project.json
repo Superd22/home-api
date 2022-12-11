@@ -77,7 +77,7 @@
           ]
         }
       },
-      "dependsOn": ["build"]
+      "dependsOn": ["build:production"]
     }
   },
   "tags": []

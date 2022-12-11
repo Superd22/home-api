@@ -76,6 +76,30 @@
           "apps/server-manager/**/*.html"
         ]
       }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "dependsOn": ["build"],
+      "push": true,
+      "tags": ["ghcr.io/superd22/home-api/server-manager:latest"],
+      "platforms": ["linux/amd64", "linux/arm64"],
+      "options": {
+        "engine": "docker",
+        "metadata": {
+          "images": [
+            "ghcr.io/superd22/home-api/server-manager"
+          ],
+          "load": true,
+          "tags": [
+            "latest",
+            "type=schedule",
+            "type=ref,event=branch",
+            "type=ref,event=tag",
+            "type=ref,event=pr",
+            "type=sha,prefix=sha-"
+          ]
+        }
+      }
     }
   },
   "tags": []
