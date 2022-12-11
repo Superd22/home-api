@@ -16,10 +16,8 @@
         "project": "apps/home-api/package.json",
         "assets": [],
         "esbuildOptions": {},
-        "thirdParty": false,
-        "format": [
-          "cjs"
-        ],
+        "esbuildConfigFile": "apps/home-api/esbuild.config",
+        "thirdParty": true,
         "platform": "node"
       },
       "configurations": {
