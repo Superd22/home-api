@@ -31,5 +31,11 @@ jobs:
       uses: nrwl/nx-set-shas@v3
       with: 
         main-branch-name: 'master'
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: 'Build & push images'
-      run: INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=container --parallel=2
+      run: npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=container --parallel=2
