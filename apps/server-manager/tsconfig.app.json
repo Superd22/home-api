@@ -1,9 +1,11 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "declaration": false,
-    "outDir": "../../dist/apps/server-manager/api"
+    "outDir": "../../dist/out-tsc",
+    "noImplicitOverride": false,
+    "types": []
   },
-  "include": ["api/**/*"],
-  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
+  "files": ["src/main.ts"],
+  "include": ["src/**/*.d.ts"],
+  "exclude": ["jest.config.ts", "src/**/*.test.ts", "src/**/*.spec.ts"]
 }

@@ -1,0 +1,64 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: restore node cache
+      uses: actions/cache@master
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+    - run: yarn install --frozen-lockfile
+    - run: npm rebuild websocket
+    - run: yarn build
+    - uses: actions/upload-artifact@v2
+      with:
+        name: dist
+        path: dist
+  
+  dockerize:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+      - name: restore node cache
+        uses: actions/cache@master
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - uses: actions/download-artifact@v2
+        with:
+          name: dist
+          path: dist
+      - name: Docker Buildx
+        uses: zmingxie/docker_buildx@v1.1
+        with:
+          publish: true
+          imageName: superd22/homeapi
+          dockerHubUser: ${{ secrets.DOCKER_USERNAME }}
+          dockerHubPassword: ${{ secrets.DOCKER_PASSWORD }}
+
+  # deploy:
+  #   runs-on: ubuntu-latest
+
+  #   needs: dockerize
+  #   steps:
+  #   - name: Deploying to server
+  #     uses: appleboy/ssh-action@master
+  #     with:
+  #       host: ${{ secrets.HOST }}
+  #       username: ${{ secrets.SSH_USERNAME }}
+  #       key: ${{ secrets.SSH_KEY }}
+  #       port: ${{ secrets.SSH_PORT }}
+  #       script: sudo systemctl restart homeapi

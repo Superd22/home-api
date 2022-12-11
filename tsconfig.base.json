@@ -1,0 +1,31 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@homeapi/auth": ["libs/auth/src/index.ts"],
+      "@homeapi/ctsdk": ["libs/ctsdk/src/index.ts"],
+      "@homeapi/freebox": ["libs/freebox/src/index.ts"],
+      "@homeapi/infra-status": ["libs/infra-status/src/index.ts"],
+      "@homeapi/k8s": ["libs/k8s/src/index.ts"],
+      "@homeapi/lgtv": ["libs/lgtv/src/index.ts"],
+      "@homeapi/nordvpn": ["libs/nordvpn/src/index.ts"],
+      "@homeapi/ovpn": ["libs/ovpn/src/index.ts"],
+      "@homeapi/pubsub": ["libs/pubsub/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}
