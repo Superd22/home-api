@@ -54,6 +54,31 @@
         "jestConfig": "apps/home-api/jest.config.ts",
         "passWithNoTests": true
       }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "options": {
+        "engine": "docker",
+        "push": true,
+        "tags": [
+          "ghcr.io/superd22/home-api:latest"
+        ],
+        "metadata": {
+          "images": ["home-api/home-api"],
+          "platforms": ["linux/amd64", "linux/arm64"],
+          "load": true,
+          "tags": [
+            "type=schedule",
+            "type=ref,event=branch",
+            "type=ref,event=tag",
+            "type=ref,event=pr",
+            "type=sha,prefix=sha-"
+          ]
+        }
+      },
+      "dependsOn": [
+        "build"
+      ]
     }
   },
   "tags": []
