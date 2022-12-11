@@ -32,4 +32,6 @@ jobs:
       with: 
         main-branch-name: 'master'
     - name: 'Build & push images'
-      run: INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=container --parallel=2
+      run: npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=container --parallel=2
+      env:
+        INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

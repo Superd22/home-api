@@ -61,10 +61,10 @@
         "engine": "docker",
         "push": true,
         "tags": [
-          "ghcr.io/superd22/home-api:latest"
+          "ghcr.io/superd22/home-api/api:latest"
         ],
         "metadata": {
-          "images": ["home-api/home-api"],
+          "images": ["ghcr.io/superd22/home-api/api"],
           "platforms": ["linux/amd64", "linux/arm64"],
           "load": true,
           "tags": [
