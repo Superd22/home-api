@@ -63,11 +63,12 @@
         "tags": [
           "ghcr.io/superd22/home-api/api:latest"
         ],
+        "platforms": ["linux/amd64", "linux/arm64"],
         "metadata": {
           "images": ["ghcr.io/superd22/home-api/api"],
-          "platforms": ["linux/amd64", "linux/arm64"],
           "load": true,
           "tags": [
+            "latest",
             "type=schedule",
             "type=ref,event=branch",
             "type=ref,event=tag",
