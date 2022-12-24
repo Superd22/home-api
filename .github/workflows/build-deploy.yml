@@ -33,6 +33,7 @@ jobs:
       with:
         path: node_modules
         key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+    - run: yarn install --frozen-lockfile
     - name: Reveal secrets
       uses: entrostat/git-secret-action@v3.3.0
       with:
@@ -76,6 +77,7 @@ jobs:
       with:
         path: node_modules
         key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+    - run: yarn install --frozen-lockfile
     - name: Reveal secrets
       uses: entrostat/git-secret-action@v3.3.0
       with:
