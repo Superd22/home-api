@@ -1,7 +1,8 @@
 import type { CodegenConfig } from '@graphql-codegen/cli'
+import { environment } from './environments/environment'
  
 const config: CodegenConfig = {
-  schema: 'http://localhost:3000/graphql',
+  schema: environment.apiUrl,
   documents: ['app/**/*.graphql'],
   generates: {
     'app/state/gql.ts': {

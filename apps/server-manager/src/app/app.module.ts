@@ -10,6 +10,7 @@ import { InMemoryCache } from '@apollo/client/core'
 import { HttpClientModule } from '@angular/common/http';
 import { GamePosterComponent } from './game-poster/game-poster.component';
 import { CoreModule } from './core/core.module';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,7 @@ import { CoreModule } from './core/core.module';
         return {
           cache: new InMemoryCache(),
           link: httpLink.create({
-            uri: 'http://localhost:3000/graphql'
+            uri: environment.apiUrl
           })
         }
       },

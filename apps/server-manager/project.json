@@ -7,23 +7,35 @@
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/apps/server-manager",
         "index": "apps/server-manager/src/index.html",
         "main": "apps/server-manager/src/main.ts",
-        "polyfills": ["zone.js"],
+        "polyfills": [
+          "zone.js"
+        ],
         "tsConfig": "apps/server-manager/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
           "apps/server-manager/src/favicon.ico",
           "apps/server-manager/src/assets"
         ],
-        "styles": ["apps/server-manager/src/styles.scss"],
+        "styles": [
+          "apps/server-manager/src/styles.scss"
+        ],
         "scripts": []
       },
       "configurations": {
         "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/server-manager/src/environments/environment.ts",
+              "with": "apps/server-manager/src/environments/environment.prod.ts"
+            }
+          ],
           "budgets": [
             {
               "type": "initial",
@@ -69,7 +81,9 @@
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
         "lintFilePatterns": [
           "apps/server-manager/**/*.ts",
@@ -79,10 +93,17 @@
     },
     "container": {
       "executor": "@nx-tools/nx-container:build",
-      "dependsOn": ["build"],
+      "dependsOn": [
+        "build"
+      ],
       "push": true,
-      "tags": ["ghcr.io/superd22/home-api/server-manager:latest"],
-      "platforms": ["linux/amd64", "linux/arm64"],
+      "tags": [
+        "ghcr.io/superd22/home-api/server-manager:latest"
+      ],
+      "platforms": [
+        "linux/amd64",
+        "linux/arm64"
+      ],
       "options": {
         "engine": "docker",
         "metadata": {
