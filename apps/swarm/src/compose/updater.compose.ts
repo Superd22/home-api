@@ -14,9 +14,9 @@ export class Updater extends Compose {
       LABEL: true,
     }),
     deploy: {
-      labels: {
+      labels: keyValueFromConfig({
         'dockerupdate.enable': true,
-      }
+      })
     }
   })
 

@@ -1,6 +1,7 @@
 import { Compose } from '@homeapi/ctsdk';
 import { Injectable } from '@nestjs/common';
 import { AvailableNodes, NodeSelector } from '../charts/node-selector';
+import { keyValueFromConfig } from '../charts/utils/kv-from-config.util';
 import { WebServiceFactory } from '../services/web-service/web-service.factory';
 import { SwarmApp } from '../swarm.service';
 
@@ -15,9 +16,9 @@ export class HomeAPI extends Compose {
     serviceProps: {
       image: 'ghcr.io/superd22/home-api/api:latest',
       deploy: {
-        labels: {
+        labels: keyValueFromConfig({
           "dockupdater.enable": true,
-        }
+        })
       }
     }
   })
