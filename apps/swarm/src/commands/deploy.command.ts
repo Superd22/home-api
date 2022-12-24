@@ -31,6 +31,7 @@ export class DeployCommand implements CommandRunner {
       [  { header: true, data: 'stack' }, { header: true, data: 'status', } ]
     ]
     
+    let hadError = false
     for (const [file, stackName] of yml) {
       this.logger.debug(`Deploying stack ${stackName}`)
       try {
@@ -43,6 +44,7 @@ export class DeployCommand implements CommandRunner {
         deploySummary.push([stackName, 'Deployed ✅'])
       } catch(e) {
         this.logger.error(`Could not deploy ${stackName}`, e.stderr)
+        hadError = true
         deploySummary.push([stackName, 'Failed ❌'])
       }
     }
@@ -56,6 +58,7 @@ export class DeployCommand implements CommandRunner {
     }
 
     this.logger.log('Done deploying')
+    if (hadError) throw new Error("Deploy did not succeed")
   }
 
   @Option({
