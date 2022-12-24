@@ -5,7 +5,7 @@ import { execSync } from 'child_process'
 import { NordVPNCountry } from '../nordvpn/country.interface';
 import { map } from 'rxjs/operators'
 import * as fs from 'fs'
-import SSH2Promise = require('ssh2-promise');
+import SSH2Promise from 'ssh2-promise'
 import { RecommendedServer } from '../nordvpn/reco-server.interface';
 
 /**

@@ -6,7 +6,9 @@
   "targets": {
     "build": {
       "executor": "@nrwl/esbuild:esbuild",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "defaultConfiguration": "production",
       "options": {
         "main": "apps/home-api/src/main.ts",
@@ -15,9 +17,13 @@
         "tsConfig": "apps/home-api/tsconfig.app.json",
         "project": "apps/home-api/package.json",
         "assets": [],
-        "esbuildOptions": {},
+        "target": "esnext",
+        "format": [
+          "cjs"
+        ],
+        "skipTypeCheck": false,
         "esbuildConfigFile": "apps/home-api/esbuild.config",
-        "thirdParty": true,
+        "thirdParty": false,
         "platform": "node"
       },
       "configurations": {
@@ -42,14 +48,20 @@
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["apps/home-api/**/*.ts"]
+        "lintFilePatterns": [
+          "apps/home-api/**/*.ts"
+        ]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
       "options": {
         "jestConfig": "apps/home-api/jest.config.ts",
         "passWithNoTests": true
@@ -60,10 +72,13 @@
       "options": {
         "engine": "docker",
         "push": true,
-        "tags": ["ghcr.io/superd22/home-api/api:latest"],
-        "platforms": ["linux/amd64", "linux/arm64"],
+        "tags": [
+          "ghcr.io/superd22/home-api/api:latest"
+        ],
         "metadata": {
-          "images": ["ghcr.io/superd22/home-api/api"],
+          "images": [
+            "ghcr.io/superd22/home-api/api"
+          ],
           "load": true,
           "tags": [
             "latest",
@@ -75,7 +90,9 @@
           ]
         }
       },
-      "dependsOn": ["build"]
+      "dependsOn": [
+        "build"
+      ]
     }
   },
   "tags": []

@@ -1,0 +1,42 @@
+diff --git a/node_modules/@nrwl/js/src/utils/package-json/index.js b/node_modules/@nrwl/js/src/utils/package-json/index.js
+index 3c78cd6..e0ed766 100644
+--- a/node_modules/@nrwl/js/src/utils/package-json/index.js
++++ b/node_modules/@nrwl/js/src/utils/package-json/index.js
+@@ -18,6 +18,7 @@ function copyPackageJson(_options, context) {
+         if (options.overrideDependencies) {
+             dependencies = options.overrideDependencies;
+         }
++
+         if (options.watch) {
+             const dispose = yield (0, watch_for_single_file_changes_1.watchForSingleFileChanges)(context.projectName, options.projectRoot, 'package.json', () => (0, update_package_json_1.updatePackageJson)(options, context, target, dependencies));
+             // Copy it once before changes
+diff --git a/node_modules/@nrwl/js/src/utils/package-json/update-package-json.js b/node_modules/@nrwl/js/src/utils/package-json/update-package-json.js
+index 21febe7..f82dd80 100644
+--- a/node_modules/@nrwl/js/src/utils/package-json/update-package-json.js
++++ b/node_modules/@nrwl/js/src/utils/package-json/update-package-json.js
+@@ -15,9 +15,11 @@ function updatePackageJson(options, context, target, dependencies) {
+     const packageJson = (0, fileutils_1.fileExists)(pathToPackageJson)
+         ? (0, devkit_1.readJsonFile)(pathToPackageJson)
+         : { name: context.projectName };
++
+     if (options.excludeLibsInPackageJson) {
+         dependencies = dependencies.filter((dep) => dep.node.type !== 'lib');
+     }
++
+     (0, devkit_1.writeJsonFile)(`${options.outputPath}/package.json`, getUpdatedPackageJsonContent(packageJson, options));
+     if (dependencies.length > 0 &&
+         options.updateBuildableProjectDepsInPackageJson) {
+@@ -70,6 +72,13 @@ function getUpdatedPackageJsonContent(packageJson, options) {
+             }
+         }
+     }
++    if (options.extraDependencies?.length) {
++        packageJson.dependencies = options.extraDependencies.sort((a, b) => a.name - b.name).reduce((acc, dep) => {
++            acc[dep.node.data.packageName] = dep.node.data.version;
++            return acc
++        }, {})
++    }
++
+     if (options.generateExportsField) {
+         packageJson.exports = exports;
+     }

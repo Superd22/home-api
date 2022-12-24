@@ -1,3 +1,52 @@
+diff --git a/node_modules/@nrwl/esbuild/src/executors/esbuild/esbuild.impl.js b/node_modules/@nrwl/esbuild/src/executors/esbuild/esbuild.impl.js
+index fe539a1..9f98506 100644
+--- a/node_modules/@nrwl/esbuild/src/executors/esbuild/esbuild.impl.js
++++ b/node_modules/@nrwl/esbuild/src/executors/esbuild/esbuild.impl.js
+@@ -37,6 +37,7 @@ function esbuildExecutor(_options, context) {
+                 options.external.push(tpd.node.data.packageName);
+                 externalDependencies.push(tpd);
+             }
++
+         }
+         const cpjOptions = Object.assign(Object.assign({}, options), { 
+             // TODO(jack): make types generate with esbuild
+@@ -46,6 +47,36 @@ function esbuildExecutor(_options, context) {
+             cpjOptions.overrideDependencies = externalDependencies;
+         }
+         else {
++            const mainpjson = require(process.cwd() + '/package.json');
++            const availables = [...Object.entries(mainpjson.dependencies || {}), ...Object.entries(mainpjson.devDependencies || {})];
++            for (const dep of externalDependencies) {
++                try {
++                    const pjson = require(dep.node.data.packageName + '/package.json');
++                    
++                    for(const wantedPeer of Object.keys(pjson.peerDependencies || {})) {
++                        // @todo handle versions
++                        const peerInstalled = availables.find(([name, version]) => name === wantedPeer);
++                        if (!peerInstalled) {
++                            console.warn(`${chalk.yellow(wantedPeer)} is not available, skipping...`);
++                            // throw new Error('Cannot find peer dependency ' + wantedPeer + ' in package.json for package ' + dep.node.data.packageName);
++                        } else {
++
++                            if (externalDependencies.find((dep) => dep.name === 'npm:'+peerInstalled[0])) continue;
++                            const {version} = require(peerInstalled[0] + '/package.json')
++                            externalDependencies.push({
++                                name: 'npm:'+peerInstalled[0],
++                                node: {
++                                    data: {
++                                        packageName: peerInstalled[0],
++                                        version,
++                                    }
++                                }
++                            })
++                        }
++                    }
++                } catch(e) {}
++            }
++            
+             cpjOptions.extraDependencies = externalDependencies;
+         }
+         const packageJsonResult = yield tslib_1.__await((0, js_1.copyPackageJson)(cpjOptions, context));
 diff --git a/node_modules/@nrwl/esbuild/src/executors/esbuild/lib/build-esbuild-options.js b/node_modules/@nrwl/esbuild/src/executors/esbuild/lib/build-esbuild-options.js
 index 8db5d9c..e6e6fde 100644
 --- a/node_modules/@nrwl/esbuild/src/executors/esbuild/lib/build-esbuild-options.js
