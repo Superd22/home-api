@@ -4,7 +4,7 @@ const { esbuildDecorators } = require('@anatine/esbuild-decorators');
 module.exports = {
   plugins: [
     esbuildDecorators(),
-    nodeExternalsPlugin({ packagePath: '/home/david/perso/home-api/package.json' }),
+    nodeExternalsPlugin({ packagePath: __dirname+'/../../package.json' }),
   ],
   sourcemap: true
 }
