@@ -274,7 +274,7 @@ export class HTPC extends Compose {
       }
     })
 
-    new this.Tdarr(this, this.web)
+    // new this.Tdarr(this, this.web)
 
     new NodeSelector(jellyfin, AvailableNodes.Galactica);
     new NodeSelector(sonarr, AvailableNodes.Galactica);

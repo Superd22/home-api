@@ -72,10 +72,12 @@
       "options": {
         "engine": "docker",
         "push": true,
+        "platforms": ["linux/arm64", "linux/amd64"],
         "tags": [
           "ghcr.io/superd22/home-api/api:latest"
         ],
         "metadata": {
+          "platforms": ["linux/arm64", "linux/amd64"],
           "images": [
             "ghcr.io/superd22/home-api/api"
           ],
