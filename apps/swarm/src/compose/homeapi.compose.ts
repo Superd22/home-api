@@ -30,6 +30,22 @@ export class HomeAPI extends Compose {
     }
   })
 
+  protected serverManager = this.web.webService(this, 'server-manager', {
+    web: {
+      match: "Host(`gamerz.davidfain.com`)",
+      port: 80,
+    },
+    serviceProps: {
+      image: 'ghcr.io/superd22/home-api/server-manager:latest',
+      deploy: {
+        labels: keyValueFromConfig({
+          "dockupdater.latest": true,
+          "dockupdater.enable": true,
+        })
+      }
+    }
+  })
+
   protected readonly postgres = new Service(this, 'pg', {
     image: 'postgres:15.1',
     volumes: [
