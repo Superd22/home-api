@@ -40,7 +40,6 @@ export const composes = [
   MQTT,
   Calibre,
   DIYHue,
-  Freebox,
   HTPC,
   Satisfactory,
   Auth,

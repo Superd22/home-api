@@ -13,6 +13,9 @@ export class Updater extends Compose {
     environment: keyValueFromConfig({
       LABEL: true,
     }),
+    volumes: [
+      "/var/run/docker.sock:/var/run/docker.sock"
+    ],
     deploy: {
       labels: keyValueFromConfig({
         'dockerupdate.enable': true,
