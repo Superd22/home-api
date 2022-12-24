@@ -3,7 +3,7 @@ FROM docker.io/node:lts-alpine as deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
 RUN apk add --no-cache python3
-RUN apk add --no-cache make gcc g++ musl-dev binutils autoconf automake libtool pkgconfig check-dev file patch
+RUN apk add --no-cache make gcc g++
 WORKDIR /usr/src/app
 COPY dist/apps/home-api/package.json .
 RUN yarn install

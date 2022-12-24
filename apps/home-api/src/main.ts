@@ -11,7 +11,6 @@ async function bootstrap() {
         new FastifyAdapter() as any
     );
 
-
     await app.listen(3000, '0.0.0.0')
 }
 bootstrap();
