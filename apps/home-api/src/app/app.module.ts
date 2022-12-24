@@ -26,8 +26,8 @@ import { AuthModule } from '@homeapi/auth';
             autoLoadEntities: true,
         }),
         FreeboxModule,
-        AuthModule,
         PubsubModule,
+        AuthModule,
         NordvpnModule,
         LgtvModule,
         InfraStatusModule

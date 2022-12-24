@@ -1,5 +1,5 @@
 diff --git a/node_modules/@nrwl/esbuild/src/executors/esbuild/esbuild.impl.js b/node_modules/@nrwl/esbuild/src/executors/esbuild/esbuild.impl.js
-index fe539a1..031e74f 100644
+index fe539a1..8f0db0a 100644
 --- a/node_modules/@nrwl/esbuild/src/executors/esbuild/esbuild.impl.js
 +++ b/node_modules/@nrwl/esbuild/src/executors/esbuild/esbuild.impl.js
 @@ -6,6 +6,7 @@ require("dotenv/config");
@@ -10,18 +10,18 @@ index fe539a1..031e74f 100644
  const esbuild = require("esbuild");
  const normalize_1 = require("./lib/normalize");
  const fs_extra_1 = require("fs-extra");
-@@ -46,6 +47,40 @@ function esbuildExecutor(_options, context) {
+@@ -46,7 +47,42 @@ function esbuildExecutor(_options, context) {
              cpjOptions.overrideDependencies = externalDependencies;
          }
          else {
+-            cpjOptions.extraDependencies = externalDependencies;
 +            const mainpjson = require(process.cwd() + '/package.json');
 +            const availables = [...Object.entries(mainpjson.dependencies || {}), ...Object.entries(mainpjson.devDependencies || {})];
 +            for (const dep of externalDependencies) {
 +                try {
-+                    const pjson = JSON.stringify(
-+                        fs.readFileSync(dep.node.data.packageName + '/package.json', { encoding: 'utf-8' }),
++                    const pjson = JSON.parse(
++                        fs.readFileSync("node_modules/"+dep.node.data.packageName + '/package.json', { encoding: 'utf-8' }),
 +                    );
-+                    
 +                    for(const wantedPeer of Object.keys(pjson.peerDependencies || {})) {
 +                        // @todo handle versions
 +                        const peerInstalled = availables.find(([name, version]) => name === wantedPeer);
@@ -32,7 +32,7 @@ index fe539a1..031e74f 100644
 +
 +                            if (externalDependencies.find((dep) => dep.name === 'npm:'+peerInstalled[0])) continue;
 +                            const {version} = JSON.parse(
-+                                fs.readFileSync(peerInstalled[0] + '/package.json', { encoding: 'utf-8' })
++                                fs.readFileSync("node_modules/"+peerInstalled[0] + '/package.json', { encoding: 'utf-8' })
 +                            )
 +                            externalDependencies.push({
 +                                name: 'npm:'+peerInstalled[0],
@@ -45,12 +45,15 @@ index fe539a1..031e74f 100644
 +                            })
 +                        }
 +                    }
-+                } catch(e) {}
++                } catch(e) {
++                    console.error("oh no", e)
++                }
 +            }
 +            
-             cpjOptions.extraDependencies = externalDependencies;
++            cpjOptions.extraDependencies = externalDependencies.sort((a, b) => a.name.localeCompare(b.name));
          }
          const packageJsonResult = yield tslib_1.__await((0, js_1.copyPackageJson)(cpjOptions, context));
+         if (options.watch) {
 diff --git a/node_modules/@nrwl/esbuild/src/executors/esbuild/lib/build-esbuild-options.js b/node_modules/@nrwl/esbuild/src/executors/esbuild/lib/build-esbuild-options.js
 index 8db5d9c..e6e6fde 100644
 --- a/node_modules/@nrwl/esbuild/src/executors/esbuild/lib/build-esbuild-options.js
