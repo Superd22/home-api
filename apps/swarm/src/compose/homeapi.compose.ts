@@ -17,6 +17,7 @@ export class HomeAPI extends Compose {
       image: 'ghcr.io/superd22/home-api/api:latest',
       deploy: {
         labels: keyValueFromConfig({
+          "dockupdater.latest": true,
           "dockupdater.enable": true,
         })
       }

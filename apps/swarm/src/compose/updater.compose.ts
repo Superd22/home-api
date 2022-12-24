@@ -14,6 +14,7 @@ export class Updater extends Compose {
       LABEL: true,
     }),
     volumes: [
+      "/home/freebox/.docker/config.json:/root/.docker/config.json",
       "/var/run/docker.sock:/var/run/docker.sock"
     ],
     deploy: {
