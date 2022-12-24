@@ -88,6 +88,6 @@ jobs:
         ssh_cert: ${{ secrets.SSH_CERT_HOME }}
         ssh_key: ${{ secrets.SSH_KEY_HOME }}
     - name: 'Resync infrastructure'
-      run: npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=deploy --parallel=2
+      run: npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=deploy --parallel=1
       env:
         INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
