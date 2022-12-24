@@ -91,7 +91,7 @@
         }
       },
       "dependsOn": [
-        "build:production"
+        "build"
       ]
     }
   },

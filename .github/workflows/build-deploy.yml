@@ -5,9 +5,8 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  node:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
       with:
@@ -21,6 +20,21 @@ jobs:
         key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
     - run: yarn install --frozen-lockfile
     - run: npm rebuild websocket
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [ node ]
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+    - name: restore node cache
+      uses: actions/cache@master
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
     - name: Reveal secrets
       uses: entrostat/git-secret-action@v3.3.0
       with:
@@ -44,5 +58,32 @@ jobs:
         password: ${{ secrets.GH_REGISTRY_TOKEN }}
     - name: 'Build & push images'
       run: npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=container --parallel=2
+      env:
+        INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  stack:
+    runs-on: ubuntu-latest
+    needs: [ node ]
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+    - name: restore node cache
+      uses: actions/cache@master
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+    - name: Reveal secrets
+      uses: entrostat/git-secret-action@v3.3.0
+      with:
+        gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}   
+    - name: Derive appropriate SHAs for base and head for `nx affected` commands
+      uses: nrwl/nx-set-shas@v3
+      with: 
+        main-branch-name: 'master'
+    - name: 'Build & push images'
+      run: npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=deploy --parallel=2
       env:
         INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

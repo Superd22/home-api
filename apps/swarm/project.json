@@ -5,27 +5,33 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nrwl/webpack:webpack",
-      "outputs": ["{options.outputPath}"],
+      "executor": "@nrwl/esbuild:esbuild",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "defaultConfiguration": "production",
       "options": {
-        "target": "node",
-        "compiler": "tsc",
-        "outputPath": "dist/apps/swarm",
         "main": "apps/swarm/src/main.ts",
+        "outputPath": "dist/apps/swarm",
+        "outputFileName": "main.cjs",
         "tsConfig": "apps/swarm/tsconfig.app.json",
-        "assets": ["apps/swarm/src/assets"]
+        "project": "apps/swarm/package.json",
+        "assets": [],
+        "target": "esnext",
+        "format": [
+          "cjs"
+        ],
+        "skipTypeCheck": false,
+        "esbuildConfigFile": "apps/swarm/esbuild.config",
+        "thirdParty": false,
+        "platform": "node"
       },
       "configurations": {
+        "development": {
+          "minify": false
+        },
         "production": {
-          "optimization": true,
-          "extractLicenses": true,
-          "inspect": false,
-          "fileReplacements": [
-            {
-              "replace": "apps/swarm/src/environments/environment.ts",
-              "with": "apps/swarm/src/environments/environment.prod.ts"
-            }
-          ]
+          "minify": false
         }
       }
     },
@@ -54,6 +60,18 @@
         "jestConfig": "apps/swarm/jest.config.ts",
         "passWithNoTests": true
       }
+    },
+    "synth": {
+      "command": "node dist/apps/swarm/main.cjs synth -p dist/synth/",
+      "dependsOn": ["build"], 
+      "outputs": ["{workspaceRoot}/dist/synth"],
+      "options": {
+        "buildTarget": "swarm:build"
+      }
+    },
+    "deploy": {
+      "command": "node dist/apps/swarm/main.cjs deploy -p dist/synth/ -d",
+      "dependsOn": ["synth"]
     }
   },
   "tags": []

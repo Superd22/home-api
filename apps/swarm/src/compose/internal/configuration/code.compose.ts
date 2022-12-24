@@ -1,5 +1,5 @@
 import { Compose, Service, Volume } from '@homeapi/ctsdk';
-import { DefinitionsService } from '@homeapi/ctsdk/docker/compose-v3';
+import { DefinitionsService } from '@homeapi/ctsdk';
 import { Injectable } from '@nestjs/common';
 import { ISynthAfterCompose, SynthAfterCompose } from 'apps/swarm/src/services/metadatas/after-compose.decorator';
 import { AvailableNodes, NodeSelector } from '../../../charts/node-selector';
@@ -15,7 +15,6 @@ export class Code implements ISynthAfterCompose {
   protected static editableVolumes: EditableVolume[] = []
 
   public static registerVolume(volume: EditableVolume) {
-    console.log("hmm")
     Code.editableVolumes.push(volume)
   }
 

@@ -1,7 +1,6 @@
 import { Compose } from "@homeapi/ctsdk";
 import { SwarmApp } from "../../swarm.service";
-import { Entrypoint } from "../traefik/traefik-v2";
-import { TraefikService } from "../traefik/traefik.compose";
+import { TraefikService, Entrypoint } from "../traefik/traefik.compose";
 
 export abstract class GameServerCompose extends Compose {
 

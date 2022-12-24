@@ -7,7 +7,7 @@ import { ISynthAfterCompose, SynthAfterCompose } from '../../services/metadatas/
 import { WebServiceFactory } from '../../services/web-service/web-service.factory';
 import { WebService } from '../../services/web-service/webservice.chart';
 import { SwarmApp } from '../../swarm.service';
-import { Entrypoint, TraefikV2 } from './traefik-v2';
+import { Entrypoint as TraefikEntry, TraefikV2 } from './traefik-v2';
 
 @Injectable()
 @SynthAfterCompose()
@@ -186,4 +186,8 @@ export class TraefikService implements ISynthAfterCompose {
   synth(): Compose {
     return new this.Traefik(this.app, this.appConfig, this.ports)
   }
+}
+
+export interface Entrypoint extends TraefikEntry {
+  address: string;
 }

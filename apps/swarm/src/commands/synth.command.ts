@@ -36,7 +36,7 @@ export class SynthCommand implements CommandRunner {
 
     this.logger.log('Synthing.');
     await this.app.synth({ ...options });
-    await cp(__dirname + '/../../manual', options.path || './', { recursive: true })
+    // await cp(__dirname + '/../manual', options.path || './', { recursive: true })
 
     this.logger.log('Done!');
   }

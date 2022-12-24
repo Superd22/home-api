@@ -104,7 +104,6 @@ export class VolumeSharerService {
           this.network.bind(scope);
           (scope as any).addConstruct(rootVolume)
 
-          console.log("rgre", volumes.filter(v => !!!v.path))
           // For every volume that does not have a path
           for (const namedVolume of volumes.filter(v => !!!v.path)) {
 

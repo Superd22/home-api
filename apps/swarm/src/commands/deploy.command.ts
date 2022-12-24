@@ -49,7 +49,11 @@ export class DeployCommand implements CommandRunner {
 
     summary.addTable(deploySummary)
 
-    summary.write()
+    try {
+      await summary.write()
+    } catch(e) {
+      console.error("e")
+    }
 
     this.logger.log('Done deploying')
   }
