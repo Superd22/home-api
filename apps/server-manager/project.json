@@ -93,19 +93,16 @@
     },
     "container": {
       "executor": "@nx-tools/nx-container:build",
-      "dependsOn": [
-        "build"
-      ],
-      "push": true,
-      "tags": [
-        "ghcr.io/superd22/home-api/server-manager:latest"
-      ],
-      "platforms": [
-        "linux/amd64",
-        "linux/arm64"
-      ],
       "options": {
         "engine": "docker",
+        "push": true,
+        "platforms": [
+          "linux/arm64",
+          "linux/amd64"
+        ],
+        "tags": [
+          "ghcr.io/superd22/home-api/server-manager:latest"
+        ],
         "metadata": {
           "images": [
             "ghcr.io/superd22/home-api/server-manager"
@@ -120,7 +117,10 @@
             "type=sha,prefix=sha-"
           ]
         }
-      }
+      },
+      "dependsOn": [
+        "build:production"
+      ]
     }
   },
   "tags": []

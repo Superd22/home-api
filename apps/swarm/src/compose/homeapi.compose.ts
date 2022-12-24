@@ -18,6 +18,7 @@ export class HomeAPI extends Compose {
     },
     serviceProps: {
       image: 'ghcr.io/superd22/home-api/api:latest',
+      volumes: ['/var/run/docker.sock:/var/run/docker.sock'],
       deploy: {
         labels: keyValueFromConfig({
           "dockupdater.latest": true,

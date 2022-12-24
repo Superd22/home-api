@@ -69,6 +69,7 @@
     },
     "container": {
       "executor": "@nx-tools/nx-container:build",
+      
       "options": {
         "engine": "docker",
         "push": true,
