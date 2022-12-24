@@ -69,9 +69,13 @@
         "buildTarget": "swarm:build"
       }
     },
-    "deploy": {
-      "command": "node dist/apps/swarm/main.cjs deploy -p dist/synth/ -d",
+    "prune": {
+      "command": "node dist/apps/swarm/main.cjs prune -p dist/synth/",
       "dependsOn": ["synth"]
+    },
+    "deploy": {
+      "command": "node dist/apps/swarm/main.cjs deploy -p dist/synth/",
+      "dependsOn": ["synth", "prune"]
     }
   },
   "tags": []
