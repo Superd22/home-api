@@ -81,7 +81,13 @@ jobs:
       uses: nrwl/nx-set-shas@v3
       with: 
         main-branch-name: 'master'
-    - name: 'Build & push images'
+    - uses: arwynfr/actions-docker-context@v2
+      with:
+        docker_host: 'ssh://freebox@home.davidfain.com'
+        context_name: 'freebox-remote'
+        ssh_cert: ${{ secrets.SSH_CERT_HOME }}
+        ssh_key: ${{ secrets.SSH_KEY_HOME }}
+    - name: 'Resync infrastructure'
       run: npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=deploy --parallel=2
       env:
         INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
