@@ -1,9 +1,8 @@
 import { OAuthModuleConfig } from 'angular-oauth2-oidc';
-import { environment } from '../../environments/environment';
 
 export const authModuleConfig: OAuthModuleConfig = {
   resourceServer: {
-    allowedUrls: [environment.apiUrl],
+    allowedUrls: ['http://localhost:3000', 'https://api.home.davidfain.com'],
     sendAccessToken: true,
   }
 };
