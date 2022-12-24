@@ -9,4 +9,15 @@
   &.offline {
     opacity: 0.5;
   }
+
+  button {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    mat-spinner {
+      width: 100% !important;
+      height: 100% !important;
+      position: relative;
+    }
+  }
 }

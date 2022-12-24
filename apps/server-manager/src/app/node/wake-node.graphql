@@ -1,0 +1,6 @@
+mutation wakeNode($node: WakableNodes!) {
+  wakeNode(id: $node) {
+    success
+    active
+  }
+}

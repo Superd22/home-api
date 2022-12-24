@@ -104,6 +104,13 @@ export type GetNodesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetNodesQuery = { __typename?: 'Query', nodes: Array<{ __typename?: 'Node', name: string, online: boolean }> };
 
+export type WakeNodeMutationVariables = Exact<{
+  node: WakableNodes;
+}>;
+
+
+export type WakeNodeMutation = { __typename?: 'Mutation', wakeNode: { __typename?: 'WakeResult', success: boolean, active: boolean } };
+
 export type WatchStatusChangeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -149,6 +156,25 @@ export const GetNodesDocument = gql`
   })
   export class GetNodesGQL extends Apollo.Query<GetNodesQuery, GetNodesQueryVariables> {
     document = GetNodesDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const WakeNodeDocument = gql`
+    mutation wakeNode($node: WakableNodes!) {
+  wakeNode(id: $node) {
+    success
+    active
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class WakeNodeGQL extends Apollo.Mutation<WakeNodeMutation, WakeNodeMutationVariables> {
+    document = WakeNodeDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
