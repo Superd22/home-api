@@ -29,6 +29,8 @@ import { Code } from './compose/internal/configuration/code.compose';
 import { Backup } from './compose/internal/backup/backup.compose';
 import { Satisfactory } from './compose/games/satisfactory.compose';
 import { Auth } from './compose/auth.compose';
+import { Updater } from './compose/updater.compose';
+import { HomeAPI } from './compose/homeapi.compose';
 
 export const composes = [
   DataDog,
@@ -41,7 +43,9 @@ export const composes = [
   Freebox,
   HTPC,
   Satisfactory,
-  Auth
+  Auth,
+  Updater,
+  HomeAPI
 ];
 
 export const dynamicComposes = [
