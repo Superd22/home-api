@@ -49,3 +49,4 @@ volumes/*/*
 **/.angular
 .nx-container
 tmp
+.secrets

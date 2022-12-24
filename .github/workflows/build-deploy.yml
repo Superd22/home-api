@@ -15,8 +15,11 @@ jobs:
       uses: actions/cache@master
       with:
         path: node_modules
-        key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-    - run: yarn install --frozen-lockfile
+        key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('patches/**') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          ${{ runner.os }}
+    - run: npx yarn install --frozen-lockfile
     - run: npm rebuild websocket
 
   build:
@@ -32,8 +35,7 @@ jobs:
       uses: actions/cache@master
       with:
         path: node_modules
-        key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-    - run: yarn install --frozen-lockfile
+        key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('patches/**') }}
     - name: Reveal secrets
       uses: entrostat/git-secret-action@v3.3.0
       with:
@@ -76,8 +78,7 @@ jobs:
       uses: actions/cache@master
       with:
         path: node_modules
-        key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-    - run: yarn install --frozen-lockfile
+        key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('patches/**') }}
     - name: Reveal secrets
       uses: entrostat/git-secret-action@v3.3.0
       with:
