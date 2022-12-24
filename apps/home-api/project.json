@@ -13,7 +13,7 @@
       "options": {
         "main": "apps/home-api/src/main.ts",
         "outputPath": "dist/apps/home-api",
-        "outputFileName": "main.js",
+        "outputFileName": "main.cjs",
         "tsConfig": "apps/home-api/tsconfig.app.json",
         "project": "apps/home-api/package.json",
         "assets": [],

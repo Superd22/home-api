@@ -54,8 +54,11 @@ jobs:
         registry: ghcr.io
         username: superd22
         password: ${{ secrets.GH_REGISTRY_TOKEN }}
+    - uses: satackey/action-docker-layer-caching@v0.0.11
+      # Ignore the failure of a step and avoid terminating the job.
+      continue-on-error: true
     - name: 'Build & push images'
-      run: npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=container --parallel=2
+      run: npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=container --parallel=1
       env:
         INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
