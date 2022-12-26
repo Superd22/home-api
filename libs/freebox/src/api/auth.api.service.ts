@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 import { AuthorizeResponse, AuthorizeTokenResponse, GetChallenge, SessionToken, TokenStatus } from "./interfaces/freebox-auth.interface";
 import { HttpService } from '@nestjs/axios'
 import * as os from "os"
-import { firstValueFrom } from "rxjs";
+import { catchError, firstValueFrom, of } from "rxjs";
 
 @Injectable()
 export class FreeboxAuthAPI implements OnApplicationBootstrap {
@@ -39,10 +39,15 @@ export class FreeboxAuthAPI implements OnApplicationBootstrap {
                 app_id: this.getAppId().app_id,
                 password: token.password
             }
-        ))
+        ).pipe(
+            catchError(error => {
+                console.log("mais wesh")
+                return of({data: {} as any})
+            })
+        ));
 
         if (!data.success) throw new Error(`Could not get session token`);
-        (this as any).sessionToken = data.result.session_token
+        (this as any).sessionToken = data?.result?.session_token
         this.logger.debug("Sucesfully got session token")
     }
 

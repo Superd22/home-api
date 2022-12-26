@@ -44,6 +44,7 @@ export class WakeNode {
       error: "Node not supported"
     })
 
+    console.log("pre")
     const hosts = await this.lan.hosts()
     const host = hosts.result.find(h => h.l2ident.id.toLowerCase() === mac.toLowerCase())
 
