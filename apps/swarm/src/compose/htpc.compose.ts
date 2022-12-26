@@ -154,7 +154,7 @@ export class HTPC extends Compose {
         port: 8096,
       },
       serviceProps: {
-        image: 'lscr.io/linuxserver/jellyfin:latest',
+        image: 'lscr.io/linuxserver/jellyfin:10.8.7',
         deploy: {
           replicas: 1,
           /** @todo gpu helper */
