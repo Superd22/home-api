@@ -9,6 +9,9 @@
       </em>
     </div>
 
-    <mat-slide-toggle></mat-slide-toggle>
+    <div class="right">
+      <mat-spinner *ngIf="isStarting"></mat-spinner>
+      <mat-slide-toggle  *ngIf="!isStarting" [disabled]="cannotToggle" [checked]="game.online" (change)="toggleGame($event)"></mat-slide-toggle>
+    </div>
   </div>
 </mat-card>

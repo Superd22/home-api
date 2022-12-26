@@ -1,8 +1,8 @@
 <mat-card class="node" [class.offline]="!node.online">
   {{ node.name }}
 
-  <button mat-icon-button *ngIf="!node.online" [disabled]="isBooting" (click)="bootNode()">
-    <mat-icon *ngIf="!isBooting">power_settings_new</mat-icon>
-    <mat-spinner *ngIf="isBooting"></mat-spinner>
+  <button mat-icon-button *ngIf="!node.online" [disabled]="isBooting$ | async" (click)="bootNode()">
+    <mat-icon *ngIf="!(isBooting$ | async)">power_settings_new</mat-icon>
+    <mat-spinner *ngIf="isBooting$ | async"></mat-spinner>
   </button>
 </mat-card>

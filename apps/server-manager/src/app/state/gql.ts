@@ -22,13 +22,20 @@ export type Game = {
   name: Scalars['String'];
   node?: Maybe<Node>;
   online: Scalars['Boolean'];
+  status: GameStatus;
 };
+
+export enum GameStatus {
+  Offline = 'OFFLINE',
+  Online = 'ONLINE',
+  Starting = 'STARTING'
+}
 
 export type Mutation = {
   __typename?: 'Mutation';
   connectVPN: Nordvpn;
-  turnOffServer: Scalars['Boolean'];
-  turnOnServer: Scalars['Boolean'];
+  turnOffServer: ToggleGameServer;
+  turnOnServer: ToggleGameServer;
   wakeNode: WakeResult;
 };
 
@@ -58,7 +65,14 @@ export type Node = {
   id: Scalars['ID'];
   name: Scalars['String'];
   online: Scalars['Boolean'];
+  status: NodeStatus;
 };
+
+export enum NodeStatus {
+  Offline = 'OFFLINE',
+  Online = 'ONLINE',
+  Starting = 'STARTING'
+}
 
 export type Nordvpn = {
   __typename?: 'Nordvpn';
@@ -72,6 +86,12 @@ export type Query = {
   nodes: Array<Node>;
   test: Scalars['String'];
   version: Scalars['String'];
+};
+
+export type ToggleGameServer = {
+  __typename?: 'ToggleGameServer';
+  game: Game;
+  success: Scalars['Boolean'];
 };
 
 export enum VpnRegion {
@@ -97,12 +117,19 @@ export type WakeResult = {
 export type GetGamesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetGamesQuery = { __typename?: 'Query', games: Array<{ __typename?: 'Game', id: string, name: string, online: boolean, image?: string | null, node?: { __typename?: 'Node', id: string, name: string, online: boolean } | null }> };
+export type GetGamesQuery = { __typename?: 'Query', games: Array<{ __typename?: 'Game', id: string, name: string, online: boolean, image?: string | null, status: GameStatus, node?: { __typename?: 'Node', id: string, name: string, online: boolean } | null }> };
+
+export type TurnOnGameMutationVariables = Exact<{
+  gameId: Scalars['ID'];
+}>;
+
+
+export type TurnOnGameMutation = { __typename?: 'Mutation', turnOnServer: { __typename?: 'ToggleGameServer', success: boolean, game: { __typename?: 'Game', id: string, status: GameStatus, online: boolean } } };
 
 export type GetNodesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetNodesQuery = { __typename?: 'Query', nodes: Array<{ __typename?: 'Node', name: string, online: boolean }> };
+export type GetNodesQuery = { __typename?: 'Query', nodes: Array<{ __typename?: 'Node', name: string, online: boolean, status: NodeStatus }> };
 
 export type WakeNodeMutationVariables = Exact<{
   node: WakableNodes;
@@ -114,7 +141,7 @@ export type WakeNodeMutation = { __typename?: 'Mutation', wakeNode: { __typename
 export type WatchStatusChangeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type WatchStatusChangeQuery = { __typename?: 'Query', nodes: Array<{ __typename?: 'Node', id: string, online: boolean, games: Array<{ __typename?: 'Game', id: string, online: boolean }> }> };
+export type WatchStatusChangeQuery = { __typename?: 'Query', nodes: Array<{ __typename?: 'Node', id: string, online: boolean, status: NodeStatus, games: Array<{ __typename?: 'Game', id: string, online: boolean, status: GameStatus }> }> };
 
 export const GetGamesDocument = gql`
     query getGames {
@@ -123,6 +150,7 @@ export const GetGamesDocument = gql`
     name
     online
     image
+    status
     node {
       id
       name
@@ -142,11 +170,35 @@ export const GetGamesDocument = gql`
       super(apollo);
     }
   }
+export const TurnOnGameDocument = gql`
+    mutation turnOnGame($gameId: ID!) {
+  turnOnServer(gameId: $gameId) {
+    success
+    game {
+      id
+      status
+      online
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class TurnOnGameGQL extends Apollo.Mutation<TurnOnGameMutation, TurnOnGameMutationVariables> {
+    document = TurnOnGameDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const GetNodesDocument = gql`
     query getNodes {
   nodes {
     name
     online
+    status
   }
 }
     `;
@@ -185,9 +237,11 @@ export const WatchStatusChangeDocument = gql`
   nodes {
     id
     online
+    status
     games {
       id
       online
+      status
     }
   }
 }

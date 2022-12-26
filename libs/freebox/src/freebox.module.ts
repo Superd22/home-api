@@ -12,6 +12,7 @@ import { FreeboxLanApi } from './api/lan.api.service';
 import { WOLResolver } from './resolvers/wol.resolver';
 import { WakeNode } from './resolvers/wake-up-node.resolver';
 import { ConfigService } from './config.service.encrypted';
+import { NodeEntity } from './entities/node.entity';
 
 const resolvers = [
     FreeboxResolver,
@@ -24,7 +25,7 @@ const resolvers = [
         HttpModule,
         PubsubModule,
         NordvpnModule,
-        TypeOrmModule.forFeature([FreeboxToken])
+        TypeOrmModule.forFeature([FreeboxToken, NodeEntity])
     ],
     providers: [
         FreeboxService,

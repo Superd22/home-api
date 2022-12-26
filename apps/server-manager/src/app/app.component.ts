@@ -27,7 +27,6 @@ export class AppComponent implements AfterViewInit {
     protected readonly getGames: GetGamesGQL,
     protected readonly watch: WatchStatusChangeGQL
   ) {
-    console.log("graou")
   }
 
   ngAfterViewInit(): void {

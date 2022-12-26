@@ -1,0 +1,10 @@
+mutation turnOnGame($gameId: ID!) {
+  turnOnServer(gameId: $gameId) {
+    success,
+    game {
+      id
+      status
+      online
+    }
+  }
+}

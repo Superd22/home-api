@@ -1,4 +1,4 @@
-import { Args, ID, Mutation, Query, ResolveField, Resolver, Root } from "@nestjs/graphql";
+import { Args, Field, ID, Mutation, ObjectType, Query, registerEnumType, ResolveField, Resolver, Root } from "@nestjs/graphql";
 import { InfraService } from "../api/infra.service";
 import { GQLGame } from './game.object'
 import { Service } from 'dockerode'
@@ -9,6 +9,24 @@ import { ListGamesQuery } from "./list-game.query";
 import { GQLNode } from "../nodes/node.object";
 import { DockerNode } from "../api/node.docker"
 import { Scope, Scopes } from "@homeapi/auth";
+
+enum GameStatus {
+  OFFLINE,
+  STARTING,
+  ONLINE
+}
+
+registerEnumType(GameStatus, { name: 'GameStatus' })
+
+@ObjectType()
+export class ToggleGameServer {
+  @Field()
+  public readonly success: boolean
+
+  @Field(() => GQLGame)
+  public readonly game: GQLGame
+
+}
 
 @Resolver(() => GQLGame)
 export class GameResolver {
@@ -55,7 +73,18 @@ export class GameResolver {
       }
     })
 
+    // might break if container has healtcheck, check later.
     return game.tasks.some(t => t['Status']['State'] === 'running')
+  }
+
+
+  @ResolveField(() => GameStatus)
+  public async status(
+    @Root() game: GQLGame
+  ): Promise<GameStatus> {
+    if (await this.online(game)) return GameStatus.ONLINE
+    if (game.tasks?.length > 0) return GameStatus.STARTING
+    return GameStatus.OFFLINE
   }
 
   @ResolveField(() => String, { nullable: true })
@@ -73,9 +102,9 @@ export class GameResolver {
   }
 
 
-  @Mutation(() => Boolean)
+  @Mutation(() => ToggleGameServer)
   @Scopes(Scope.InfraManager)
-  public async turnOffServer(@Args('gameId', { type: () => ID }) id: string): Promise<boolean> {
+  public async turnOffServer(@Args('gameId', { type: () => ID }) id: string): Promise<ToggleGameServer> {
     const service: Service = await this.infra.docker.getService(id).inspect()
 
     await this.infra.docker.getService(id).update({
@@ -83,12 +112,12 @@ export class GameResolver {
       ...service.Spec,
       Mode: { Replicated: { Replicas: 0 } }
     })
-    return true
+    return { success: true, game: await this.gameById(id) }
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => ToggleGameServer)
   @Scopes(Scope.InfraManager)
-  public async turnOnServer(@Args('gameId', { type: () => ID }) id: string): Promise<boolean> {
+  public async turnOnServer(@Args('gameId', { type: () => ID }) id: string): Promise<ToggleGameServer> {
     const service: Service = await this.infra.docker.getService(id).inspect()
 
     await this.infra.docker.getService(id).update({
@@ -96,7 +125,15 @@ export class GameResolver {
       ...service.Spec,
       Mode: { Replicated: { Replicas: 1 } }
     })
-    return true
+    return { success: true, game: await this.gameById(id) }
+  }
+
+  protected async gameById(id: string): Promise<GQLGame> {
+    const games = await this.getGames.query()
+
+    return games.map(g => new GQLGame(g)).find(
+      g => g.id === id
+    )
   }
 
 }

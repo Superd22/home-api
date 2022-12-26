@@ -2,5 +2,6 @@ query getNodes{
   nodes {
     name
     online
+    status
   }
 }

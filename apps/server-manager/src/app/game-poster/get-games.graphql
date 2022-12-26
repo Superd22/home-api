@@ -4,6 +4,7 @@ query getGames{
     name
     online
     image
+    status
     node {
       id
       name

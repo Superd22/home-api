@@ -2,9 +2,11 @@ query watchStatusChange {
   nodes {
     id
     online
+    status
     games {
       id
       online
+      status
     }
   }
 }
