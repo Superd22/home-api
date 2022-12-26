@@ -21,7 +21,8 @@
         "inlineStyleLanguage": "scss",
         "assets": [
           "apps/server-manager/src/favicon.ico",
-          "apps/server-manager/src/assets"
+          "apps/server-manager/src/assets",
+          "apps/server-manager/src/assets/*"
         ],
         "styles": [
           "apps/server-manager/src/styles.scss"
