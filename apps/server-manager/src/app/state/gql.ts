@@ -119,6 +119,13 @@ export type GetGamesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetGamesQuery = { __typename?: 'Query', games: Array<{ __typename?: 'Game', id: string, name: string, online: boolean, image?: string | null, status: GameStatus, node?: { __typename?: 'Node', id: string, name: string, online: boolean } | null }> };
 
+export type TurnOffGameMutationVariables = Exact<{
+  gameId: Scalars['ID'];
+}>;
+
+
+export type TurnOffGameMutation = { __typename?: 'Mutation', turnOffServer: { __typename?: 'ToggleGameServer', success: boolean, game: { __typename?: 'Game', id: string, status: GameStatus, online: boolean } } };
+
 export type TurnOnGameMutationVariables = Exact<{
   gameId: Scalars['ID'];
 }>;
@@ -165,6 +172,29 @@ export const GetGamesDocument = gql`
   })
   export class GetGamesGQL extends Apollo.Query<GetGamesQuery, GetGamesQueryVariables> {
     document = GetGamesDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const TurnOffGameDocument = gql`
+    mutation turnOffGame($gameId: ID!) {
+  turnOffServer(gameId: $gameId) {
+    success
+    game {
+      id
+      status
+      online
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class TurnOffGameGQL extends Apollo.Mutation<TurnOffGameMutation, TurnOffGameMutationVariables> {
+    document = TurnOffGameDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

@@ -1,0 +1,10 @@
+mutation turnOffGame($gameId: ID!) {
+  turnOffServer(gameId: $gameId) {
+    success,
+    game {
+      id
+      status
+      online
+    }
+  }
+}
