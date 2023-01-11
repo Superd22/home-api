@@ -136,6 +136,18 @@ export class HTPC extends Compose {
     }
   })
 
+  /**
+   * Needed for some indexers
+   * bypasses cloudflare
+   */
+  protected readonly flareSolver = new Service(this, 'flaresolver', {
+    image: 'ghcr.io/flaresolverr/flaresolverr:latest',
+    expose: [8191],
+    environment: [...keyValueFromConfig({
+      LOG_LEVEL: 'debug'
+    })]
+  })
+
 
   constructor(
     protected readonly app: SwarmApp,
