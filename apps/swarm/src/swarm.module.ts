@@ -34,6 +34,7 @@ import { HomeAPI } from './compose/homeapi.compose';
 
 export const composes = [
   DataDog,
+  Calibre,
   HomeAssistant,
   Flood,
   Test,

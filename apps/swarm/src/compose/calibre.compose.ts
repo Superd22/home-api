@@ -12,7 +12,39 @@ import { SwarmApp } from '../swarm.service';
  */
 export class Calibre extends Compose {
 
+  protected readonly timezone = 'Europe/Paris';
   protected readonly webData = new Volume(this, 'web-data')
+  protected readonly volumes = {
+    'readarr-config': new Volume(
+      this,
+      'readarr-config',
+    ),
+  }
+
+
+  protected readonly readarr = this.web.webService(this, 'readarr', {
+    web: {
+      match: 'Host("readarr.davidfain.com")',
+      port: 8787,
+    },
+    serviceProps: {
+      image: 'lscr.io/linuxserver/readarr:develop',
+      deploy: {
+        replicas: 1,
+      },
+      volumes: [
+        `/mnt/raid/0.SHARED/:/data`,
+        `${this.volumes['readarr-config'].id(this)}:/config`,
+      ],
+      environment: [
+        ...keyValueFromConfig({
+          PUID: 1000,
+          PGID: 1000,
+          TZ: this.timezone,
+        }),
+      ],
+    }
+  })
 
   constructor(
     protected readonly app: SwarmApp,
@@ -23,9 +55,11 @@ export class Calibre extends Compose {
     const calibre = this.web.webService(this, 'calibre', {
       web: { match: 'Host(`calibre.davidfain.com`)', port: 8080 },
       serviceProps: {
-        image: 'linuxserver/calibre',
+        image: 'lscr.io/linuxserver/calibre:6.4.0',
         environment: keyValueFromConfig({
-          TZ: 'Europe/Paris'
+          PUID: 1000,
+          PGID: 1000,
+          TZ: this.timezone,
         }),
         volumes: [
           "/mnt/raid/0.SHARED/3.Books/:/config",
@@ -42,7 +76,9 @@ export class Calibre extends Compose {
       serviceProps: {
         image: 'ghcr.io/linuxserver/calibre-web',
         environment: keyValueFromConfig({
-          TZ: 'Europe/Paris',
+          PUID: 1000,
+          PGID: 1000,
+          TZ: this.timezone,
           DOCKER_MODS: "linuxserver/calibre-web:calibre"
         }),
         volumes: [
@@ -53,7 +89,6 @@ export class Calibre extends Compose {
     });
 
     new NodeSelector(calibreWeb, AvailableNodes.Galactica)
-
-   
+    new NodeSelector(this.readarr, AvailableNodes.Galactica)
   }
 }
