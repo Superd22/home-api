@@ -7,6 +7,7 @@ import { WebServiceFactory } from '../services/web-service/web-service.factory';
 import { SwarmApp } from '../swarm.service';
 import { LaunchThroughComposeService } from './internal/dind/dind.service';
 import { NetworkVolume } from './internal/network-volume/network.volume';
+import { AutoUpdate } from './internal/updater';
 import { reverseProxyToWeb } from './traefik/reverse-proxy-to-web';
 import { WebProxyNetwork } from './traefik/webproxy.network';
 
@@ -92,6 +93,7 @@ export class HTPC extends Compose {
   }
 
 
+  @AutoUpdate()
   protected readonly jellyseer = this.web.webService(this, 'jellyseer', {
     web: {
       match: 'Host(`jellyseer.davidfain.com`)',
@@ -109,6 +111,7 @@ export class HTPC extends Compose {
     }
   })
 
+  @AutoUpdate()
   protected readonly radarr = this.web.webService(this, 'radarr', {
     web: {
       match: 'Host("radarr.davidfain.com")',
@@ -118,9 +121,6 @@ export class HTPC extends Compose {
       image: 'lscr.io/linuxserver/radarr:latest',
       deploy: {
         replicas: 1,
-      },
-      networks: {
-        [this.webproxyNetwork.id(this)]: {},
       },
       volumes: [
         `/mnt/raid/0.SHARED/:/data`,
@@ -140,12 +140,144 @@ export class HTPC extends Compose {
    * Needed for some indexers
    * bypasses cloudflare
    */
-  protected readonly flareSolver = new Service(this, 'flaresolver', {
+  @AutoUpdate()
+  protected readonly flareSolver: Service = new Service(this, 'flaresolver', {
     image: 'ghcr.io/flaresolverr/flaresolverr:latest',
     expose: [8191],
+    networks: {
+      ...this.webproxyNetwork.toService(this)
+    },
     environment: [...keyValueFromConfig({
       LOG_LEVEL: 'debug'
     })]
+  })
+
+  @AutoUpdate()
+  public readonly jellyfin = this.web.webService(this, 'jellyfin', {
+    web: {
+      match: 'Host("jellyfin.davidfain.com")',
+      allowHttp: true,
+      port: 8096,
+    },
+    serviceProps: {
+      image: 'lscr.io/linuxserver/jellyfin:10.8.7',
+      deploy: {
+        replicas: 1,
+        /** @todo gpu helper */
+        resources: {
+          reservations: {
+            generic_resources: [
+              {
+                discrete_resource_spec: {
+                  kind: 'NVIDIA-GPU',
+                  value: 0
+                }
+              }
+            ]
+          }
+        }
+      },
+      networks: {
+        [this.webproxyNetwork.id(this)]: {},
+      },
+      volumes: [
+        `/mnt/raid/0.SHARED/0.Media:/data`,
+        `${this.volumes['jellyfin-config'].id(this)}:/config`,
+      ],
+      devices: [
+        new SwarmDevice('/dev/dri')
+      ],
+      environment: [
+        ...keyValueFromConfig({
+          NVIDIA_VISIBLE_DEVICES: 'all',
+          PUID: 1000,
+          PGID: 1000,
+          TZ: this.timezone,
+          JELLYFIN_PublishedServerUrl: "jellyfin.davidfain.com"
+        }),
+      ]
+    }
+  })
+
+  public readonly sonarr = this.web.webService(this, 'sonarr', {
+    web: {
+      match: 'Host("sonarr.davidfain.com")',
+      port: 8989,
+    },
+    serviceProps: {
+      image: 'lscr.io/linuxserver/sonarr:latest',
+      deploy: {
+        replicas: 1,
+      },
+      networks: {
+        [this.webproxyNetwork.id(this)]: {},
+      },
+      volumes: [
+        `/mnt/raid/0.SHARED/:/data`,
+        `${this.volumes['sonarr-config'].id(this)}:/config`,
+      ],
+      environment: [
+        ...keyValueFromConfig({
+          PUID: 1000,
+          PGID: 1000,
+          TZ: this.timezone,
+        }),
+      ],
+    }
+  })
+
+  public readonly prowlarr = this.web.webService(this, 'prowlarr', {
+    web: {
+      match: 'Host("prowlarr.davidfain.com")',
+      port: 9696,
+    },
+    serviceProps: {
+      image: 'lscr.io/linuxserver/prowlarr:develop',
+      deploy: {
+        replicas: 1,
+      },
+      dns: '8.8.8.8',
+      networks: {
+        [this.webproxyNetwork.id(this)]: {},
+      },
+      volumes: [
+        `${this.volumes['prowlarr-config'].id(this)}:/config`,
+      ],
+      environment: [
+        ...keyValueFromConfig({
+          PUID: 1000,
+          PGID: 1000,
+          TZ: this.timezone,
+        }),
+      ],
+    }
+  })
+
+  public readonly bazarr = this.web.webService(this, 'bazarr', {
+    web: {
+      match: 'Host("bazarr.davidfain.com")',
+      port: 6767,
+    },
+    serviceProps: {
+      image: 'lscr.io/linuxserver/bazarr:latest',
+      deploy: {
+        replicas: 1,
+      },
+      networks: {
+        [this.webproxyNetwork.id(this)]: {},
+      },
+      volumes: [
+        `/mnt/raid/0.SHARED/:/data`,
+        `${this.volumes['bazarr-config'].id(this)}:/config`,
+      ],
+      environment: [
+        ...keyValueFromConfig({
+          PUID: 1000,
+          PGID: 1000,
+          TZ: this.timezone,
+        }),
+      ],
+    }
   })
 
 
@@ -156,143 +288,16 @@ export class HTPC extends Compose {
     protected readonly config: Config,
   ) {
     super(app, HTPC.name, { version: '3.6', name: null });
-
     webproxyNetwork.bind(this)
-
-    const jellyfin = this.web.webService(this, 'jellyfin', {
-      web: {
-        match: 'Host("jellyfin.davidfain.com")',
-        allowHttp: true,
-        port: 8096,
-      },
-      serviceProps: {
-        image: 'lscr.io/linuxserver/jellyfin:10.8.7',
-        deploy: {
-          replicas: 1,
-          /** @todo gpu helper */
-          resources: {
-            reservations: {
-              generic_resources: [
-                {
-                  discrete_resource_spec: {
-                    kind: 'NVIDIA-GPU',
-                    value: 0
-                  }
-                }
-              ]
-            }
-          }
-        },
-        networks: {
-          [this.webproxyNetwork.id(this)]: {},
-        },
-        volumes: [
-          `/mnt/raid/0.SHARED/0.Media:/data`,
-          `${this.volumes['jellyfin-config'].id(this)}:/config`,
-        ],
-        devices: [
-          new SwarmDevice('/dev/dri')
-        ],
-        environment: [
-          ...keyValueFromConfig({
-            NVIDIA_VISIBLE_DEVICES: 'all',
-            PUID: 1000,
-            PGID: 1000,
-            TZ: this.timezone,
-            JELLYFIN_PublishedServerUrl: "jellyfin.davidfain.com"
-          }),
-        ]
-      }
-    })
-
-    const sonarr = this.web.webService(this, 'sonarr', {
-      web: {
-        match: 'Host("sonarr.davidfain.com")',
-        port: 8989,
-      },
-      serviceProps: {
-        image: 'lscr.io/linuxserver/sonarr:latest',
-        deploy: {
-          replicas: 1,
-        },
-        networks: {
-          [this.webproxyNetwork.id(this)]: {},
-        },
-        volumes: [
-          `/mnt/raid/0.SHARED/:/data`,
-          `${this.volumes['sonarr-config'].id(this)}:/config`,
-        ],
-        environment: [
-          ...keyValueFromConfig({
-            PUID: 1000,
-            PGID: 1000,
-            TZ: this.timezone,
-          }),
-        ],
-      }
-    })
-
-    const prowlarr = this.web.webService(this, 'prowlarr', {
-      web: {
-        match: 'Host("prowlarr.davidfain.com")',
-        port: 9696,
-      },
-      serviceProps: {
-        image: 'lscr.io/linuxserver/prowlarr:develop',
-        deploy: {
-          replicas: 1,
-        },
-        dns: '8.8.8.8',
-        networks: {
-          [this.webproxyNetwork.id(this)]: {},
-        },
-        volumes: [
-          `${this.volumes['prowlarr-config'].id(this)}:/config`,
-        ],
-        environment: [
-          ...keyValueFromConfig({
-            PUID: 1000,
-            PGID: 1000,
-            TZ: this.timezone,
-          }),
-        ],
-      }
-    })
-
-    const bazarr = this.web.webService(this, 'bazarr', {
-      web: {
-        match: 'Host("bazarr.davidfain.com")',
-        port: 6767,
-      },
-      serviceProps: {
-        image: 'lscr.io/linuxserver/bazarr:latest',
-        deploy: {
-          replicas: 1,
-        },
-        networks: {
-          [this.webproxyNetwork.id(this)]: {},
-        },
-        volumes: [
-          `/mnt/raid/0.SHARED/:/data`,
-          `${this.volumes['bazarr-config'].id(this)}:/config`,
-        ],
-        environment: [
-          ...keyValueFromConfig({
-            PUID: 1000,
-            PGID: 1000,
-            TZ: this.timezone,
-          }),
-        ],
-      }
-    })
 
     // new this.Tdarr(this, this.web)
 
-    new NodeSelector(jellyfin, AvailableNodes.Galactica);
-    new NodeSelector(sonarr, AvailableNodes.Galactica);
-    new NodeSelector(bazarr, AvailableNodes.Galactica);
-    new NodeSelector(prowlarr, AvailableNodes.Galactica);
+    new NodeSelector(this.jellyfin, AvailableNodes.Galactica);
+    new NodeSelector(this.sonarr, AvailableNodes.Galactica);
+    new NodeSelector(this.bazarr, AvailableNodes.Galactica);
+    new NodeSelector(this.prowlarr, AvailableNodes.Galactica);
     new NodeSelector(this.jellyseer, AvailableNodes.Galactica);
     new NodeSelector(this.radarr, AvailableNodes.Galactica);
+    new NodeSelector(this.flareSolver, AvailableNodes.Galactica);
   }
 }

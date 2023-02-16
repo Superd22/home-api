@@ -38,15 +38,9 @@ export class WebServiceFactory {
     })
     this.ensureWebProxyNetwork(compose, service);
 
-    const dedup = (a: KeyValue[] = [], b: KeyValue[] = []): KeyValue[] => {
-      return [...new Map<string, KeyValue>(
-        ([...props.labels, ...service.props.labels] as KeyValue[])
-          .map((l: KeyValue) => ([l.key, l] as const)).values()
-      ).values()]
-    }
 
-    service.props.labels = dedup(props?.labels as KeyValue[], service.props?.labels as KeyValue[])
-    service.props.deploy.labels = dedup(props.deploy?.labels as KeyValue[], service.props?.deploy?.labels as KeyValue[])
+    service.props.labels = keyValueFromConfig(props?.labels as KeyValue[], service.props?.labels as KeyValue[])
+    service.props.deploy.labels = keyValueFromConfig(props.deploy?.labels as KeyValue[], service.props?.deploy?.labels as KeyValue[])
    
     // this.addLabels(service, web)
   }

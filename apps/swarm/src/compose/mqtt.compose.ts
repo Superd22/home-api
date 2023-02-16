@@ -1,9 +1,8 @@
-import { App, Compose, Network, Port, Service, Volume } from '@homeapi/ctsdk';
-import { Injectable } from '@nestjs/common';
+import { Compose, Service, Volume } from '@homeapi/ctsdk';
+import { Inject, Injectable } from '@nestjs/common';
 import { AvailableNodes, NodeSelector } from '../charts/node-selector';
-import { WebServiceFactory } from '../services/web-service/web-service.factory';
-import { WebService } from '../services/web-service/webservice.chart';
 import { SwarmApp } from '../swarm.service';
+import { WebProxyNetwork } from './traefik/webproxy.network';
 
 /**
  * version: '3'
@@ -42,7 +41,8 @@ volumes:
 export class MQTT extends Compose {
   constructor(
     app: SwarmApp,
-    protected readonly webServiceFactory: WebServiceFactory,
+    @Inject(WebProxyNetwork)
+    protected readonly network: WebProxyNetwork
   ) {
     super(app, MQTT.name, { name: null, version: "3.8" });
 
@@ -50,11 +50,16 @@ export class MQTT extends Compose {
     const service = new Service(this, 'server', {
       image: 'eclipse-mosquitto',
       ports: [{ mode: 'host', published: 1883, target: 1883 }],
+      networks: {
+        ...this.network.toService(this)
+      },
       volumes: [
-        `${new Volume(this, 'config', null).id(this)}:/mosquitto/config`,
-        `${new Volume(this, 'data', null).id(this)}:/mosquitto/data`,
+        new Volume(this, 'config').toService({ path: '/mosquitto/config' }),
+        new Volume(this, 'data').toService({ path: '/mosquitto/data' }),
       ],
     })
+
+    this.network.bind(this)
 
 
     new NodeSelector(service, AvailableNodes.HomeAPI)

@@ -1,6 +1,7 @@
 import { Compose } from './compose.construct';
 import { Construct, Construct_ID } from '../../sdk';
 import { DefinitionsNetwork, DefinitionsService } from '../compose-v3';
+import { Service } from './service.construct';
 
 export class Network extends Construct<NetworkProps, Compose> {
 
@@ -16,9 +17,9 @@ export class Network extends Construct<NetworkProps, Compose> {
     }
   }
 
-  public toService(): DefinitionsService['networks'] {
+  public toService(scope?: Compose): DefinitionsService['networks'] {
     return {
-      [this.id(this.scope)]: {}
+      [this.id(scope || this.scope)]: {}
     }
   }
 
