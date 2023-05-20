@@ -31,6 +31,7 @@ import { Satisfactory } from './compose/games/satisfactory.compose';
 import { Auth } from './compose/auth.compose';
 import { Updater } from './compose/internal/updater/updater.compose';
 import { HomeAPI } from './compose/homeapi.compose';
+import { Whipser } from './compose/whisper.compose';
 
 export const composes = [
   DataDog,
@@ -45,7 +46,8 @@ export const composes = [
   Satisfactory,
   Auth,
   Updater,
-  HomeAPI
+  HomeAPI,
+  Whipser
 ];
 
 export const dynamicComposes = [
