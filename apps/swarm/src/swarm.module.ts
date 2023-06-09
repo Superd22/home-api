@@ -35,17 +35,17 @@ import { Whipser } from './compose/whisper.compose';
 import { AuthMiddlewares } from './services/web-service/auths-middleware.chart';
 
 export const composes = [
-  DataDog,
-  Calibre,
+  // DataDog,
+  // Calibre,
   HomeAssistant,
   Flood,
   Test,
   MQTT,
-  Calibre,
+  // Calibre,
   DIYHue,
   HTPC,
   Satisfactory,
-  Auth,
+  // Auth,
   Updater,
   HomeAPI,
   Whipser

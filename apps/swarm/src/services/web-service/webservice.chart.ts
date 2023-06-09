@@ -83,6 +83,8 @@ export class WebService extends Service {
     if (!this.config.requiresAuth) {
       delete labels.traefik.http.routers[`${this[Construct_ID]}unsecure`].middlewares
       delete labels.traefik.http.routers[`${this[Construct_ID]}`].middlewares
+    } else {
+      this.authsMiddlewareService.registerRule(this.config.requiresAuth as AuthRule)
     }
 
     if (!this.config.allowHttp && !this.config.unsecure) {

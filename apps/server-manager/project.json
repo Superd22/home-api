@@ -7,16 +7,12 @@
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/server-manager",
         "index": "apps/server-manager/src/index.html",
         "main": "apps/server-manager/src/main.ts",
-        "polyfills": [
-          "zone.js"
-        ],
+        "polyfills": ["zone.js"],
         "tsConfig": "apps/server-manager/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
@@ -24,9 +20,7 @@
           "apps/server-manager/src/assets",
           "apps/server-manager/src/assets/*"
         ],
-        "styles": [
-          "apps/server-manager/src/styles.scss"
-        ],
+        "styles": ["apps/server-manager/src/styles.scss"],
         "scripts": []
       },
       "configurations": {
@@ -81,10 +75,8 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": [
           "apps/server-manager/**/*.ts",
@@ -98,17 +90,10 @@
       "options": {
         "engine": "docker",
         "push": true,
-        "platforms": [
-          "linux/arm64",
-          "linux/amd64"
-        ],
-        "tags": [
-          "ghcr.io/superd22/home-api/server-manager:latest"
-        ],
+        "platforms": ["linux/arm64", "linux/amd64"],
+        "tags": ["ghcr.io/superd22/home-api/server-manager:latest"],
         "metadata": {
-          "images": [
-            "ghcr.io/superd22/home-api/server-manager"
-          ],
+          "images": ["ghcr.io/superd22/home-api/server-manager"],
           "load": true,
           "tags": [
             "latest",
