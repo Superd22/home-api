@@ -46,7 +46,6 @@ volumes/*/*
 
 /docker-compose.*.yml
 
-**/.angular
 .nx-container
 tmp
 .secrets

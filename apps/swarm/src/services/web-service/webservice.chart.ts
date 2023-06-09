@@ -1,10 +1,13 @@
 import { Compose, Construct_ID, KeyValue, Service, ServiceProps } from '@homeapi/ctsdk';
 import { keyValueFromConfig } from '../../charts/utils/kv-from-config.util';
 import set from 'lodash/set'
+import { AuthMiddlewares, AuthRule } from './auths-middleware.chart';
 
 export class WebService extends Service {
 
   protected readonly config!: WebServiceProps['web']
+
+  protected readonly authsMiddlewareService = AuthMiddlewares.instance
 
   constructor(
     protected readonly compose: Compose,
@@ -30,6 +33,11 @@ export class WebService extends Service {
   }
 
   protected addLabels(): void {
+    
+    if (this.config.requiresAuth === true) {
+      this.config.requiresAuth = new AuthRule({ whitelist: ['superd001@gmail.com'] })
+    }
+
     if (!this._props.labels) this._props.labels = [];
 
     const labels = {
@@ -56,13 +64,13 @@ export class WebService extends Service {
               entrypoints: 'web',
               rule: this.config.match,
               service: this[Construct_ID],
-              middlewares: "forward-auth",
+              middlewares: "forward-auth" + (this.config.requiresAuth as AuthRule)?.id,
             },
             [this[Construct_ID]]: {
               entrypoints: 'websecure',
               rule: this.config.match,
               service: this[Construct_ID],
-              middlewares: "forward-auth",
+              middlewares: "forward-auth" + (this.config.requiresAuth as AuthRule)?.id,
               tls: {
                 certresolver: 'le',
               },
@@ -102,7 +110,13 @@ export interface WebServiceProps {
     match: string;
     unsecure?: boolean;
     allowHttp?: boolean;
-    requiresAuth?: boolean;
+    /**
+     * Give an auth rule to ensure that no one can access this
+     * service without authorizating
+     * 
+     * if true is given, auth will be required for default email address
+     */
+    requiresAuth?: boolean | AuthRule;
     /** 
      * container port to use
      * default: 80
