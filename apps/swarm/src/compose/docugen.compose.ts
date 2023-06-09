@@ -20,7 +20,12 @@ export class Docugen extends Compose {
       image: 'ghcr.io/superd22/docugen/api',
       networks: {
         ...this.network.toService(this)
-      }
+      },
+      environment: keyValueFromConfig({
+        GITHUB_TOKEN: this.config.docugen.ghToken,
+        REPOSITORY: "wemaintain/backend",
+        DOCUMENTATION_GH_RELEASE: true
+      })
     },
   })
 
@@ -34,12 +39,7 @@ export class Docugen extends Compose {
       image: 'ghcr.io/superd22/docugen/frontend',
       networks: {
         ...this.network.toService(this)
-      },
-      environment: keyValueFromConfig({
-        GITHUB_TOKEN: this.config.docugen.ghToken,
-        REPOSITORY: "wemaintain/backend",
-        DOCUMENTATION_GH_RELEASE: true
-      })
+      }
     }
   })
 

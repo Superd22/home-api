@@ -20,6 +20,7 @@ export class KeyValueImpl extends wesh.Node<KeyValue> implements KeyValue {
   }
 
   public toJSON(): string {
+    if (this._props.value === null) return `${this._props.key}`
     return `${this._props.key}=${this._props.value}`
   }
 

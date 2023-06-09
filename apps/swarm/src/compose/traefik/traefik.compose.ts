@@ -98,6 +98,34 @@ export class TraefikService implements ISynthAfterCompose {
         }),
       });
 
+  const commands = [
+    ...keyValueFromConfig({
+      "auth-host": "auth.davidfain.com",
+      "cookie-domain": "davidfain.com",
+      secret: this.appConfig.traefik.auth.secret,
+      'match-whitelist-or-domain': null,
+      'log-level': 'debug',
+      providers: {
+        google: {
+          'client-id': this.appConfig.traefik.auth.providers.google.clientId,
+          'client-secret': this.appConfig.traefik.auth.providers.google.clientSecret
+        },
+        "generic-oauth": {
+          "auth-url": "https://github.com/login/oauth/authorize",
+          "token-url": "https://github.com/login/oauth/access_token",
+          "user-url": "https://api.github.com/user",
+          "client-id": this.appConfig.traefik.auth.providers.github.clientId,
+          "client-secret": this.appConfig.traefik.auth.providers.github.clientSecret
+        }
+      }
+    }),
+    ...this.appConfig.traefik.auth.domain.flatMap(
+      domain => keyValueFromConfig({ domain })
+    ),
+    ...this.appConfig.traefik.auth.whitelist.flatMap(
+      whitelist => keyValueFromConfig({ whitelist })
+    ),
+  ]
 
       const forwardAuth = new WebService(
         this,
@@ -131,28 +159,7 @@ export class TraefikService implements ISynthAfterCompose {
               // @todo better API for dis?
               webproxy: null,
             },
-            command: keyValueFromConfig({
-              "auth-host": "auth.davidfain.com",
-              "cookie-domain": "davidfain.com",
-              whitelist:  this.appConfig.traefik.auth.whitelist,
-              domain:  this.appConfig.traefik.auth.domain,
-              secret: this.appConfig.traefik.auth.secret,
-              'match-whitelist-or-domain': true,
-              'log-level': 'debug',
-              providers: {
-                google: {
-                  'client-id': this.appConfig.traefik.auth.providers.google.clientId,
-                  'client-secret': this.appConfig.traefik.auth.providers.google.clientSecret
-                },
-                "generic-oauth": {
-                  "auth-url": "https://github.com/login/oauth/authorize",
-                  "token-url": "https://github.com/login/oauth/access_token",
-                  "user-url": "https://api.github.com/user",
-                  "client-id": this.appConfig.traefik.auth.providers.github.clientId,
-                  "client-secret": this.appConfig.traefik.auth.providers.github.clientSecret
-                }
-              }
-            }).map(keyVal => {
+            command: commands.map(keyVal => {
               keyVal.key = `--${keyVal.key}`
               return keyVal
             })
