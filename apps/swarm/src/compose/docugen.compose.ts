@@ -1,4 +1,4 @@
-import { Compose } from '@homeapi/ctsdk';
+import { Compose, Network } from '@homeapi/ctsdk';
 import { Injectable } from '@nestjs/common';
 import { keyValueFromConfig } from '../charts/utils/kv-from-config.util';
 import { WebServiceFactory } from '../services/web-service/web-service.factory';
@@ -9,6 +9,8 @@ import { Config } from '../config.encrypted';
 @Injectable()
 export class Docugen extends Compose {
 
+  protected network = new Network(this, 'docugen');
+  
   protected readonly backend = this.web.webService(this, 'backend', {
     web: {
       match: 'Host(`wmtn.docugen.davidfain.com`) && PathPrefix(`/api`)',
@@ -16,8 +18,11 @@ export class Docugen extends Compose {
       port: 3000
     },
     serviceProps: {
-      image: 'ghcr.io/superd22/docugen/api'
-    }
+      image: 'ghcr.io/superd22/docugen/api',
+      networks: {
+        ...this.network.toService(this)
+      }
+    },
   })
 
   protected readonly frontend = this.web.webService(this, 'frontend', {
@@ -28,6 +33,9 @@ export class Docugen extends Compose {
     },
     serviceProps: {
       image: 'ghcr.io/superd22/docugen/frontend',
+      networks: {
+        ...this.network.toService(this)
+      },
       environment: keyValueFromConfig({
         GITHUB_TOKEN: this.config.docugen.ghToken,
         REPOSITORY: "wemaintain/backend",

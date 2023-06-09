@@ -76,7 +76,7 @@ export class AuthMiddlewares implements ISynthAfterCompose {
         },
         networks: {
           // @todo better API for dis?
-          webproxy: null,
+          traefik_webproxy: null,
         },
         command: keyValueFromConfig({
           'auth-host': 'auth.davidfain.com',
