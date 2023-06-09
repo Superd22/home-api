@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { keyValueFromConfig } from '../charts/utils/kv-from-config.util';
 import { WebServiceFactory } from '../services/web-service/web-service.factory';
 import { SwarmApp } from '../swarm.service';
-import { AuthRule } from '../services/web-service/auths-middleware.chart';
 import { Config } from '../config.encrypted';
 
 @Injectable()
@@ -14,7 +13,7 @@ export class Docugen extends Compose {
   protected readonly backend = this.web.webService(this, 'backend', {
     web: {
       match: 'Host(`wmtn.docugen.davidfain.com`) && PathPrefix(`/api`)',
-      requiresAuth: new AuthRule({ domains: ['wemaintain.com'] }),
+      requiresAuth: true,
       port: 3000
     },
     serviceProps: {
@@ -28,7 +27,7 @@ export class Docugen extends Compose {
   protected readonly frontend = this.web.webService(this, 'frontend', {
     web: {
       match: 'Host(`wmtn.docugen.davidfain.com`)',
-      requiresAuth: new AuthRule({ domains: ['wemaintain.com'] }),
+      requiresAuth: true,
       port: 80
     },
     serviceProps: {

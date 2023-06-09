@@ -4,7 +4,6 @@ import set from 'lodash/set';
 import { keyValueFromConfig } from '../../charts/utils/kv-from-config.util';
 import { WebProxyNetwork } from '../../compose/traefik/webproxy.network';
 import { WebService, WebServiceProps } from './webservice.chart';
-import { AuthRule } from './auths-middleware.chart';
 
 @Injectable()
 export class WebServiceFactory {
@@ -49,11 +48,6 @@ export class WebServiceFactory {
 
 
   protected addLabels(service: Service, config: WebAccessProps): void {
-
-    if (config.requiresAuth === true) {
-      config.requiresAuth = new AuthRule({ whitelist: ['superd001@gmail.com'] })
-    }
-
     const labels = {
       traefik: {
         http: {

@@ -98,6 +98,73 @@ export class TraefikService implements ISynthAfterCompose {
         }),
       });
 
+
+      const forwardAuth = new WebService(
+        this,
+        "forward-auth",
+        {
+          serviceProps: {
+            image: 'npawelek/traefik-forward-auth',
+            deploy: {
+              labels: keyValueFromConfig({
+                traefik: {
+                  http: {
+                    routers: {
+                      "forward-auth": {
+                        middlewares: "forward-auth"
+                      },
+                    },
+                    middlewares: {
+                      'forward-auth': {
+                        forwardauth: {
+                          address: `http://traefik_forward-auth:4181`,
+                          authResponseHeaders: "X-Forwarded-User",
+                          trustForwardHeader: true,
+                        }
+                      }
+                    }
+                  }
+                }
+              }),
+            },
+            networks: {
+              // @todo better API for dis?
+              webproxy: null,
+            },
+            command: keyValueFromConfig({
+              "auth-host": "auth.davidfain.com",
+              "cookie-domain": "davidfain.com",
+              whitelist:  this.appConfig.traefik.auth.whitelist,
+              domain:  this.appConfig.traefik.auth.domain,
+              secret: this.appConfig.traefik.auth.secret,
+              'match-whitelist-or-domain': true,
+              'log-level': 'debug',
+              providers: {
+                google: {
+                  'client-id': this.appConfig.traefik.auth.providers.google.clientId,
+                  'client-secret': this.appConfig.traefik.auth.providers.google.clientSecret
+                },
+                "generic-oauth": {
+                  "auth-url": "https://github.com/login/oauth/authorize",
+                  "token-url": "https://github.com/login/oauth/access_token",
+                  "user-url": "https://api.github.com/user",
+                  "client-id": this.appConfig.traefik.auth.providers.github.clientId,
+                  "client-secret": this.appConfig.traefik.auth.providers.github.clientSecret
+                }
+              }
+            }).map(keyVal => {
+              keyVal.key = `--${keyVal.key}`
+              return keyVal
+            })
+          },
+          web: {
+            match: "Host(`auth.davidfain.com`)",
+            port: 4181
+          }
+        }
+      )
+
+      new NodeSelector(service, AvailableNodes.HomeAPI)
     }
   }
 
