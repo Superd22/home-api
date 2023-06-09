@@ -33,6 +33,7 @@ import { Updater } from './compose/internal/updater/updater.compose';
 import { HomeAPI } from './compose/homeapi.compose';
 import { Whipser } from './compose/whisper.compose';
 import { AuthMiddlewares } from './services/web-service/auths-middleware.chart';
+import { Docugen } from './compose/docugen.compose';
 
 export const composes = [
   // DataDog,
@@ -48,7 +49,8 @@ export const composes = [
   // Auth,
   Updater,
   HomeAPI,
-  Whipser
+  Whipser,
+  Docugen
 ];
 
 export const dynamicComposes = [
