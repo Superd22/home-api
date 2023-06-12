@@ -33,7 +33,7 @@ export class Docugen extends Compose {
     web: {
       match: 'Host(`wmtn.docugen.davidfain.com`)',
       requiresAuth: true,
-      port: 80
+      port: 8080
     },
     serviceProps: {
       image: 'ghcr.io/superd22/docugen/frontend',
