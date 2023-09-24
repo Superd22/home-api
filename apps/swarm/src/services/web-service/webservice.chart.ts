@@ -1,6 +1,6 @@
-import { Compose, Construct_ID, KeyValue, Service, ServiceProps } from '@homeapi/ctsdk';
+import { Compose, Construct_ID, Service, ServiceProps } from '@homeapi/ctsdk';
+import set from 'lodash/set';
 import { keyValueFromConfig } from '../../charts/utils/kv-from-config.util';
-import set from 'lodash/set'
 
 export class WebService extends Service {
 
@@ -89,9 +89,12 @@ export class WebService extends Service {
 
     // find a better way to do dis
     // in swarm mode labels should be on service (ie= deploy) NOT on container
-    if (!this.props?.deploy?.labels) set(this._props, 'deploy.labels', []);
+    if (!this.props?.deploy?.labels) set(this._props, 'deploy.labels', {});
 
-    (this._props.deploy.labels as any as KeyValue[]).push(...keyValueFromConfig(labels))
+    this._props.deploy.labels = Object.assign(keyValueFromConfig(labels).reduce((acc, curr) => {
+      acc[curr.key] = (['string', 'number', null].includes(typeof curr.value)) ? curr.value : JSON.stringify(curr.value)
+      return acc
+    }, {}), this._props.deploy.labels)
 
   }
 }

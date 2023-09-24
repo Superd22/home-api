@@ -1,14 +1,12 @@
-import { BindVolume, Compose, Network, Port, Service, SwarmDevice, Volume } from '@homeapi/ctsdk';
+import { Compose, Service, SwarmDevice, Volume } from '@homeapi/ctsdk';
 import { Injectable } from '@nestjs/common';
 import { AvailableNodes, NodeSelector } from '../charts/node-selector';
 import { keyValueFromConfig } from '../charts/utils/kv-from-config.util';
 import { Config } from '../config.encrypted';
 import { WebServiceFactory } from '../services/web-service/web-service.factory';
 import { SwarmApp } from '../swarm.service';
-import { LaunchThroughComposeService } from './internal/dind/dind.service';
 import { NetworkVolume } from './internal/network-volume/network.volume';
 import { AutoUpdate } from './internal/updater';
-import { reverseProxyToWeb } from './traefik/reverse-proxy-to-web';
 import { WebProxyNetwork } from './traefik/webproxy.network';
 
 @Injectable()
@@ -164,18 +162,18 @@ export class HTPC extends Compose {
       deploy: {
         replicas: 1,
         /** @todo gpu helper */
-        resources: {
-          reservations: {
-            generic_resources: [
-              {
-                discrete_resource_spec: {
-                  kind: 'NVIDIA-GPU',
-                  value: 0
-                }
-              }
-            ]
-          }
-        }
+        // resources: {
+        //   reservations: {
+        //     generic_resources: [
+        //       {
+        //         discrete_resource_spec: {
+        //           kind: 'NVIDIA-GPU',
+        //           value: 0
+        //         }
+        //       }
+        //     ]
+        //   }
+        // }
       },
       networks: {
         [this.webproxyNetwork.id(this)]: {},

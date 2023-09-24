@@ -1,9 +1,9 @@
-import { App, Construct, Construct_ID } from '../../sdk';
-import { Service } from './service.construct';
-import { ComposeSpecification, DefinitionsService } from '../compose-v3';
 import { stringify } from 'yaml';
-import { Volume } from './volumes/volume.construct';
+import { App, Construct } from '../../sdk';
+import { ComposeSpecification } from '../compose-v3';
 import { Network } from './network.construct';
+import { Service } from './service.construct';
+import { Volume } from './volumes/volume.construct';
 
 export class Compose extends Construct<ComposeProps, App> {
 
@@ -30,7 +30,7 @@ export class Compose extends Construct<ComposeProps, App> {
       networks: this.returnInternalObject(Network, this),
     } as ComposeSpecification
 
-    return stringify(compose)
+    return stringify(compose, { defaultStringType: 'QUOTE_SINGLE'})
   }
 
   protected returnInternalObject<T extends new (...args: any[]) => Construct<any>>(ConstructType: T, scope: Compose) {

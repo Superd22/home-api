@@ -5,6 +5,7 @@ import { keyValueFromConfig } from '../charts/utils/kv-from-config.util';
 import { WebServiceFactory } from '../services/web-service/web-service.factory';
 import { SwarmApp } from '../swarm.service';
 import { EditableVolume } from './internal/configuration/editable-volume.construct';
+import { AutoUpdate } from './internal';
 
 @Injectable()
 /**
@@ -13,7 +14,9 @@ import { EditableVolume } from './internal/configuration/editable-volume.constru
 export class Flood extends Compose {
 
   protected readonly _config = new EditableVolume(this, 'config', AvailableNodes.Galactica)
+  protected readonly _nzbConfig = new Volume(this, 'confignzb')
 
+  @AutoUpdate()
   protected readonly rtorrent = new Service(this, 'rtorent', {
     image: 'jesec/rtorrent',
     hostname: 'rtorrent',
@@ -27,6 +30,7 @@ export class Flood extends Compose {
     ]
   })
 
+  @AutoUpdate()
   protected readonly flood = this.web.webService(this, 'flood', {
     web: { match: 'Host(`torrent.davidfain.com`)', port: 3001 },
     serviceProps: {
@@ -41,6 +45,19 @@ export class Flood extends Compose {
     }
   })
 
+  @AutoUpdate()
+  protected readonly sabnzbd = this.web.webService(this, 'sabnzbd', {
+    web: { match: 'Host(`nzb.davidfain.com`)', port: 8080 },
+    serviceProps: {
+      image: 'lscr.io/linuxserver/sabnzbd:latest',
+      environment: keyValueFromConfig({ PUID: 1000, PGID: 1000, TZ: 'Europe/Paris' }),
+      volumes: [
+        this._nzbConfig.toService({ path: '/config' }),
+        "/mnt/raid/0.SHARED:/data"
+      ]
+    }
+  })
+
   constructor(
     protected readonly app: SwarmApp,
     protected readonly web: WebServiceFactory,
@@ -49,5 +66,6 @@ export class Flood extends Compose {
 
     new NodeSelector(this.flood, AvailableNodes.Galactica)
     new NodeSelector(this.rtorrent, AvailableNodes.Galactica)
+    new NodeSelector(this.sabnzbd, AvailableNodes.Galactica)
   }
 }
