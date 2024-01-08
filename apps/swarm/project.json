@@ -21,7 +21,8 @@
         "esbuildConfig": "apps/swarm/esbuild.config.js",
         "thirdParty": false,
         "platform": "node",
-        "generatePackageJson": true
+        "generatePackageJson": true,
+        "sourcemap": "inline"
       },
       "configurations": {
         "development": {

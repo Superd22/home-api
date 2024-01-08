@@ -5,34 +5,28 @@ import { DeployCommand } from './commands/deploy.command';
 import { PruneCommand } from './commands/prune.command';
 import { SynthCommand } from './commands/synth.command';
 import { Calibre } from './compose/calibre.compose';
-import { DataDog } from './compose/datadog.compose';
 import { DIYHue } from './compose/diyhue.compose';
+import { Docugen } from './compose/docugen.compose';
 import { Flood } from './compose/flood.compose';
-import { Freebox } from './compose/freebox.compose';
+import { Minecraft } from './compose/games/minecraft.compose';
 import { HomeAssistant } from './compose/home-assistant.compose';
+import { HomeAPI } from './compose/homeapi.compose';
+import { HTPC } from './compose/htpc.compose';
+import { Backup } from './compose/internal/backup/backup.compose';
+import { Code } from './compose/internal/configuration/code.compose';
+import { DevicerService } from './compose/internal/devices/devicer.service';
 import { NetworkVolume } from './compose/internal/network-volume/network.volume';
 import { VolumeSharerService } from './compose/internal/network-volume/volume-sharer.service';
-import { HTPC } from './compose/htpc.compose';
+import { Updater } from './compose/internal/updater/updater.compose';
 import { MQTT } from './compose/mqtt.compose';
-import { Plex } from './compose/plex/plex.compose';
-import { Portainer } from './compose/portainer.compose';
-import { Swarmpit } from './compose/swarmpit.compose';
 import { Test } from './compose/test.compose';
 import { TraefikService } from './compose/traefik/traefik.compose';
 import { WebProxyNetwork } from './compose/traefik/webproxy.network';
+import { Whipser } from './compose/whisper.compose';
 import { Config } from './config.encrypted';
+import { MetadataExplorerService } from './services/metadatas/metadata-explorer.service';
 import { WebServiceFactory } from './services/web-service/web-service.factory';
 import { SwarmApp } from './swarm.service';
-import { DevicerService } from './compose/internal/devices/devicer.service';
-import { MetadataExplorerService } from './services/metadatas/metadata-explorer.service';
-import { Code } from './compose/internal/configuration/code.compose';
-import { Backup } from './compose/internal/backup/backup.compose';
-import { Satisfactory } from './compose/games/satisfactory.compose';
-import { Auth } from './compose/auth.compose';
-import { Updater } from './compose/internal/updater/updater.compose';
-import { HomeAPI } from './compose/homeapi.compose';
-import { Whipser } from './compose/whisper.compose';
-import { Docugen } from './compose/docugen.compose';
 
 export const composes = [
   // DataDog,
@@ -41,15 +35,16 @@ export const composes = [
   Flood,
   Test,
   MQTT,
-  // Calibre,
+  Calibre,
   DIYHue,
   HTPC,
-  Satisfactory,
+  // Satisfactory,
   // Auth,
   Updater,
   HomeAPI,
   Whipser,
-  Docugen
+  Docugen,
+  Minecraft
 ];
 
 export const dynamicComposes = [
@@ -79,8 +74,8 @@ const commands = [SynthCommand, DeployCommand, PruneCommand];
 })
 export class SwarmModule {
   constructor(
-    protected readonly app: SwarmApp,
     protected readonly volumes: VolumeSharerService,
+    protected readonly app: SwarmApp,
   ) {
     /**
      * @todo better way to create network volumes.

@@ -10,7 +10,12 @@ export class WebServiceFactory {
   constructor(
     @Inject(WebProxyNetwork)
     protected readonly network: WebProxyNetwork
-  ) { }
+  ) {
+    console.log("ahaha", this.network)
+    if (!this.network) {
+      throw new Error('WebProxyNetwork not injected');
+    }
+  }
 
   public webService(
     compose: Compose,
