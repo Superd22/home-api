@@ -1,5 +1,5 @@
 # HomeAPI
-Personal home API
+Personal Home API
 
 
 # Secrets
