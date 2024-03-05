@@ -8,7 +8,6 @@ import { Calibre } from './compose/calibre.compose';
 import { DIYHue } from './compose/diyhue.compose';
 import { Docugen } from './compose/docugen.compose';
 import { Flood } from './compose/flood.compose';
-import { Minecraft } from './compose/games/minecraft.compose';
 import { HomeAssistant } from './compose/home-assistant.compose';
 import { HomeAPI } from './compose/homeapi.compose';
 import { HTPC } from './compose/htpc.compose';
@@ -44,7 +43,6 @@ export const composes = [
   HomeAPI,
   Whipser,
   Docugen,
-  Minecraft
 ];
 
 export const dynamicComposes = [
