@@ -29,13 +29,13 @@ import { SwarmApp } from './swarm.service';
 
 export const composes = [
   // DataDog,
-  // Calibre,
+  Calibre,
   HomeAssistant,
   Flood,
   // Test,
   MQTT,
   // Calibre,
-  DIYHue,
+  // DIYHue,
   HTPC,
   // Satisfactory,
   // Auth,
@@ -46,9 +46,9 @@ export const composes = [
 ];
 
 export const dynamicComposes = [
-  Backup,
-  Code,
-  VolumeSharerService,
+  // Backup,
+  // Code,
+  // VolumeSharerService,
   TraefikService,
 ]
 

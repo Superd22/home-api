@@ -4,6 +4,7 @@ import { keyValueFromConfig } from '../charts/utils/kv-from-config.util';
 import { WebServiceFactory } from '../services/web-service/web-service.factory';
 import { SwarmApp } from '../swarm.service';
 import { Config } from '../config.encrypted';
+import { AvailableNodes, NodeSelector } from '../charts/node-selector';
 
 @Injectable()
 export class Docugen extends Compose {
@@ -33,13 +34,16 @@ export class Docugen extends Compose {
     web: {
       match: 'Host(`wmtn.docugen.davidfain.com`)',
       requiresAuth: true,
-      port: 8080
+      port: 3000
     },
     serviceProps: {
-      image: 'ghcr.io/superd22/docugen/frontend',
+      image: 'ghcr.io/superd22/docugen/frontend:beta',
       networks: {
         ...this.network.toService(this)
-      }
+      },
+      environment: keyValueFromConfig({
+        API_URL: 'https://wmtn.docugen.davidfain.com'
+      })
     }
   })
 
@@ -49,5 +53,7 @@ export class Docugen extends Compose {
     protected readonly web: WebServiceFactory,
   ) {
     super(app, Docugen.name, { version: '3.6', name: null });
+
+    new NodeSelector(this.frontend, AvailableNodes.Galactica)
   }
 }
