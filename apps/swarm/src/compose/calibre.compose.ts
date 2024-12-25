@@ -2,15 +2,15 @@ import { Compose, Service, Volume } from '@homeapi/ctsdk';
 import { Injectable } from '@nestjs/common';
 import { AvailableNodes, NodeSelector } from '../charts/node-selector';
 import { keyValueFromConfig } from '../charts/utils/kv-from-config.util';
-import type { WebServiceFactory } from '../services/web-service/web-service.factory';
-import type { SwarmApp } from '../swarm.service';
+import { WebServiceFactory } from '../services/web-service/web-service.factory';
+import { SwarmApp } from '../swarm.service';
 import { AutoUpdate } from './internal';
 
-@Injectable()
 /**
  * Calibre + CalibreWeb for ebook management
  * @todo
- */
+*/
+@Injectable()
 export class Calibre extends Compose {
   protected readonly timezone = 'Europe/Paris';
   protected readonly webData = new Volume(this, 'web-data');

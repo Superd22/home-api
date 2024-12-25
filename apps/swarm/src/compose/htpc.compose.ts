@@ -158,7 +158,7 @@ export class HTPC extends Compose {
       port: 8096,
     },
     serviceProps: {
-      image: 'lscr.io/linuxserver/jellyfin:latest',
+      image: 'lscr.io/linuxserver/jellyfin:10.10.0',
       deploy: {
         replicas: 1,
         /** @todo gpu helper */
@@ -191,7 +191,8 @@ export class HTPC extends Compose {
           PUID: 1000,
           PGID: 1000,
           TZ: this.timezone,
-          JELLYFIN_PublishedServerUrl: "jellyfin.davidfain.com"
+          JELLYFIN_PublishedServerUrl: "jellyfin.davidfain.com",
+          DOCKER_MODS: "ghcr.io/intro-skipper/intro-skipper-docker-mod"
         }),
       ]
     }

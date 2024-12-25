@@ -26,10 +26,11 @@ import { Config } from './config.encrypted';
 import { MetadataExplorerService } from './services/metadatas/metadata-explorer.service';
 import { WebServiceFactory } from './services/web-service/web-service.factory';
 import { SwarmApp } from './swarm.service';
+import { Minecraft } from './compose/games/minecraft.compose';
 
 export const composes = [
   // DataDog,
-  Calibre,
+  // Calibre,
   HomeAssistant,
   Flood,
   // Test,
@@ -42,7 +43,8 @@ export const composes = [
   Updater,
   // HomeAPI,
   // Whipser,
-  Docugen,
+  // Docugen,
+  // Minecraft
 ];
 
 export const dynamicComposes = [

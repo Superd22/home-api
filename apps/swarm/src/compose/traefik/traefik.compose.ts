@@ -67,7 +67,7 @@ export class TraefikService implements ISynthAfterCompose {
       Object.assign(this.config.entryPoints, additionalEntryPoints)
 
       const service = new Service(this, 'reverse-proxy', {
-        image: 'traefik:latest',
+        image: 'traefik:v2.11.8',
         ports: ['443:443', '80:80', '8080:8080']
           .concat(
             Object.values(this.additionalEntryPoints)

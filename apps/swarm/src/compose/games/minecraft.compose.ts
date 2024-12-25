@@ -14,7 +14,7 @@ import { WebServiceFactory } from '../../services/web-service/web-service.factor
  * FTB
  */
 export class Minecraft extends Compose {
-  protected readonly volume = new Volume(this, 'minecraft-ftb');
+  protected readonly volume = new Volume(this, 'minecraft-solar');
 
   // handle manually added mods
   // https://mediafilez.forgecdn.net/files/4742/643/PacketFixer-forge-1.1.7-1.19.2.jar
@@ -43,9 +43,13 @@ export class Minecraft extends Compose {
         volumes: [this.volume.toService({ path: '/data' })],
         environment: keyValueFromConfig({
           EULA: 'TRUE',
-          FTB_MODPACK_ID: this.modpack.packId,
-          FTB_MODPACK_VERSION_ID: this.modpack.versionId,
-          TYPE: 'FTBA',
+          MOD_PLATFORM: 'MODRINTH',
+          MODRINTH_MODPACK: '/data/pack.mrpack',
+          // FTB_MODPACK_ID: this.modpack.packId,
+          // FTB_MODPACK_VERSION_ID: this.modpack.versionId,
+          // NEOFORGE_VERSION: '47.1.76',
+          // VERSION: '1.20.1',
+          // TYPE: 'NEOFORGE',
           MEMORY: '20G',
         }),
       },
