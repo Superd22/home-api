@@ -15,7 +15,7 @@ import { Backup } from './compose/internal/backup/backup.compose';
 import { Code } from './compose/internal/configuration/code.compose';
 import { DevicerService } from './compose/internal/devices/devicer.service';
 import { NetworkVolume } from './compose/internal/network-volume/network.volume';
-import { VolumeSharerService } from './compose/internal/network-volume/volume-sharer.service';
+import type { VolumeSharerService } from './compose/internal/network-volume/volume-sharer.service';
 import { Updater } from './compose/internal/updater/updater.compose';
 import { MQTT } from './compose/mqtt.compose';
 import { Test } from './compose/test.compose';
@@ -34,7 +34,7 @@ export const composes = [
   Flood,
   // Test,
   MQTT,
-  // Calibre,
+  Calibre,
   // DIYHue,
   HTPC,
   // Satisfactory,
@@ -50,7 +50,7 @@ export const dynamicComposes = [
   // Code,
   // VolumeSharerService,
   TraefikService,
-]
+];
 
 const commands = [SynthCommand, DeployCommand, PruneCommand];
 
@@ -73,7 +73,7 @@ const commands = [SynthCommand, DeployCommand, PruneCommand];
 export class SwarmModule {
   constructor(
     protected readonly volumes: VolumeSharerService,
-    protected readonly app: SwarmApp,
+    protected readonly app: SwarmApp
   ) {
     /**
      * @todo better way to create network volumes.
