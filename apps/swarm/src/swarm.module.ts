@@ -27,6 +27,7 @@ import { MetadataExplorerService } from './services/metadatas/metadata-explorer.
 import { WebServiceFactory } from './services/web-service/web-service.factory';
 import { SwarmApp } from './swarm.service';
 import { Minecraft } from './compose/games/minecraft.compose';
+import { Valheim } from './compose/games/valheim.compose';
 
 export const composes = [
   // DataDog,
@@ -45,6 +46,7 @@ export const composes = [
   // Whipser,
   // Docugen,
   // Minecraft
+  Valheim
 ];
 
 export const dynamicComposes = [

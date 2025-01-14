@@ -2,6 +2,9 @@ import { Compose } from "@homeapi/ctsdk";
 import { SwarmApp } from "../../swarm.service";
 import { TraefikService, Entrypoint } from "../traefik/traefik.compose";
 
+/**
+ * deprecated, please use GameService instead
+ */
 export abstract class GameServerCompose extends Compose {
 
 
