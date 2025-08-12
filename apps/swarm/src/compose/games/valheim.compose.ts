@@ -15,7 +15,7 @@ import { valheimPassword } from "./valheim.encrypted";
 @Injectable()
 export class Valheim extends Compose {
 
-  protected readonly ports: ReverseProxiedPort[] = ['2456/udp', '2457/udp']
+  protected readonly ports: ReverseProxiedPort[] = ['2456/udp', '2457/udp', '2458/udp']
 
   protected readonly configVolume = new Volume(this, 'config')
   protected readonly gameVolume = new Volume(this, 'game')
@@ -36,7 +36,8 @@ export class Valheim extends Compose {
           SERVER_NAME: "The big D",
           WORLD_NAME: "WestWorld",
           SERVER_PASS: valheimPassword,
-          SERVER_ARGS: "-crossplay",
+          // SERVER_PUBLIC: 'false',
+          // SERVER_ARGS: "-crossplay",
           BEPINEX: 'true'
         }),
         deploy: {
