@@ -15,49 +15,32 @@ import { WebProxyNetwork } from './traefik/webproxy.network';
  * to organize and stream librairy of movies/TV-SHOWS
  */
 export class HTPC extends Compose {
-
   protected readonly timezone = 'Europe/Paris';
 
-
   protected readonly volumes = {
-    'jellyfin-config': new Volume(
-      this,
-      'jellyfin-config',
-    ),
-    'sonarr-config': new Volume(
-      this,
-      'sonarr-config'
-    ),
-    'radarr-config': new Volume(
-      this,
-      'radarr-config'
-    ),
-    'bazarr-config': new Volume(
-      this,
-      'bazarr-config'
-    ),
-    'prowlarr-config': new Volume(
-      this,
-      'prowlarr-config'
-    ),
-    'jellyseer-config': new Volume(
-      this,
-      'jellyseer-config',
-    )
+    'jellyfin-config': new Volume(this, 'jellyfin-config'),
+    'sonarr-config': new Volume(this, 'sonarr-config'),
+    'radarr-config': new Volume(this, 'radarr-config'),
+    'bazarr-config': new Volume(this, 'bazarr-config'),
+    'prowlarr-config': new Volume(this, 'prowlarr-config'),
+    'jellyseer-config': new Volume(this, 'jellyseer-config'),
   } as const;
 
-
-
-
   private Tdarr = class TDAR {
-
     protected readonly volumes = {
       server: new Volume(this.htpc, 'tdar-server'),
-      config: new NetworkVolume(this.htpc, 'tdar-config', { node: AvailableNodes.Galactica }),
-      logs: new NetworkVolume(this.htpc, 'tdar-logs', { node: AvailableNodes.Galactica }),
+      config: new NetworkVolume(this.htpc, 'tdar-config', {
+        node: AvailableNodes.Galactica,
+      }),
+      logs: new NetworkVolume(this.htpc, 'tdar-logs', {
+        node: AvailableNodes.Galactica,
+      }),
       // transcode: new NetworkVolume(this.htpc, 'tdar-transcode', { node: AvailableNodes.Galactica, path: '/mnt/raid/tmp/transcode' }),
-      media: new NetworkVolume(this.htpc, 'tdar-media', { node: AvailableNodes.Galactica, path: '/mnt/raid/0.SHARED/0.Media' })
-    } as const
+      media: new NetworkVolume(this.htpc, 'tdar-media', {
+        node: AvailableNodes.Galactica,
+        path: '/mnt/raid/0.SHARED/0.Media',
+      }),
+    } as const;
 
     protected readonly server = this.web.webService(this.htpc, 'tdar-server', {
       web: {
@@ -79,35 +62,33 @@ export class HTPC extends Compose {
           PGID: 1000,
           UMASK_SET: '002',
           internalNode: 'false',
-        })
-      }
+        }),
+      },
     });
 
     constructor(
       protected readonly htpc: HTPC,
-      protected readonly web: WebServiceFactory,
-    ) {
-    }
-  }
-
+      protected readonly web: WebServiceFactory
+    ) {}
+  };
 
   @AutoUpdate()
   protected readonly jellyseer = this.web.webService(this, 'jellyseer', {
     web: {
       match: 'Host(`jellyseer.davidfain.com`)',
-      port: 5055
+      port: 5055,
     },
     serviceProps: {
       image: 'fallenbagel/jellyseerr:latest',
       volumes: [
-        this.volumes['jellyseer-config'].toService({ path: '/app/config' })
+        this.volumes['jellyseer-config'].toService({ path: '/app/config' }),
       ],
       environment: keyValueFromConfig({
-        LOG_LEVEL: "debug",
-        TZ: this.timezone
-      })
-    }
-  })
+        LOG_LEVEL: 'debug',
+        TZ: this.timezone,
+      }),
+    },
+  });
 
   @AutoUpdate()
   protected readonly radarr = this.web.webService(this, 'radarr', {
@@ -131,8 +112,8 @@ export class HTPC extends Compose {
           TZ: this.timezone,
         }),
       ],
-    }
-  })
+    },
+  });
 
   /**
    * Needed for some indexers
@@ -143,12 +124,14 @@ export class HTPC extends Compose {
     image: 'ghcr.io/flaresolverr/flaresolverr:latest',
     expose: [8191],
     networks: {
-      ...this.webproxyNetwork.toService(this)
+      ...this.webproxyNetwork.toService(this),
     },
-    environment: [...keyValueFromConfig({
-      LOG_LEVEL: 'debug'
-    })]
-  })
+    environment: [
+      ...keyValueFromConfig({
+        LOG_LEVEL: 'debug',
+      }),
+    ],
+  });
 
   @AutoUpdate()
   public readonly jellyfin = this.web.webService(this, 'jellyfin', {
@@ -158,7 +141,7 @@ export class HTPC extends Compose {
       port: 8096,
     },
     serviceProps: {
-      image: 'lscr.io/linuxserver/jellyfin:10.10.0',
+      image: 'lscr.io/linuxserver/jellyfin:10.11.5',
       deploy: {
         replicas: 1,
         /** @todo gpu helper */
@@ -182,21 +165,19 @@ export class HTPC extends Compose {
         `/mnt/raid/0.SHARED/0.Media:/data`,
         `${this.volumes['jellyfin-config'].id(this)}:/config`,
       ],
-      devices: [
-        new SwarmDevice('/dev/dri')
-      ],
+      devices: [new SwarmDevice('/dev/dri')],
       environment: [
         ...keyValueFromConfig({
           NVIDIA_VISIBLE_DEVICES: 'all',
           PUID: 1000,
           PGID: 1000,
           TZ: this.timezone,
-          JELLYFIN_PublishedServerUrl: "jellyfin.davidfain.com",
-          DOCKER_MODS: "ghcr.io/intro-skipper/intro-skipper-docker-mod"
+          JELLYFIN_PublishedServerUrl: 'jellyfin.davidfain.com',
+          DOCKER_MODS: 'ghcr.io/intro-skipper/intro-skipper-docker-mod',
         }),
-      ]
-    }
-  })
+      ],
+    },
+  });
 
   public readonly sonarr = this.web.webService(this, 'sonarr', {
     web: {
@@ -222,8 +203,8 @@ export class HTPC extends Compose {
           TZ: this.timezone,
         }),
       ],
-    }
-  })
+    },
+  });
 
   public readonly prowlarr = this.web.webService(this, 'prowlarr', {
     web: {
@@ -239,9 +220,7 @@ export class HTPC extends Compose {
       networks: {
         [this.webproxyNetwork.id(this)]: {},
       },
-      volumes: [
-        `${this.volumes['prowlarr-config'].id(this)}:/config`,
-      ],
+      volumes: [`${this.volumes['prowlarr-config'].id(this)}:/config`],
       environment: [
         ...keyValueFromConfig({
           PUID: 1000,
@@ -249,8 +228,8 @@ export class HTPC extends Compose {
           TZ: this.timezone,
         }),
       ],
-    }
-  })
+    },
+  });
 
   public readonly bazarr = this.web.webService(this, 'bazarr', {
     web: {
@@ -276,18 +255,17 @@ export class HTPC extends Compose {
           TZ: this.timezone,
         }),
       ],
-    }
-  })
-
+    },
+  });
 
   constructor(
     protected readonly app: SwarmApp,
     protected readonly web: WebServiceFactory,
     protected readonly webproxyNetwork: WebProxyNetwork,
-    protected readonly config: Config,
+    protected readonly config: Config
   ) {
     super(app, HTPC.name, { version: '3.6', name: null });
-    webproxyNetwork.bind(this)
+    webproxyNetwork.bind(this);
 
     // new this.Tdarr(this, this.web)
 
