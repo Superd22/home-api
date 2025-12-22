@@ -19,6 +19,7 @@ import { Config } from './config.encrypted';
 import { MetadataExplorerService } from './services/metadatas/metadata-explorer.service';
 import { WebServiceFactory } from './services/web-service/web-service.factory';
 import { SwarmApp } from './swarm.service';
+import { Zomboid } from './compose/games/zomboid.compose';
 
 export const composes = [
   // DataDog,
@@ -38,6 +39,7 @@ export const composes = [
   // Docugen,
   // Minecraft
   // Valheim
+  Zomboid,
 ];
 
 export const dynamicComposes = [
