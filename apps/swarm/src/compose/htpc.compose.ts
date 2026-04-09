@@ -79,7 +79,7 @@ export class HTPC extends Compose {
       port: 5055,
     },
     serviceProps: {
-      image: 'fallenbagel/jellyseerr:latest',
+      image: 'ghcr.io/seerr-team/seerr:latest',
       volumes: [
         this.volumes['jellyseer-config'].toService({ path: '/app/config' }),
       ],
