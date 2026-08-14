@@ -13,3 +13,4 @@ CI handles everything but basically this app provides a few command:
 
 can be useful to type things
 `npx -p json-schema-to-typescript json2ts traefik-v2.json -o traefik-v2.d.ts`
+a
